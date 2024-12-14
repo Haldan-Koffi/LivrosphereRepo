@@ -1,0 +1,34 @@
+{# templates/utilisateur/info.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Informations de l'utilisateur{% endblock %}
+
+{% block body %}
+    <h1>Informations de l'utilisateur connecté</h1>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <td>{{ utilisateur.id }}</td>
+        </tr>
+        <tr>
+            <th>Nom</th>
+            <td>{{ utilisateur.nom }}</td>
+        </tr>
+        <tr>
+            <th>Prénom</th>
+            <td>{{ utilisateur.prenom }}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{{ utilisateur.email }}</td>
+        </tr>
+        <tr>
+            <th>Rôles</th>
+            <td>{{ utilisateur.roles | join(', ') }}</td>
+        </tr>
+    </table>
+
+    <a href="{{ path('app_utilisateur') }}">Retour à la liste des utilisateurs</a>
+{% endblock %}

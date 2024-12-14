@@ -1,0 +1,37 @@
+{# templates/user/new.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un nouvel utilisateur{% endblock %}
+
+{% block body %}
+    <h1>Créer un nouvel utilisateur</h1>
+
+    <form method="post">
+        <div>
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" name="nom" required>
+        </div>
+
+        <div>
+            <label for="prenom">Prénom</label>
+            <input type="text" id="prenom" name="prenom" required>
+        </div>
+
+        <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+
+        <div>
+            <label for="mot_de_passe">Mot de passe</label>
+            <input type="password" id="mot_de_passe" name="mot_de_passe" required>
+        </div>
+
+        <div>
+            <button type="submit">Créer</button>
+        </div>
+    </form>
+
+    <a href="{{ path('app_utilisateur') }}">Retour à la liste des utilisateurs</a>
+{% endblock %}
