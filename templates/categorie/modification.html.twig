@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier une Catégorie{% endblock %}
+
+{% block body %}
+    <h1>Modifier la Catégorie</h1>
+
+    <form method="post" action="{{ path('modification_categorie', {id: categorie.id}) }}" enctype="multipart/form-data">
+        <div>
+            <label for="nom">Nom de la catégorie :</label>
+            <input type="text" id="nom" name="nom" value="{{ categorie.nom }}" required>
+        </div>
+
+        <div>
+            <label for="couverture_categorie">Couverture actuelle :</label>
+            <img src="{{ asset('uploads/' ~ categorie.couverture_categorie) }}" alt="Couverture de la catégorie" style="max-width: 100px; max-height: 100px;">
+        </div>
+
+        <div>
+            <label for="couverture_categorie">Nouvelle couverture :</label>
+            <input type="file" id="couverture_categorie" name="couverture_categorie" accept="image/*">
+        </div>
+
+        <div>
+            <label for="date_creation">Date de création :</label>
+            <input type="datetime-local" id="date_creation" name="date_creation" value="{{ categorie.dateCreation|date('Y-m-d\\TH:i') }}" required>
+        </div>
+
+        <button type="submit">Modifier</button>
+    </form>
+{% endblock %}

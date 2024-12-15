@@ -56,7 +56,7 @@ class UtilisateurController extends AbstractController
             $formMotDePasse = $request->request->get('mot_de_passe');
             $hashedMotDePasse = $passwordHasher->hashPassword($utilisateur, $formMotDePasse);
             $utilisateur->setMotDePasse($hashedMotDePasse);
-            $utilisateur->setRoles(['ROLE_USER']);
+            $utilisateur->setRoles(['ROLE_ADMIN']);
 
             $em->persist($utilisateur);
             $em->flush();

@@ -1,0 +1,17 @@
+<ul>
+    {% for categorie in categories %}
+        <li>
+            <h3>{{ categorie.nom }}</h3>
+            {% if categorie.couvertureCategorie %}
+                <img 
+                    src="{{ asset('uploads/' ~ categorie.couvertureCategorie) }}" 
+                    alt="{{ categorie.nom }}" 
+                    style="max-width: 100px; max-height: 100px;"
+                >
+            {% else %}
+                <p>Pas d'image disponible</p>
+            {% endif %}
+            <p>Date de création : {{ categorie.dateCreation|date('d/m/Y H:i') }}</p>
+        </li>
+    {% endfor %}
+</ul>

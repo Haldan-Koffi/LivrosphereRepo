@@ -28,6 +28,9 @@ class Categorie
     #[ORM\OneToMany(targetEntity: Livre::class, mappedBy: 'categorie')]
     private Collection $livres;
 
+    #[ORM\Column(length: 255)]
+    private ?string $couverture_categorie = null;
+
     public function __construct()
     {
         $this->date_creation = new \DateTime();
@@ -89,6 +92,18 @@ class Categorie
                 $livre->setCategorie(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCouvertureCategorie(): ?string
+    {
+        return $this->couverture_categorie;
+    }
+
+    public function setCouvertureCategorie(string $couverture_categorie): static
+    {
+        $this->couverture_categorie = $couverture_categorie;
 
         return $this;
     }
