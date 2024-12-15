@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Livres{% endblock %}
+
+{% block body %}
+    <h1>Liste des Livres</h1>
+
+    <!-- Formulaire de filtre par catégorie -->
+    <form method="get">
+        <div>
+            <label for="categorie">Filtrer par catégorie :</label>
+            <select id="categorie" name="categorie">
+                <option value="">Toutes les catégories</option>
+                {% for categorie in categories %}
+                    <option value="{{ categorie.id }}" {% if categorie.id == app.request.query.get('categorie') %}selected{% endif %}>
+                        {{ categorie.nom }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit">Filtrer</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Auteur</th>
+                <th>Année de Publication</th>
+                <th>Couverture</th>
+                <th>Catégorie</th>
+                <th>Résumé</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for livre in livres %}
+                <tr>
+                    <td>{{ livre.titre }}</td>
+                    <td>{{ livre.auteur }}</td>
+                    <td>{{ livre.anneePublication|date('Y') }}</td>
+                    <td>
+                        {% if livre.couverture %}
+                            <img src="{{ asset('uploads/' ~ livre.couverture) }}" alt="Couverture" style="max-width: 100px;">
+                        {% else %}
+                            Pas de couverture
+                        {% endif %}
+                    </td>
+                    <td>{{ livre.categorie.nom }}</td>
+                    <td>{{ livre.resume }}</td>
+                    <td>
+                        <a href="{{ path('modification_livre', {id: livre.id}) }}">Modifier</a>
+                        <a href="{{ path('supprimer_livre', {id: livre.id}) }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?');">Supprimer</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">Aucun livre n'a été ajouté.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('nouveau_livre') }}">Ajouter un nouveau livre</a>
+{% endblock %}

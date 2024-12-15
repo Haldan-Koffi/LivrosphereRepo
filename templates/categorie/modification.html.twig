@@ -12,18 +12,18 @@
         </div>
 
         <div>
-            <label for="couverture_categorie">Couverture actuelle :</label>
-            <img src="{{ asset('uploads/' ~ categorie.couverture_categorie) }}" alt="Couverture de la catégorie" style="max-width: 100px; max-height: 100px;">
+            <label for="couvertureCategorie">Couverture actuelle :</label>
+            <img src="{{ asset('uploads/' ~ categorie.couvertureCategorie) }}" alt="Couverture de la catégorie" style="max-width: 100px; max-height: 100px;">
         </div>
 
         <div>
-            <label for="couverture_categorie">Nouvelle couverture :</label>
-            <input type="file" id="couverture_categorie" name="couverture_categorie" accept="image/*">
+            <label for="couvertureCategorie">Nouvelle couverture :</label>
+            <input type="file" id="couvertureCategorie" name="couvertureCategorie" accept="image/*">
         </div>
 
         <div>
-            <label for="date_creation">Date de création :</label>
-            <input type="datetime-local" id="date_creation" name="date_creation" value="{{ categorie.dateCreation|date('Y-m-d\\TH:i') }}" required>
+            <label for="dateCreation">Date de création :</label>
+            <input type="datetime-local" id="dateCreation" name="dateCreation" value="{{ categorie.dateCreation|date('Y-m-d\\TH:i') }}" required>
         </div>
 
         <button type="submit">Modifier</button>
