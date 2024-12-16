@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Livre;
 use App\Entity\Categorie;
+use App\Entity\Commentaire;
+use App\Form\CommentaireType;
 use App\Repository\LivreRepository;
 use App\Repository\CategorieRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,28 +20,72 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class LivreController extends AbstractController
 {
     #[Route('/livres', name: 'app_livre')]
-public function index(Request $request, LivreRepository $livreRepository, EntityManagerInterface $em): Response
-{
-    // Récupère la catégorie sélectionnée depuis la requête GET
-    $categorieId = $request->query->get('categorie');
+    public function index(Request $request, LivreRepository $livreRepository, EntityManagerInterface $em): Response
+    {
+        // Récupère la catégorie sélectionnée depuis la requête GET
+        $categorieId = $request->query->get('categorie');
 
-    // Récupère toutes les catégories pour le menu déroulant
-    $categories = $em->getRepository(Categorie::class)->findAll();
+        // Récupère toutes les catégories pour le menu déroulant
+        $categories = $em->getRepository(Categorie::class)->findAll();
 
-    // Si une catégorie est sélectionnée, on filtre les livres par cette catégorie
-    if ($categorieId) {
-        $livres = $livreRepository->findBy(['categorie' => $categorieId]);
-    } else {
-        // Sinon, on récupère tous les livres
-        $livres = $livreRepository->findAll();
+        // Si une catégorie est sélectionnée, on filtre les livres par cette catégorie
+        if ($categorieId) {
+            $livres = $livreRepository->findBy(['categorie' => $categorieId]);
+        } else {
+            // Sinon, on récupère tous les livres
+            $livres = $livreRepository->findAll();
+        }
+
+        return $this->render('livre/liste_livre.html.twig', [
+            'livres' => $livres,
+            'categories' => $categories,
+        ]);
     }
 
-    return $this->render('livre/liste_livre.html.twig', [
-        'livres' => $livres,
-        'categories' => $categories,
-    ]);
-}
+    #[Route('/{id}/info', name: 'livre_info', methods: ['GET', 'POST'])]
+    public function show(Livre $livre, Request $request, EntityManagerInterface $em): Response
+    {
 
+        $currentUtilisateur = $this->getUser();
+        if (!$currentUtilisateur) {
+            return $this->redirectToRoute('login'); // Redirection vers la page de connexion
+        }
+
+        $commentaires = $livre->getCommentaires();
+
+        // Créer un nouveau commentaire
+        $commentaire = new Commentaire();
+        $commentaire->setLivre($livre);
+        $commentaire->setUtilisateur($currentUtilisateur);
+        $commentaire->setDateCommentaire(new \DateTime());
+        $commentaire->setModificationCommentaire(false);
+
+        // Créer le formulaire de commentaire
+        $form = $this->createForm(CommentaireType::class, $commentaire);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Sauvegarder le commentaire dans la base de données
+            $em->persist($commentaire);
+            $em->flush();
+
+            // Lier le commentaire au livre
+            $livre->addCommentaire($commentaire);
+
+            // Ajouter un message flash
+            $this->addFlash('success', 'Votre commentaire a été ajouté avec succès.');
+
+            // Redirection vers la même page après ajout du commentaire
+            return $this->redirectToRoute('livre_info', ['id' => $livre->getId()]);
+        }
+
+        return $this->render('livre/info.html.twig', [
+            'livre' => $livre,
+            'commentaires' => $commentaires,
+            'form' => $form->createView(),  // Passer le formulaire à la vue
+        ]);
+    
+    }
 
     #[Route('/nouveau', name: 'nouveau_livre', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $em, CategorieRepository $categorieRepository, Security $security): Response

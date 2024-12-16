@@ -26,7 +26,7 @@ class UtilisateurController extends AbstractController
     #[Route('/utilisateurs/info', name: 'utilisateur_info', methods: ['GET'])]
     public function show(): Response
     {
-        $currentUtilisateur = $this->getUtilisateur();
+        $currentUtilisateur = $this->getUser();
 
         // Vérifier si l'utilisateur est connecté
         if (!$currentUtilisateur) {
