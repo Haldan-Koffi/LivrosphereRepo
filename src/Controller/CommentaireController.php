@@ -11,17 +11,54 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 
 class CommentaireController extends AbstractController
 {
-    #[Route('/commentaire', name: 'app_commentaire')]
-    public function index(): Response
+    #[Route('admin/commentaires', name: 'app_commentaire', methods: ['GET'])]
+    public function index(CommentaireRepository $commentaireRepository): Response
     {
-        return $this->render('commentaire/index.html.twig', [
-            'controller_name' => 'CommentaireController',
-        ]);
+        $commentaires = $commentaireRepository->findAll();
+
+        return $this->render('commentaire/liste_commentaire.html.twig',[
+            'commentaires' => $commentaires]); 
     }
+
+    
+    // #[Route('api/commentaires', name: 'app_api_commentaire', methods: ['GET'])]
+    public function indexapi(CommentaireRepository $commentaireRepository): Response
+    {
+        $commentaires = $commentaireRepository->findAll();
+
+        $data = array_map(function ($commentaire) {
+            return [
+                'id' => $commentaire->getId(),
+                'message' => $commentaire->getMessage(),
+                'dateCommentaire' => $commentaire->getDateCommentaire()->format('Y-m-d H:i:s'),
+                'modificationCommentaire' => $commentaire->isModificationCommentaire(),
+                'utilisateur' => $commentaire->getUtilisateur()->getPrenom(),
+                'livre' => [
+                    'id' => $commentaire->getLivre()->getId(),
+                    'titre' => $commentaire->getLivre()->getTitre(),
+                    'auteur' => $commentaire->getLivre()->getAuteur(),
+                ],
+            ];
+        }, $commentaires);
+
+        return $this->json($data);
+    }
+
+    // #[Route('/api/commentaire/{id}/supprimer', name: 'app_api_commentaire', methods: ['POST'])]
+    public function deleteapi(Commentaire $commentaire, EntityManagerInterface $em): JsonResponse
+    {
+        $em->remove($commentaire);
+        $em->flush();
+
+        return new JsonResponse(['status' => 'Commentaire supprimé'], JsonResponse::HTTP_OK);
+    }
+    
 
     #[Route('/livre/{id}/commentaire', name: 'ajout_commentaire', methods: ['GET', 'POST'])]
     public function new(Livre $livre, Request $request, EntityManagerInterface $em, CommentaireRepository $commentaireRepository): Response

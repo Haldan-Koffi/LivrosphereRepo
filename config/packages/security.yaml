@@ -22,6 +22,10 @@ security:
         password_path: mot_de_passe
         success_handler: lexik_jwt_authentication.handler.authentication_success # Si la connexion réussit, la réponse JSON sera gérée ici
         failure_handler: lexik_jwt_authentication.handler.authentication_failure # Si la connexion échoue, la réponse JSON sera gérée ici
+    api:
+      pattern: ^/api
+      stateless: true
+      jwt: ~
 
     main:
       pattern: ^/
@@ -50,4 +54,4 @@ security:
     - { path: ^/nouveau/utilisateur, roles: PUBLIC_ACCESS }
     - { path: ^/utilisateurs, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/livre, roles: IS_AUTHENTICATED_FULLY }
-    - { path: ^/api/login, roles: ROLE_ADMIN }
+    - { path: ^/api, roles: ROLE_ADMIN }
