@@ -44,10 +44,27 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'utilisateur')]
     private Collection $commentaires;
 
+    #[ORM\Column(length: 50)]
+    private ?string $pseudonyme = null;
+
+    /**
+     * @var Collection<int, InteractionJaime>
+     */
+    #[ORM\OneToMany(targetEntity: InteractionJaime::class, mappedBy: 'utilisateur')]
+    private Collection $interactionJaimes;
+
+    /**
+     * @var Collection<int, Recommandation>
+     */
+    #[ORM\OneToMany(targetEntity: Recommandation::class, mappedBy: 'utilisateur')]
+    private Collection $recommandations;
+
     public function __construct()
     {
         $this->livres = new ArrayCollection();
         $this->commentaires = new ArrayCollection();
+        $this->interactionJaimes = new ArrayCollection();
+        $this->recommandations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -194,6 +211,78 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($commentaire->getUtilisateur() === $this) {
                 $commentaire->setUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPseudonyme(): ?string
+    {
+        return $this->pseudonyme;
+    }
+
+    public function setPseudonyme(string $pseudonyme): static
+    {
+        $this->pseudonyme = $pseudonyme;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, InteractionJaime>
+     */
+    public function getInteractionJaimes(): Collection
+    {
+        return $this->interactionJaimes;
+    }
+
+    public function addInteractionJaime(InteractionJaime $interactionJaime): static
+    {
+        if (!$this->interactionJaimes->contains($interactionJaime)) {
+            $this->interactionJaimes->add($interactionJaime);
+            $interactionJaime->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInteractionJaime(InteractionJaime $interactionJaime): static
+    {
+        if ($this->interactionJaimes->removeElement($interactionJaime)) {
+            // set the owning side to null (unless already changed)
+            if ($interactionJaime->getUtilisateur() === $this) {
+                $interactionJaime->setUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Recommandation>
+     */
+    public function getRecommandations(): Collection
+    {
+        return $this->recommandations;
+    }
+
+    public function addRecommandation(Recommandation $recommandation): static
+    {
+        if (!$this->recommandations->contains($recommandation)) {
+            $this->recommandations->add($recommandation);
+            $recommandation->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecommandation(Recommandation $recommandation): static
+    {
+        if ($this->recommandations->removeElement($recommandation)) {
+            // set the owning side to null (unless already changed)
+            if ($recommandation->getUtilisateur() === $this) {
+                $recommandation->setUtilisateur(null);
             }
         }
 

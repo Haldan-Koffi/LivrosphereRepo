@@ -15,7 +15,7 @@
         {% if commentaires is not empty %}
             {% for commentaire in commentaires %}
                 <div>
-                    <p><strong>{{ commentaire.utilisateur.username }}</strong> ({{ commentaire.dateCommentaire|date('d/m/Y H:i') }})</p>
+                    <p><strong>{{ commentaire.utilisateur.pseudonyme }}</strong> ({{ commentaire.dateCommentaire|date('d/m/Y H:i') }})</p>
                     <p>{{ commentaire.message }}</p>
                     {% if commentaire.modificationCommentaire %}
                         <p><em>(Modifié)</em></p>

@@ -6,6 +6,8 @@ use App\Entity\Livre;
 use App\Entity\Categorie;
 use App\Entity\Commentaire;
 use App\Form\CommentaireType;
+use App\Entity\Recommandation;
+use App\Entity\InteractionJaime;
 use App\Repository\LivreRepository;
 use App\Repository\CategorieRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -42,18 +44,34 @@ class LivreController extends AbstractController
         ]);
     }
 
+
     #[Route('/{id}/info', name: 'livre_info', methods: ['GET', 'POST'])]
     public function show(Livre $livre, Request $request, EntityManagerInterface $em): Response
     {
-
+        // Vérification de l'authentification de l'utilisateur
         $currentUtilisateur = $this->getUser();
         if (!$currentUtilisateur) {
-            return $this->redirectToRoute('login'); // Redirection vers la page de connexion
+            return $this->redirectToRoute('app_connexion'); // Redirection vers la page de connexion
         }
 
+        // Récupérer les commentaires liés au livre
         $commentaires = $livre->getCommentaires();
 
-        // Créer un nouveau commentaire
+        // Vérifier si l'utilisateur a déjà liké ce livre
+        $interactionJaimeRepo = $em->getRepository(InteractionJaime::class);
+        $utilisateurALike = $interactionJaimeRepo->findByUserAndLivre($currentUtilisateur, $livre);
+
+        // Compter le nombre de likes pour le livre
+        $nombreLikes = $interactionJaimeRepo->count(['livre' => $livre]);
+
+        //les recommandations
+
+        $recommandationRepo = $em->getRepository(Recommandation::class);
+        $nombreRecommandations = $recommandationRepo->count(['livre' => $livre]);
+        $utilisateurARecommande = $recommandationRepo->findByUserAndLivre($currentUtilisateur, $livre);
+
+
+        // Gérer l'ajout de commentaires
         $commentaire = new Commentaire();
         $commentaire->setLivre($livre);
         $commentaire->setUtilisateur($currentUtilisateur);
@@ -65,27 +83,29 @@ class LivreController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Sauvegarder le commentaire dans la base de données
             $em->persist($commentaire);
             $em->flush();
 
             // Lier le commentaire au livre
             $livre->addCommentaire($commentaire);
 
-            // Ajouter un message flash
             $this->addFlash('success', 'Votre commentaire a été ajouté avec succès.');
 
-            // Redirection vers la même page après ajout du commentaire
+            // Redirection pour éviter la double soumission
             return $this->redirectToRoute('livre_info', ['id' => $livre->getId()]);
         }
 
         return $this->render('livre/info.html.twig', [
             'livre' => $livre,
             'commentaires' => $commentaires,
-            'form' => $form->createView(),  // Passer le formulaire à la vue
+            'form' => $form->createView(),
+            'utilisateurALike' => $utilisateurALike !== null, // Passer si l'utilisateur a liké ou non
+            'nombreLikes' => $nombreLikes, // Passer le nombre de likes
+            'nombreRecommandations' => $nombreRecommandations,
+            'utilisateurARecommande' => $utilisateurARecommande,
         ]);
-    
     }
+
 
     #[Route('/nouveau', name: 'nouveau_livre', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $em, CategorieRepository $categorieRepository, Security $security): Response
@@ -138,67 +158,67 @@ class LivreController extends AbstractController
 
     
     #[Route('/{id}/modification', name: 'modification_livre', methods: ['GET', 'POST'])]
-public function edit(Livre $livre, Request $request, EntityManagerInterface $em, SluggerInterface $slugger, Categorie $categorie): Response
-{
-    // Récupération de toutes les catégories pour le menu déroulant
-    $categories = $em->getRepository(Categorie::class)->findAll();
-
-    if ($request->isMethod('POST')) {
-        // Mise à jour des informations du livre
-        $livre->setTitre($request->request->get('titre'));
-        $livre->setAuteur($request->request->get('auteur'));
-        $livre->setAnneePublication(new \DateTime($request->request->get('annee_publication')));
-        $livre->setResume($request->request->get('resume'));
-
-        // Gestion de la couverture du livre
-        $nouvelleCouverture = $request->files->get('couverture');
-        if ($nouvelleCouverture) {
-            // Gérer l'upload du fichier
-            $originalFilename = pathinfo($nouvelleCouverture->getClientOriginalName(), PATHINFO_FILENAME);
-            $safeFilename = $slugger->slug($originalFilename);
-            $newFilename = $safeFilename . '-' . uniqid() . '.' . $nouvelleCouverture->guessExtension();
-
-            // Déplacer le fichier dans le dossier 'uploads'
-            try {
-                $nouvelleCouverture->move(
-                    $this->getParameter('uploads_directory'), // Dossier de destination
-                    $newFilename
-                );
-                $livre->setCouverture($newFilename);
-            } catch (FileException $e) {
-                // Gérer l'erreur de téléchargement si nécessaire
-                $this->addFlash('error', 'Erreur lors de l\'upload de la couverture.');
-            }
-        }
-
-        // Mise à jour de la catégorie sélectionnée
-        $categorie = $em->getRepository(Categorie::class)->find($request->request->get('categorie'));
-        if ($categorie) {
-            $livre->setCategorie($categorie);
-        }
-
-        // Sauvegarde des modifications dans la base de données
-        $em->flush();
-
-        // Rediriger vers la liste des livres après modification
-        return $this->redirectToRoute('app_livre');
-    }
-
-    // Rendu du formulaire de modification
-    return $this->render('livre/modification.html.twig', [
-        'livre' => $livre,
-        'categories' => $categories, // Passer la liste des catégories à la vue
-    ]);
-}
-
-
-
-    #[Route('/{id}/supprimer', name: 'supprimer_livre', methods: ['GET'])]
-    public function delete(Livre $livre, EntityManagerInterface $em): Response
+    public function edit(Livre $livre, Request $request, EntityManagerInterface $em, SluggerInterface $slugger, Categorie $categorie): Response
     {
-        $em->remove($livre);
-        $em->flush();
+        // Récupération de toutes les catégories pour le menu déroulant
+        $categories = $em->getRepository(Categorie::class)->findAll();
 
-        return $this->redirectToRoute('app_livre');
+        if ($request->isMethod('POST')) {
+            // Mise à jour des informations du livre
+            $livre->setTitre($request->request->get('titre'));
+            $livre->setAuteur($request->request->get('auteur'));
+            $livre->setAnneePublication(new \DateTime($request->request->get('annee_publication')));
+            $livre->setResume($request->request->get('resume'));
+
+            // Gestion de la couverture du livre
+            $nouvelleCouverture = $request->files->get('couverture');
+            if ($nouvelleCouverture) {
+                // Gérer l'upload du fichier
+                $originalFilename = pathinfo($nouvelleCouverture->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $nouvelleCouverture->guessExtension();
+
+                // Déplacer le fichier dans le dossier 'uploads'
+                try {
+                    $nouvelleCouverture->move(
+                        $this->getParameter('uploads_directory'), // Dossier de destination
+                        $newFilename
+                    );
+                    $livre->setCouverture($newFilename);
+                } catch (FileException $e) {
+                    // Gérer l'erreur de téléchargement si nécessaire
+                    $this->addFlash('error', 'Erreur lors de l\'upload de la couverture.');
+                }
+            }
+
+            // Mise à jour de la catégorie sélectionnée
+            $categorie = $em->getRepository(Categorie::class)->find($request->request->get('categorie'));
+            if ($categorie) {
+                $livre->setCategorie($categorie);
+            }
+
+            // Sauvegarde des modifications dans la base de données
+            $em->flush();
+
+            // Rediriger vers la liste des livres après modification
+            return $this->redirectToRoute('app_livre');
+        }
+
+        // Rendu du formulaire de modification
+        return $this->render('livre/modification.html.twig', [
+            'livre' => $livre,
+            'categories' => $categories, // Passer la liste des catégories à la vue
+        ]);
     }
+
+
+
+        #[Route('/{id}/supprimer', name: 'supprimer_livre', methods: ['GET'])]
+        public function delete(Livre $livre, EntityManagerInterface $em): Response
+        {
+            $em->remove($livre);
+            $em->flush();
+
+            return $this->redirectToRoute('app_livre');
+        }
 }

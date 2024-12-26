@@ -20,7 +20,7 @@
                 {% for commentaire in commentaires %}
                     <tr>
                         <td>{{ commentaire.id }}</td>
-                        <td>{{ commentaire.utilisateur.prenom }} {{ commentaire.utilisateur.nom }}</td>
+                        <td>{{ commentaire.utilisateur.pseudonyme }}</td>
                         <td>{{ commentaire.dateCommentaire|date('d/m/Y H:i') }}</td>
                         <td>{{ commentaire.message }}</td>
                         <td>

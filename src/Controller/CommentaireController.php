@@ -38,7 +38,7 @@ class CommentaireController extends AbstractController
                 'message' => $commentaire->getMessage(),
                 'dateCommentaire' => $commentaire->getDateCommentaire()->format('Y-m-d H:i:s'),
                 'modificationCommentaire' => $commentaire->isModificationCommentaire(),
-                'utilisateur' => $commentaire->getUtilisateur()->getPrenom(),
+                'utilisateur' => $commentaire->getUtilisateur()->getPseudonyme(),
                 'livre' => [
                     'id' => $commentaire->getLivre()->getId(),
                     'titre' => $commentaire->getLivre()->getTitre(),

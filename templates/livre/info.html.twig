@@ -17,6 +17,22 @@
                 Pas de couverture disponible.
             {% endif %}
         </li>
+        <li>
+        <form method="POST" action="{{ path('toggle_like', {'id': livre.id}) }}" style="display: inline;">
+            <button type="submit" class="btn {{ utilisateurALike ? 'btn-danger' : 'btn-primary' }}">
+                {{ utilisateurALike ? 'Je n\'aime plus' : 'J\'aime' }}
+            </button>
+        </form>
+        <span class="badge bg-secondary">{{ nombreLikes }}{{ nombreLikes > 1 ? 's' }}</span>
+        </li>
+        <li>
+        <form method="POST" action="{{ path('toggle_recommandation', {'id': livre.id}) }}" style="display: inline;">
+            <button type="submit" class="btn {{ utilisateurARecommande ? 'btn-danger' : 'btn-success' }}">
+                {{ utilisateurARecommande ? 'Retirer la recommandation' : 'Recommander' }}
+            </button>
+        </form>
+        <span class="badge bg-secondary">{{ nombreRecommandations }}{{ nombreRecommandations > 1 ? 's' }}</span>
+        </li>
     </ul>
 
     <a href="{{ path('app_livre') }}">Retour à la liste des livres</a>
@@ -26,7 +42,7 @@
         {% if commentaires is not empty %}
             {% for commentaire in commentaires %}
                 <div>
-                    <p><strong>{{ commentaire.utilisateur.prenom }}</strong> ({{ commentaire.dateCommentaire|date('d/m/Y H:i') }})</p>
+                    <p><strong>{{ commentaire.utilisateur.pseudonyme }}</strong> ({{ commentaire.dateCommentaire|date('d/m/Y H:i') }})</p>
                     <p>{{ commentaire.message }}</p>
                     {% if commentaire.modificationCommentaire %}
                         <p><em>(Modifié)</em></p>
