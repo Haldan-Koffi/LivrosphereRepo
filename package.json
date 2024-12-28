@@ -13,6 +13,7 @@
     "webpack-notifier": "^1.15.0"
   },
   "dependencies": {
+    "@symfony/stimulus-bridge": "^3.2.2",
     "bootstrap": "^5.3.3"
   }
 }
