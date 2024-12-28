@@ -1,3 +1,5 @@
+{% extends 'base.html.twig' %}
+{% block body %}
 <form method="post" action="{{ path('app_connexion') }}">
     <div>
         <label for="username">Email</label>
@@ -7,5 +9,6 @@
         <label for="password">Mot de passe</label>
         <input type="password" id="password" name="_password" required>
     </div>
-    <button type="submit">Se connecter</button>
+    <button type="submit" class="btn btn-success">Se connecter</button>
 </form>
+{% endblock %}
