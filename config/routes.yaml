@@ -7,9 +7,14 @@ controllers:
 login_api:
   path: /api/login
 
-afficher_commentaire:
+afficher_commentaires:
   path: /api/commentaires
   controller: App\Controller\CommentaireController::indexapi
+  methods: [GET]
+
+afficher_livres:
+  path: /api/livres
+  controller: App\Controller\LivreController::indexapi
   methods: [GET]
 
 supprimer_commentaire:

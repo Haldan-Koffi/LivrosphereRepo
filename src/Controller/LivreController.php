@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/livre')]
+// #[Route('/livre')]
 class LivreController extends AbstractController
 {
     #[Route('/livres', name: 'app_livre')]
@@ -43,6 +43,35 @@ class LivreController extends AbstractController
             'categories' => $categories,
         ]);
     }
+
+     public function indexapi(Request $request, LivreRepository $livreRepository, EntityManagerInterface $em): Response 
+     {
+        $livres = $livreRepository->findAll();
+
+        $data = array_map(function ($livre){
+            return [
+                'id' => $livre->getId(),
+                'titre' => $livre->getTitre(),
+                'auteur' => $livre->getAuteur(),
+                'annee_publication' => $livre->getAnneePublication()->format('Y-m-d'),
+                'resume' => $livre->getResume(),
+                'couverture' => $livre->getCouverture(),
+                'date_ajout' => $livre->getDateAjout()->format('Y-m-d H:i:s'),
+                'categorie' => [
+                    'id' => $livre->getCategorie()->getId(),
+                    'nom' => $livre->getCategorie()->getNom(),
+                ],
+                'utilisateur' => [
+                    'id' => $livre->getUtilisateur()->getId(),
+                    'pseudonyme' => $livre->getUtilisateur()->getPseudonyme(),
+                ],
+
+            ];
+
+        }, $livres);
+
+        return $this->json($data);
+     }
 
 
     #[Route('/{id}/info', name: 'livre_info', methods: ['GET', 'POST'])]
