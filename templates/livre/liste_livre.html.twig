@@ -50,8 +50,8 @@
                     <td>{{ livre.resume }}</td>
                     <td>
                         <a href="{{ path('modification_livre', {id: livre.id}) }}">Modifier</a>
-                        <a href="{{ path('supprimer_livre', {id: livre.id}) }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?');">Supprimer</a>
-                        <a href="{{ path('livre_info', {id: livre.id}) }}" class="btn btn-info">Voir les détails</a> <!-- Nouveau bouton -->
+                        <a href="{{ path('suppression_livre', {id: livre.id}) }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?');">Supprimer</a>
+                        <a href="{{ path('livre_information', {id: livre.id}) }}" class="btn btn-info">Voir les détails</a> <!-- Nouveau bouton -->
                     </td>
                 </tr>
             {% else %}

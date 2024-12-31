@@ -15,6 +15,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -74,7 +75,7 @@ class LivreController extends AbstractController
      }
 
 
-    #[Route('/{id}/info', name: 'livre_info', methods: ['GET', 'POST'])]
+    #[Route('/livre/{id}/info', name: 'livre_information', methods: ['GET', 'POST'])]
     public function show(Livre $livre, Request $request, EntityManagerInterface $em): Response
     {
         // Vérification de l'authentification de l'utilisateur
@@ -121,7 +122,7 @@ class LivreController extends AbstractController
             $this->addFlash('success', 'Votre commentaire a été ajouté avec succès.');
 
             // Redirection pour éviter la double soumission
-            return $this->redirectToRoute('livre_info', ['id' => $livre->getId()]);
+            return $this->redirectToRoute('livre_information', ['id' => $livre->getId()]);
         }
 
         return $this->render('livre/info.html.twig', [
@@ -136,7 +137,7 @@ class LivreController extends AbstractController
     }
 
 
-    #[Route('/nouveau', name: 'nouveau_livre', methods: ['GET', 'POST'])]
+    #[Route('livre/nouveau', name: 'nouveau_livre', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $em, CategorieRepository $categorieRepository, Security $security): Response
     {
         if ($request->isMethod('POST')) {
@@ -186,8 +187,8 @@ class LivreController extends AbstractController
     }
 
     
-    #[Route('/{id}/modification', name: 'modification_livre', methods: ['GET', 'POST'])]
-    public function edit(Livre $livre, Request $request, EntityManagerInterface $em, SluggerInterface $slugger, Categorie $categorie): Response
+    #[Route('livre/{id}/modification', name: 'modification_livre', methods: ['GET', 'POST'])]
+    public function edit(Livre $livre, Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
     {
         // Récupération de toutes les catégories pour le menu déroulant
         $categories = $em->getRepository(Categorie::class)->findAll();
@@ -242,12 +243,37 @@ class LivreController extends AbstractController
 
 
 
-        #[Route('/{id}/supprimer', name: 'supprimer_livre', methods: ['GET'])]
-        public function delete(Livre $livre, EntityManagerInterface $em): Response
-        {
-            $em->remove($livre);
-            $em->flush();
+     #[Route('livre/{id}/supprimer', name: 'suppression_livre', methods: ['GET'])]
+    public function delete(Livre $livre, EntityManagerInterface $em): Response
+    {
+        $em->remove($livre);
+        $em->flush();
 
-            return $this->redirectToRoute('app_livre');
+        return $this->redirectToRoute('app_livre');
+    }
+
+    public function deleteapi(Livre $livre, EntityManagerInterface $em): JsonResponse
+    {
+        // Supprimer les commentaires associés
+        foreach ($livre->getCommentaires() as $commentaire) {
+            $em->remove($commentaire);
         }
+
+        // Supprimer les recommandations associées
+        foreach ($livre->getRecommandations() as $recommandation) {
+            $em->remove($recommandation);
+        }
+
+        // Supprimer les interactions j'aimes associées
+        foreach ($livre->getInteractionJaimes() as $interactionJaime) {
+            $em->remove($interactionJaime);
+        }
+
+        // Supprimer le livre
+        $em->remove($livre);
+        $em->flush();
+
+        return new JsonResponse(['status' => 'Livre et ses commentaires supprimés'], JsonResponse::HTTP_OK);
+    }
+
 }

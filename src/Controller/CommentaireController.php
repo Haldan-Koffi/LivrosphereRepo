@@ -26,9 +26,7 @@ class CommentaireController extends AbstractController
             'commentaires' => $commentaires]); 
     }
 
-    
-    // #[Route('api/commentaires', name: 'app_api_commentaire', methods: ['GET'])]
-    public function indexapi(CommentaireRepository $commentaireRepository): Response
+    public function indexapi(CommentaireRepository $commentaireRepository): JsonResponse
     {
         $commentaires = $commentaireRepository->findAll();
 
@@ -50,7 +48,6 @@ class CommentaireController extends AbstractController
         return $this->json($data);
     }
 
-    // #[Route('/api/commentaire/{id}/supprimer', name: 'app_api_commentaire', methods: ['POST'])]
     public function deleteapi(Commentaire $commentaire, EntityManagerInterface $em): JsonResponse
     {
         $em->remove($commentaire);
@@ -85,7 +82,7 @@ class CommentaireController extends AbstractController
             // Ajouter un message flash
             $this->addFlash('success', 'Votre commentaire a été ajouté avec succès.');
 
-            return $this->redirectToRoute('livre_info', ['id' => $livre->getId()]);
+            return $this->redirectToRoute('livre_information', ['id' => $livre->getId()]);
         }
 
         $commentaires = $commentaireRepository->findBy(['livre' => $livre]);
@@ -107,7 +104,7 @@ class CommentaireController extends AbstractController
         if ($commentaire->getUtilisateur() !== $currentUtilisateur) {
             // Si ce n'est pas l'utilisateur qui a créé le commentaire, redirigez-le
             $this->addFlash('error', 'Vous ne pouvez pas modifier ce commentaire.');
-            return $this->redirectToRoute('livre_info', ['id' => $commentaire->getLivre()->getId()]);
+            return $this->redirectToRoute('livre_information', ['id' => $commentaire->getLivre()->getId()]);
         }
 
         // Créer un formulaire pour modifier le commentaire
@@ -126,7 +123,7 @@ class CommentaireController extends AbstractController
             $this->addFlash('success', 'Votre commentaire a été modifié avec succès.');
 
             // Rediriger l'utilisateur vers la page d'info du livre
-            return $this->redirectToRoute('livre_info', ['id' => $commentaire->getLivre()->getId()]);
+            return $this->redirectToRoute('livre_information', ['id' => $commentaire->getLivre()->getId()]);
         }
 
         // Retourner la vue avec le formulaire
@@ -155,7 +152,7 @@ class CommentaireController extends AbstractController
         }
 
         // Rediriger vers la page du livre
-        return $this->redirectToRoute('livre_info', ['id' => $commentaire->getLivre()->getId()]);
+        return $this->redirectToRoute('livre_information', ['id' => $commentaire->getLivre()->getId()]);
     }
 
 

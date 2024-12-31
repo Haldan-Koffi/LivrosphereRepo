@@ -20,4 +20,9 @@ afficher_livres:
 supprimer_commentaire:
   path: /api/commentaire/{id}/supprimer
   controller: App\Controller\CommentaireController::deleteapi
-  methods: [POST]
+  methods: [DELETE]
+
+supprimer_livre:
+  path: /api/livre/{id}/supprimer
+  controller: App\Controller\LivreController::deleteapi
+  methods: [DELETE]

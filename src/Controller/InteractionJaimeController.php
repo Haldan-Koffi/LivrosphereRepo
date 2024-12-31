@@ -38,7 +38,7 @@ class InteractionJaimeController extends AbstractController
             $em->remove($existingLike);
             $em->flush();
 
-            return $this->redirectToRoute('livre_info', ['id' => $livre->getId()]);
+            return $this->redirectToRoute('livre_information', ['id' => $livre->getId()]);
         }
 
         $like = new InteractionJaime();
@@ -49,6 +49,6 @@ class InteractionJaimeController extends AbstractController
         $em->persist($like);
         $em->flush();
 
-        return $this->redirectToRoute('livre_info', ['id' => $livre->getId()]);
+        return $this->redirectToRoute('livre_information', ['id' => $livre->getId()]);
     }
 }

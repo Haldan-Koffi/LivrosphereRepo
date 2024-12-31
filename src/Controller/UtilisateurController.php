@@ -68,7 +68,7 @@ class UtilisateurController extends AbstractController
         return $this->render('utilisateur/new.html.twig');
     }
 
-    #[Route('utilisateurs/{id}/modification', name: 'utilisateur_modification', methods: ['GET', 'POST'])]
+    #[Route('utilisateur/{id}/modification', name: 'utilisateur_modification', methods: ['GET', 'POST'])]
     public function edit(Utilisateur $utilisateur, Request $request, EntityManagerInterface $em): Response
     {
         if ($request->isMethod('POST')) {

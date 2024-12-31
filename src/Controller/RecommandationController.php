@@ -40,7 +40,7 @@ class RecommandationController extends AbstractController
             $em->flush();
 
 
-            return $this->redirectToRoute('livre_info', ['id' => $livre->getId()]);
+            return $this->redirectToRoute('livre_information', ['id' => $livre->getId()]);
         }
             // Sinon, créer une nouvelle recommandation
         $Recommandation = new Recommandation();
@@ -51,6 +51,6 @@ class RecommandationController extends AbstractController
         $em->persist($Recommandation);
         $em->flush();
 
-        return $this->redirectToRoute('livre_info', ['id' => $livre->getId()]);
+        return $this->redirectToRoute('livre_information', ['id' => $livre->getId()]);
     }
 }
