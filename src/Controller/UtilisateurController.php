@@ -57,12 +57,12 @@ class UtilisateurController extends AbstractController
             $formMotDePasse = $request->request->get('mot_de_passe');
             $hashedMotDePasse = $passwordHasher->hashPassword($utilisateur, $formMotDePasse);
             $utilisateur->setMotDePasse($hashedMotDePasse);
-            $utilisateur->setRoles(['ROLE_ADMIN']);
+            $utilisateur->setRoles(['ROLE_USER']);
 
             $em->persist($utilisateur);
             $em->flush();
 
-            return $this->redirectToRoute('app_utilisateur');
+            return $this->redirectToRoute('app_accueil');
         }
 
         return $this->render('utilisateur/new.html.twig');

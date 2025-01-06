@@ -140,6 +140,15 @@ class LivreController extends AbstractController
     #[Route('livre/nouveau', name: 'nouveau_livre', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $em, CategorieRepository $categorieRepository, Security $security): Response
     {
+        
+        // Récupérer l'utilisateur connecté
+
+        $user = $security->getUser();
+            if ($user) {
+            // Associer l'utilisateur connecté au livre
+                $livre->setUtilisateur($user);
+            }
+        
         if ($request->isMethod('POST')) {
             $livre = new Livre();
             $livre->setTitre($request->request->get('titre'));
@@ -147,12 +156,8 @@ class LivreController extends AbstractController
             $livre->setAnneePublication(new \DateTime($request->request->get('annee_publication')));
             $livre->setResume($request->request->get('resume'));
 
-            // Récupérer l'utilisateur connecté
-            $user = $security->getUser();
-            if ($user) {
-            // Associer l'utilisateur connecté au livre
-                $livre->setUtilisateur($user);
-            }
+            
+            
 
 
             if ($request->files->get('couverture')) {

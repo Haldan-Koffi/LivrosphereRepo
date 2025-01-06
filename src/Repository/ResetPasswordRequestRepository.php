@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\ReinitialisationMotDePasse;
+use App\Entity\ResetPasswordRequest;
 use App\Entity\Utilisateur;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -13,13 +13,13 @@ use SymfonyCasts\Bundle\ResetPassword\Persistence\ResetPasswordRequestRepository
 /**
  * @extends ServiceEntityRepository<ResetPasswordRequest>
  */
-class ReinitialisationMotDePasseRepository extends ServiceEntityRepository implements ResetPasswordRequestRepositoryInterface
+class ResetPasswordRequestRepository extends ServiceEntityRepository implements ResetPasswordRequestRepositoryInterface
 {
     use ResetPasswordRequestRepositoryTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, ReinitialisationMotDePasse::class);
+        parent::__construct($registry, ResetPasswordRequest::class);
     }
 
     /**
@@ -27,6 +27,6 @@ class ReinitialisationMotDePasseRepository extends ServiceEntityRepository imple
      */
     public function createResetPasswordRequest(object $user, \DateTimeInterface $expiresAt, string $selector, string $hashedToken): ResetPasswordRequestInterface
     {
-        return new ReinitialisationMotDePasse($user, $expiresAt, $selector, $hashedToken);
+        return new ResetPasswordRequest($user, $expiresAt, $selector, $hashedToken);
     }
 }

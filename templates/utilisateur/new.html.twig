@@ -5,38 +5,155 @@
 {% block title %}Créer un nouvel utilisateur{% endblock %}
 
 {% block body %}
-    <h1>Créer un nouvel utilisateur</h1>
+    {# <h1>Créer un nouvel utilisateur</h1> #}
 
-    <form method="post">
-        <div>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inscription</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet"  href="{{ asset('style/style.inscription.css') }}" />
+
+    <link rel="stylesheet" href="css/style.inscription.css" />
+  </head>
+  <body>
+    <header class="header-container bg-blue">
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+          <!-- <a class="navbar-brand" href="#">Navbar</a> -->
+          <a href="/index.html"
+            ><img
+              href="#"
+              title="logo_livrosphère"
+              src="{{ asset('images/logo-livrosphere.png') }}"
+              height="80"
+          /></a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="#">À propos</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/categories.html">Catégories</a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" href="/index.html">Accueil</a>
+              </li>
+            </ul>
+        </div>
+      </nav>
+    </header>
+    <main class="">
+      <div class="container-form bg-white">
+        <form class="bloc-inscription bg-blue" method="post">
+          <div class="logo-titre">
+            <a href="/index.html"
+              ><img
+                src="{{ asset('images/logo-livrosphere.png') }}"
+                height="50px"
+                width="50px"
+            /></a>
+            <h5>INSCRIPTION</h5>
+          </div>
+
+          <div>
             <label for="nom">Nom</label>
-            <input type="text" id="nom" name="nom" required>
-        </div>
+            <input type="text" id="nom" name="nom" required />
 
-        <div>
             <label for="prenom">Prénom</label>
-            <input type="text" id="prenom" name="prenom" required>
-        </div>
+            <input type="text" id="prenom" name="prenom" required />
 
-        <div>
             <label for="pseudonyme">Pseudonyme</label>
-            <input type="text" id="pseudonyme" name="pseudonyme" required>
-        </div>
+            <input type="text" id="pseudonyme" name="pseudonyme" required />
 
-        <div>
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" required>
-        </div>
+            <input type="email" id="email" name="email" required />
 
-        <div>
             <label for="mot_de_passe">Mot de passe</label>
-            <input type="password" id="mot_de_passe" name="mot_de_passe" required>
-        </div>
+            <input
+              type="password"
+              id="mot_de_passe"
+              name="mot_de_passe"
+              required
+            />
+          </div>
+          <div class="btnU">
+            <button type="submit" class="btn btn-dark">M'inscrire</button>
+          </div>
+        </form>
+      </div>
+    </main>
 
-        <div>
-            <button type="submit">Créer</button>
-        </div>
-    </form>
+    <footer class="footer-container bg-blue">
+      <div class="boutons-header">
+        <a href="" class="text-white">À propos</a>
+        <a href="" class="text-white">Catégories</a>
+        <a href="" class="text-white">Accueil</a>
+        <a href="" class="text-white">S'inscrire</a>
+        <a href="" class="text-white">Se connecter</a>
+      </div>
 
-    <a href="{{ path('app_utilisateur') }}">Retour à la liste des utilisateurs</a>
+      <div class="logo-reseaux">
+        <a href="#" class="icon-reseaux"
+          ><i class="fa-brands fa-instagram"></i
+        ></a>
+        <a href="#" class="icon-reseaux"
+          ><i class="fa-brands fa-snapchat"></i
+        ></a>
+        <a href="#" class="icon-reseaux"
+          ><i class="fa-brands fa-facebook"></i
+        ></a>
+        <a href="#" class="icon-reseaux"
+          ><i class="fa-brands fa-x-twitter"></i
+        ></a>
+      </div>
+
+      <div class="pages-legales">
+        <a href="" class="text-white">Mentions légales</a>
+        <a href="" class="text-white">Conditions générales d'utilisation</a>
+      </div>
+
+      <div class="copyright text-white">
+        <p>© Livrosphère 2024</p>
+      </div>
+    </footer>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
+
+
+    {# <a href="{{ path('app_utilisateur') }}">Retour à la liste des utilisateurs</a> #}
 {% endblock %}
