@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Utilisateur;
+use App\Repository\LivreRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\UtilisateurRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,7 +46,7 @@ class UtilisateurController extends AbstractController
         ]);
     }
 
-    #[Route('/nouveau/utilisateur', name: 'utilisateur_new', methods: ['GET', 'POST'])]
+    #[Route('/inscription', name: 'utilisateur_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): Response
     {
         if ($request->isMethod('POST')) {
@@ -78,14 +79,12 @@ class UtilisateurController extends AbstractController
             $utilisateur->setEmail($request->request->get('email'));
             $em->flush();
 
-            return $this->redirectToRoute('app_utilisateur');
+            return $this->redirectToRoute('app_accueil');
         }
-
-        return $this->render('utilisateur/modification.html.twig', ['utilisateur' => $utilisateur]);
-
-        
+        return $this->render('utilisateur/modification.html.twig', ['utilisateur' => $utilisateur]);        
     }
 
+    
     #[Route('utilisateurs/{id}/supprimer', name: 'utilisateur_supprimer', methods: ['GET'])] // La route '/{id}/delete' permet de supprimer un utilisateur
     public function delete(Utilisateur $utilisateur, EntityManagerInterface $em): Response // La méthode delete() permet de supprimer un utilisateur existant
     {
@@ -93,5 +92,25 @@ class UtilisateurController extends AbstractController
         $em->flush(); // Sauvegarde la suppression dans la base de données
 
         return $this->redirectToRoute('app_utilisateur'); // Redirige vers la liste des utilisateurs après suppression
+    }
+    #[Route('/mon-espace', name: 'mon_espace', methods: ['GET'])]
+    public function monEspace(LivreRepository $livreRepository): Response
+    {
+        // Récupérer l'utilisateur actuellement connecté
+        $utilisateur = $this->getUser();
+
+        // Vérifier si l'utilisateur est connecté
+        if (!$utilisateur) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à votre espace.');
+            return $this->redirectToRoute('app_connexion'); // Redirection vers la page de connexion
+        }
+
+        // Récupérer les livres ajoutés par l'utilisateur
+        $livresAjoutes = $livreRepository->findBy(['utilisateur' => $utilisateur]);
+
+        // Rendre la vue du tableau de bord utilisateur
+        return $this->render('utilisateur/mon_espace.html.twig', [
+            'livres' => $livresAjoutes,
+        ]);
     }
 }

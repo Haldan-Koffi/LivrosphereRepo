@@ -11,39 +11,33 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/admin')]
+
 class CategorieController extends AbstractController
 {
-    #[Route('/categorie', name: 'app_categorie')]
+    #[Route('/categories', name: 'app_categorie')]
     public function index(CategorieRepository $categorieRepository): Response
     {
         $categories = $categorieRepository->findAll();
         return $this->render('categorie/liste_categorie.html.twig', ['categories' => $categories]);
     }
 
-    #[Route('/nouvelle/categorie', name: 'nouvelle_categorie', methods: ['GET', 'POST'])]
+    #[Route('admin/nouvelle/categorie', name: 'nouvelle_categorie', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $em): Response
     {
         if ($request->isMethod('POST')) {
             $categorie = new Categorie();
             $categorie->setNom($request->request->get('nom'));
 
-
             if ($request->files->get('couverture_categorie')) {
             $file = $request->files->get('couverture_categorie');
             $fileName = uniqid() . '.' . $file->guessExtension();
-
-            // Déplace le fichier dans le répertoire de téléchargement
             $file->move($this->getParameter('upload_directory'), $fileName);
-
-            // Définit le nom du fichier dans l'entité
             $categorie->setCouvertureCategorie($fileName);
         }
             $categorie->setDateCreation(new \DateTime());
-
             $em->persist($categorie);
             $em->flush();
-
+            
             return $this->redirectToRoute('app_categorie');
         }
 

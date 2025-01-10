@@ -79,7 +79,7 @@
           method="post"
           action="{{ path('app_connexion') }}"
         >
-          <div class="logo-titre">
+          <section class="logo-titre">
             <a href="/index.html"
               ><img
                 src="{{ asset('images/logo-livrosphere.png') }}"
@@ -87,26 +87,25 @@
                 width="50px"
             /></a>
             <h5>CONNEXION</h5>
-          </div>
-
-          <div>
+          </section>
+          <section>
             <label for="username">Email</label>
             <input type="email" id="username" name="_username" required />
 
             <label for="password">Mot de passe</label>
             <input type="password" id="password" name="_password" required />
-          </div>
-          <div class="btnU">
+          </section>
+          <section class="btnU">
             <button type="submit" class="btn btn-dark">Me connecter</button>
-            <div class="gestion-password">
+            <section class="gestion-password">
               <a class="text-white" href="/gestion_motdepasse.html"
                 ><p>Mot de passe oublié</p></a
               >
               <a class="text-white" href="/gestion_motdepasse.html"
                 ><p>Réinitialiser mon mot de passe</p></a
               >
-            </div>
-          </div>
+            </section>
+          </section>
         </form>
       </div>
     </main>

@@ -21,6 +21,9 @@ Encore
    * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
    */
   .addEntry("app", "./assets/app.js")
+  .addStyleEntry("style_acc", "./assets/styles/style_acc.scss")
+  .addStyleEntry("style_categorie", "./assets/styles/style_categorie.scss")
+  .addStyleEntry("style_aff_livres", "./assets/styles/style_aff_livres.scss")
 
   // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
   .splitEntryChunks()
@@ -44,17 +47,22 @@ Encore
 
   // configure Babel
   // .configureBabel((config) => {
-  //     config.plugins.push('@babel/a-babel-plugin');
+  //   config.plugins.push("@babel/a-babel-plugin");
   // })
 
-  // enables and configure @babel/preset-env polyfills
-  .configureBabelPresetEnv((config) => {
-    config.useBuiltIns = "usage";
-    config.corejs = "3.38";
+  .configureBabel((config) => {
+    config.plugins.push("@babel/plugin-proposal-class-properties");
   })
+
+  // enables and configure @babel/preset-env polyfills
+  // .configureBabelPresetEnv((config) => {
+  //   config.useBuiltIns = "usage";
+  //   config.corejs = "3.38";
+  // })
 
   // enables Sass/SCSS support
   .enableSassLoader();
+// .enableStimulusBridge("./assets/controllers.json");
 
 // uncomment if you use TypeScript
 //.enableTypeScriptLoader()

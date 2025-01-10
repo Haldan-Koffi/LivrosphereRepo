@@ -14,14 +14,14 @@ security:
       security: false
 
     api_login:
-      pattern: ^/api/login # Cette route serait spécifique aux API (connexion via API)
-      stateless: true # Indique que l'API ne maintient pas de session (stateless)
-      json_login: # Configuration pour une authentification JSON (souvent utilisée pour les APIs)
-        check_path: /api/login # La route où les données de connexion sont envoyées
+      pattern: ^/api/login
+      stateless: true
+      json_login:
+        check_path: /api/login
         username_path: email
         password_path: mot_de_passe
-        success_handler: lexik_jwt_authentication.handler.authentication_success # Si la connexion réussit, la réponse JSON sera gérée ici
-        failure_handler: lexik_jwt_authentication.handler.authentication_failure # Si la connexion échoue, la réponse JSON sera gérée ici
+        success_handler: lexik_jwt_authentication.handler.authentication_success
+        failure_handler: lexik_jwt_authentication.handler.authentication_failure
     api:
       pattern: ^/api
       stateless: true
@@ -33,7 +33,7 @@ security:
       form_login:
         login_path: app_connexion
         check_path: /connexion
-        default_target_path: /utilisateurs
+        default_target_path: app_accueil
       logout:
         path: /logout
 
@@ -53,6 +53,6 @@ security:
     - { path: ^/api, roles: ROLE_ADMIN }
     - { path: ^/admin, roles: ROLE_ADMIN }
     - { path: ^/connexion, roles: PUBLIC_ACCESS }
-    - { path: ^/nouveau/utilisateur, roles: PUBLIC_ACCESS }
-    - { path: ^/utilisateurs, roles: IS_AUTHENTICATED_FULLY }
-    - { path: ^/livre, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/inscription, roles: PUBLIC_ACCESS }
+    - { path: ^/utilisateurs, roles: ROLE_ADMIN }
+    - { path: ^/livres, roles: IS_AUTHENTICATED_FULLY }

@@ -12,6 +12,7 @@ class AccueilControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/accueil');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('p', "Page d'accueil");
+        $this->assertSelectorExists('.bouton-inscriptionc a.btn.btn-dark', "S'inscrire");
+        $this->assertSelectorExists('.bouton-inscriptionc a.btn.btn-dark', "Se connecter");
     }
 }

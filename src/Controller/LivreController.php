@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-// #[Route('/livre')]
+
 class LivreController extends AbstractController
 {
     #[Route('/livres', name: 'app_livre')]
@@ -48,7 +48,6 @@ class LivreController extends AbstractController
      public function indexapi(Request $request, LivreRepository $livreRepository, EntityManagerInterface $em): Response 
      {
         $livres = $livreRepository->findAll();
-
         $data = array_map(function ($livre){
             return [
                 'id' => $livre->getId(),
@@ -66,11 +65,8 @@ class LivreController extends AbstractController
                     'id' => $livre->getUtilisateur()->getId(),
                     'pseudonyme' => $livre->getUtilisateur()->getPseudonyme(),
                 ],
-
             ];
-
         }, $livres);
-
         return $this->json($data);
      }
 
@@ -136,30 +132,22 @@ class LivreController extends AbstractController
         ]);
     }
 
-
     #[Route('livre/nouveau', name: 'nouveau_livre', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $em, CategorieRepository $categorieRepository, Security $security): Response
-    {
-        
+    {   
         // Récupérer l'utilisateur connecté
-
         $user = $security->getUser();
             if ($user) {
             // Associer l'utilisateur connecté au livre
                 $livre->setUtilisateur($user);
             }
-        
         if ($request->isMethod('POST')) {
             $livre = new Livre();
             $livre->setTitre($request->request->get('titre'));
             $livre->setAuteur($request->request->get('auteur'));
             $livre->setAnneePublication(new \DateTime($request->request->get('annee_publication')));
             $livre->setResume($request->request->get('resume'));
-
             
-            
-
-
             if ($request->files->get('couverture')) {
             $file = $request->files->get('couverture');
             $fileName = uniqid() . '.' . $file->guessExtension();
@@ -186,12 +174,9 @@ class LivreController extends AbstractController
         }
 
         $categories = $categorieRepository->findAll();
-
-
         return $this->render('livre/nouveau_livre.html.twig', ['categories' => $categories]);
     }
 
-    
     #[Route('livre/{id}/modification', name: 'modification_livre', methods: ['GET', 'POST'])]
     public function edit(Livre $livre, Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
     {
@@ -246,9 +231,7 @@ class LivreController extends AbstractController
         ]);
     }
 
-
-
-     #[Route('livre/{id}/supprimer', name: 'suppression_livre', methods: ['GET'])]
+    #[Route('livre/{id}/supprimer', name: 'suppression_livre', methods: ['GET'])]
     public function delete(Livre $livre, EntityManagerInterface $em): Response
     {
         $em->remove($livre);

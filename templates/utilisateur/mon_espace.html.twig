@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Espace{% endblock %}
+
+{% block body %}
+    <h1><p>Hello {{ app.user.pseudonyme }} !</p></h1>
+
+
+    <!-- Message personnalisé -->
+    <p>Bienvenue dans votre espace</p>
+
+    <h2>Vos livres ajoutés</h2>
+    {% if livres is not empty %}
+        <ul>
+            {% for livre in livres %}
+                <li>
+                    <strong>{{ livre.titre }}</strong> par {{ livre.auteur }}
+                    (Ajouté le {{ livre.dateAjout|date('d/m/Y') }})
+                    
+                    <!-- Bouton pour accéder aux détails -->
+                    <a href="{{ path('livre_information', { id: livre.id }) }}" class="btn btn-primary">Voir les détails</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Vous n'avez ajouté aucun livre pour l'instant.</p>
+    {% endif %}
+{% endblock %}
