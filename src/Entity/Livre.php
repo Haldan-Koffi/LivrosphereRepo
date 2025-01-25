@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LivreRepository::class)]
 class Livre
@@ -17,15 +18,18 @@ class Livre
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le titre est obligatoire')]
     private ?string $titre = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: 'L\'auteur est obligatoire')]
     private ?string $auteur = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $annee_publication = null;
+    private ?\DateTimeInterface $date_publication = null;
 
-    #[ORM\Column(length: 500)]
+    #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message: 'Le résumé est obligatoire')]
     private ?string $resume = null;
 
     #[ORM\Column(length: 255)]
@@ -99,12 +103,12 @@ class Livre
 
     public function getAnneePublication(): ?\DateTimeInterface
     {
-        return $this->annee_publication;
+        return $this->date_publication;
     }
 
-    public function setAnneePublication(\DateTimeInterface $annee_publication): static
+    public function setAnneePublication(\DateTimeInterface $date_publication): static
     {
-        $this->annee_publication = $annee_publication;
+        $this->date_publication = $date_publication;
 
         return $this;
     }

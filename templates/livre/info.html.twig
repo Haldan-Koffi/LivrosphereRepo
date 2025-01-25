@@ -1,3 +1,5 @@
+{% extends 'base.html.twig' %}
+
 {% block stylesheets %}
 {{ encore_entry_link_tags('style_aff_livres') }}
 {% endblock %}
@@ -86,6 +88,9 @@
   </section>
 
   <!-- Section des détails du livre -->
+  <section class="informations-ajout">
+      <h3>Ajouté par {{ livre.utilisateur.pseudonyme }} le {{livre.dateAjout|date('d/m/Y H:i')}} </h3>
+  </section>
   <section class="ajout">
     <figure class="cover-ajout">
       {% if livre.couverture %}

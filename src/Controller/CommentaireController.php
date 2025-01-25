@@ -99,10 +99,9 @@ class CommentaireController extends AbstractController
     public function edit(Commentaire $commentaire, Request $request, EntityManagerInterface $em): Response
     {
         $currentUtilisateur = $this->getUser();
-        
+
         // Vérifier que l'utilisateur connecté est celui qui a créé le commentaire
         if ($commentaire->getUtilisateur() !== $currentUtilisateur) {
-            // Si ce n'est pas l'utilisateur qui a créé le commentaire, redirigez-le
             $this->addFlash('error', 'Vous ne pouvez pas modifier ce commentaire.');
             return $this->redirectToRoute('livre_information', ['id' => $commentaire->getLivre()->getId()]);
         }
@@ -112,9 +111,12 @@ class CommentaireController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Mettre à jour la date de modification du commentaire et changer le boolean
+            // Mettre à jour la date de commentaire avec la date actuelle
+            $commentaire->setDateCommentaire(new \DateTime());
+
+            // Indiquer que le commentaire a été modifié
             $commentaire->setModificationCommentaire(true);
-            
+
             // Sauvegarder les modifications
             $em->persist($commentaire);
             $em->flush();
@@ -132,6 +134,7 @@ class CommentaireController extends AbstractController
             'commentaire' => $commentaire
         ]);
     }
+
 
     #[Route('/commentaire/{id}/delete', name: 'delete_commentaire', methods: ['POST'])]
     public function delete(Commentaire $commentaire, EntityManagerInterface $em, Security $security): Response

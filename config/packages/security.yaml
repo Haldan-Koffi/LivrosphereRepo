@@ -56,3 +56,4 @@ security:
     - { path: ^/inscription, roles: PUBLIC_ACCESS }
     - { path: ^/utilisateurs, roles: ROLE_ADMIN }
     - { path: ^/livres, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/livre, roles: IS_AUTHENTICATED_FULLY }

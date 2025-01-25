@@ -134,48 +134,63 @@ class LivreController extends AbstractController
 
     #[Route('livre/nouveau', name: 'nouveau_livre', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $em, CategorieRepository $categorieRepository, Security $security): Response
-    {   
-        // Récupérer l'utilisateur connecté
+    {
+        // Vérifiez si l'utilisateur est connecté
         $user = $security->getUser();
-            if ($user) {
-            // Associer l'utilisateur connecté au livre
-                $livre->setUtilisateur($user);
-            }
+
+        // Initialisez l'objet Livre
+        $livre = new Livre();
+
         if ($request->isMethod('POST')) {
-            $livre = new Livre();
+            // Récupérez les données du formulaire
             $livre->setTitre($request->request->get('titre'));
             $livre->setAuteur($request->request->get('auteur'));
-            $livre->setAnneePublication(new \DateTime($request->request->get('annee_publication')));
+            $livre->setAnneePublication(new \DateTime($request->request->get('date_publication')));
             $livre->setResume($request->request->get('resume'));
-            
+
+            // Traitez l'image de couverture, si elle est fournie
             if ($request->files->get('couverture')) {
-            $file = $request->files->get('couverture');
-            $fileName = uniqid() . '.' . $file->guessExtension();
+                $file = $request->files->get('couverture');
+                $fileName = uniqid() . '.' . $file->guessExtension();
 
-            // Déplace le fichier dans le répertoire de téléchargement
-            $file->move($this->getParameter('upload_directory'), $fileName);
+                // Déplacez le fichier dans le répertoire de téléchargement
+                $file->move($this->getParameter('upload_directory'), $fileName);
 
-            // Définit le nom du fichier dans l'entité
-            $livre->setCouverture($fileName);
-        }
+                // Associez le nom du fichier au livre
+                $livre->setCouverture($fileName);
+            }
 
+            // Associez la catégorie au livre
             $categorieId = $request->request->get('categorie');
             $categorie = $categorieRepository->find($categorieId);
             if ($categorie) {
                 $livre->setCategorie($categorie);
             }
-            
+
+            // Associez l'utilisateur connecté au livre
+            if ($user) {
+                $livre->setUtilisateur($user);
+            }
+
+            // Définissez la date d'ajout
             $livre->setDateAjout(new \DateTime());
 
+            // Enregistrez le livre dans la base de données
             $em->persist($livre);
             $em->flush();
 
+            // Redirigez vers une autre page
             return $this->redirectToRoute('app_livre');
         }
 
+        // Récupérez toutes les catégories pour le formulaire
         $categories = $categorieRepository->findAll();
-        return $this->render('livre/nouveau_livre.html.twig', ['categories' => $categories]);
+
+        return $this->render('livre/nouveau_livre.html.twig', [
+            'categories' => $categories,
+        ]); 
     }
+
 
     #[Route('livre/{id}/modification', name: 'modification_livre', methods: ['GET', 'POST'])]
     public function edit(Livre $livre, Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
