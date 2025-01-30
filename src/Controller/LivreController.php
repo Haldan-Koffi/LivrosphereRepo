@@ -18,24 +18,20 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class LivreController extends AbstractController
 {
     #[Route('/livres', name: 'app_livre')]
     public function index(Request $request, LivreRepository $livreRepository, EntityManagerInterface $em): Response
     {
-        // Récupère la catégorie sélectionnée depuis la requête GET
         $categorieId = $request->query->get('categorie');
-
-        // Récupère toutes les catégories pour le menu déroulant
         $categories = $em->getRepository(Categorie::class)->findAll();
 
-        // Si une catégorie est sélectionnée, on filtre les livres par cette catégorie
         if ($categorieId) {
             $livres = $livreRepository->findBy(['categorie' => $categorieId]);
         } else {
-            // Sinon, on récupère tous les livres
             $livres = $livreRepository->findAll();
         }
 
@@ -45,7 +41,7 @@ class LivreController extends AbstractController
         ]);
     }
 
-     public function indexapi(Request $request, LivreRepository $livreRepository, EntityManagerInterface $em): Response 
+    public function indexapi(Request $request, LivreRepository $livreRepository, EntityManagerInterface $em): Response 
      {
         $livres = $livreRepository->findAll();
         $data = array_map(function ($livre){
@@ -68,43 +64,90 @@ class LivreController extends AbstractController
             ];
         }, $livres);
         return $this->json($data);
-     }
+    }
 
+    #[Route('livre/nouveau', name: 'nouveau_livre', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $em, CategorieRepository $categorieRepository, Security $security): Response
+    {
+        try {
+            $user = $security->getUser();
+
+            if (!$user) {
+                throw new AccessDeniedHttpException('Vous devez être connecté pour ajouter un nouveau livre.');
+            }
+
+            $livre = new Livre();
+
+            if ($request->isMethod('POST')) {
+                $livre->setTitre($request->request->get('titre'));
+                $livre->setAuteur($request->request->get('auteur'));
+                $livre->setAnneePublication(new \DateTime($request->request->get('date_publication')));
+                $livre->setResume($request->request->get('resume'));
+
+                if ($request->files->get('couverture')) {
+                    $file = $request->files->get('couverture');
+                    $fileName = uniqid() . '.' . $file->guessExtension();
+
+                    $file->move($this->getParameter('upload_directory'), $fileName);
+                    $livre->setCouverture($fileName);
+                }
+
+                $categorieId = $request->request->get('categorie');
+                $categorie = $categorieRepository->find($categorieId);
+
+                if (!$categorie) {
+                    throw new NotFoundHttpException('Catégorie non trouvée.');
+                }
+
+                $livre->setCategorie($categorie);
+                $livre->setUtilisateur($user);
+                $livre->setDateAjout(new \DateTime());
+
+                $em->persist($livre);
+                $em->flush();
+
+                return $this->redirectToRoute('app_livre');
+            }
+
+            $categories = $categorieRepository->findAll();
+
+            return $this->render('livre/nouveau_livre.html.twig', [
+                'categories' => $categories,
+            ]);
+        } catch (AccessDeniedHttpException $e) {
+            throw new AccessDeniedHttpException('Accès refusé.', $e);
+        } catch (\Exception $e) {
+            throw new \RuntimeException('Erreur lors de la création du livre : ' . $e->getMessage());
+        }
+    } 
 
     #[Route('/livre/{id}/info', name: 'livre_information', methods: ['GET', 'POST'])]
     public function show(Livre $livre, Request $request, EntityManagerInterface $em): Response
     {
-        // Vérification de l'authentification de l'utilisateur
-        $currentUtilisateur = $this->getUser();
-        if (!$currentUtilisateur) {
-            return $this->redirectToRoute('app_connexion'); // Redirection vers la page de connexion
+        if (!$livre) {
+            throw new NotFoundHttpException("Le livre demandé n'existe pas.");
         }
 
-        // Récupérer les commentaires liés au livre
-        $commentaires = $livre->getCommentaires();
+        $currentUtilisateur = $this->getUser();
+        if (!$currentUtilisateur) {
+            return $this->redirectToRoute('app_connexion');
+        }
 
-        // Vérifier si l'utilisateur a déjà liké ce livre
+        $commentaires = $livre->getCommentaires();
         $interactionJaimeRepo = $em->getRepository(InteractionJaime::class);
         $utilisateurALike = $interactionJaimeRepo->findByUserAndLivre($currentUtilisateur, $livre);
-
-        // Compter le nombre de likes pour le livre
         $nombreLikes = $interactionJaimeRepo->count(['livre' => $livre]);
-
-        //les recommandations
 
         $recommandationRepo = $em->getRepository(Recommandation::class);
         $nombreRecommandations = $recommandationRepo->count(['livre' => $livre]);
         $utilisateurARecommande = $recommandationRepo->findByUserAndLivre($currentUtilisateur, $livre);
 
-
-        // Gérer l'ajout de commentaires
         $commentaire = new Commentaire();
         $commentaire->setLivre($livre);
         $commentaire->setUtilisateur($currentUtilisateur);
         $commentaire->setDateCommentaire(new \DateTime());
         $commentaire->setModificationCommentaire(false);
 
-        // Créer le formulaire de commentaire
         $form = $this->createForm(CommentaireType::class, $commentaire);
         $form->handleRequest($request);
 
@@ -112,12 +155,9 @@ class LivreController extends AbstractController
             $em->persist($commentaire);
             $em->flush();
 
-            // Lier le commentaire au livre
             $livre->addCommentaire($commentaire);
-
             $this->addFlash('success', 'Votre commentaire a été ajouté avec succès.');
 
-            // Redirection pour éviter la double soumission
             return $this->redirectToRoute('livre_information', ['id' => $livre->getId()]);
         }
 
@@ -125,158 +165,83 @@ class LivreController extends AbstractController
             'livre' => $livre,
             'commentaires' => $commentaires,
             'form' => $form->createView(),
-            'utilisateurALike' => $utilisateurALike !== null, // Passer si l'utilisateur a liké ou non
-            'nombreLikes' => $nombreLikes, // Passer le nombre de likes
+            'utilisateurALike' => $utilisateurALike !== null,
+            'nombreLikes' => $nombreLikes,
             'nombreRecommandations' => $nombreRecommandations,
             'utilisateurARecommande' => $utilisateurARecommande,
         ]);
     }
 
-    #[Route('livre/nouveau', name: 'nouveau_livre', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $em, CategorieRepository $categorieRepository, Security $security): Response
-    {
-        // Vérifiez si l'utilisateur est connecté
-        $user = $security->getUser();
-
-        // Initialisez l'objet Livre
-        $livre = new Livre();
-
-        if ($request->isMethod('POST')) {
-            // Récupérez les données du formulaire
-            $livre->setTitre($request->request->get('titre'));
-            $livre->setAuteur($request->request->get('auteur'));
-            $livre->setAnneePublication(new \DateTime($request->request->get('date_publication')));
-            $livre->setResume($request->request->get('resume'));
-
-            // Traitez l'image de couverture, si elle est fournie
-            if ($request->files->get('couverture')) {
-                $file = $request->files->get('couverture');
-                $fileName = uniqid() . '.' . $file->guessExtension();
-
-                // Déplacez le fichier dans le répertoire de téléchargement
-                $file->move($this->getParameter('upload_directory'), $fileName);
-
-                // Associez le nom du fichier au livre
-                $livre->setCouverture($fileName);
-            }
-
-            // Associez la catégorie au livre
-            $categorieId = $request->request->get('categorie');
-            $categorie = $categorieRepository->find($categorieId);
-            if ($categorie) {
-                $livre->setCategorie($categorie);
-            }
-
-            // Associez l'utilisateur connecté au livre
-            if ($user) {
-                $livre->setUtilisateur($user);
-            }
-
-            // Définissez la date d'ajout
-            $livre->setDateAjout(new \DateTime());
-
-            // Enregistrez le livre dans la base de données
-            $em->persist($livre);
-            $em->flush();
-
-            // Redirigez vers une autre page
-            return $this->redirectToRoute('app_livre');
-        }
-
-        // Récupérez toutes les catégories pour le formulaire
-        $categories = $categorieRepository->findAll();
-
-        return $this->render('livre/nouveau_livre.html.twig', [
-            'categories' => $categories,
-        ]); 
-    }
-
-
-    #[Route('livre/{id}/modification', name: 'modification_livre', methods: ['GET', 'POST'])]
-    public function edit(Livre $livre, Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
-    {
-        // Récupération de toutes les catégories pour le menu déroulant
-        $categories = $em->getRepository(Categorie::class)->findAll();
-
-        if ($request->isMethod('POST')) {
-            // Mise à jour des informations du livre
-            $livre->setTitre($request->request->get('titre'));
-            $livre->setAuteur($request->request->get('auteur'));
-            $livre->setAnneePublication(new \DateTime($request->request->get('annee_publication')));
-            $livre->setResume($request->request->get('resume'));
-
-            // Gestion de la couverture du livre
-            $nouvelleCouverture = $request->files->get('couverture');
-            if ($nouvelleCouverture) {
-                // Gérer l'upload du fichier
-                $originalFilename = pathinfo($nouvelleCouverture->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $nouvelleCouverture->guessExtension();
-
-                // Déplacer le fichier dans le dossier 'uploads'
-                try {
-                    $nouvelleCouverture->move(
-                        $this->getParameter('uploads_directory'), // Dossier de destination
-                        $newFilename
-                    );
-                    $livre->setCouverture($newFilename);
-                } catch (FileException $e) {
-                    // Gérer l'erreur de téléchargement si nécessaire
-                    $this->addFlash('error', 'Erreur lors de l\'upload de la couverture.');
-                }
-            }
-
-            // Mise à jour de la catégorie sélectionnée
-            $categorie = $em->getRepository(Categorie::class)->find($request->request->get('categorie'));
-            if ($categorie) {
-                $livre->setCategorie($categorie);
-            }
-
-            // Sauvegarde des modifications dans la base de données
-            $em->flush();
-
-            // Rediriger vers la liste des livres après modification
-            return $this->redirectToRoute('app_livre');
-        }
-
-        // Rendu du formulaire de modification
-        return $this->render('livre/modification.html.twig', [
-            'livre' => $livre,
-            'categories' => $categories, // Passer la liste des catégories à la vue
-        ]);
-    }
-
     #[Route('livre/{id}/supprimer', name: 'suppression_livre', methods: ['GET'])]
-    public function delete(Livre $livre, EntityManagerInterface $em): Response
+    public function delete(Livre $livre = null, EntityManagerInterface $em): Response
     {
-        $em->remove($livre);
-        $em->flush();
+        if (!$livre) {
+            throw new NotFoundHttpException("Le livre que vous tentez de supprimer n'existe pas.");
+        }
+
+        try {
+            $em->remove($livre);
+            $em->flush();
+            $this->addFlash('success', 'Livre supprimé avec succès.');
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Une erreur est survenue lors de la suppression du livre.');
+        }
 
         return $this->redirectToRoute('app_livre');
     }
 
-    public function deleteapi(Livre $livre, EntityManagerInterface $em): JsonResponse
+    public function deleteapi(Livre $livre = null, EntityManagerInterface $em): JsonResponse
     {
-        // Supprimer les commentaires associés
-        foreach ($livre->getCommentaires() as $commentaire) {
-            $em->remove($commentaire);
+        if (!$livre) {
+            throw new NotFoundHttpException("Le livre que vous tentez de supprimer n'existe pas.");
         }
 
-        // Supprimer les recommandations associées
-        foreach ($livre->getRecommandations() as $recommandation) {
-            $em->remove($recommandation);
+        try {
+            foreach ($livre->getCommentaires() as $commentaire) {
+                $em->remove($commentaire);
+            }
+
+            foreach ($livre->getRecommandations() as $recommandation) {
+                $em->remove($recommandation);
+            }
+
+            foreach ($livre->getInteractionJaimes() as $interactionJaime) {
+                $em->remove($interactionJaime);
+            }
+
+            $em->remove($livre);
+            $em->flush();
+
+            return new JsonResponse(['status' => 'Livre et ses commentaires supprimés'], JsonResponse::HTTP_OK);
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => 'Erreur lors de la suppression du livre'], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-        // Supprimer les interactions j'aimes associées
-        foreach ($livre->getInteractionJaimes() as $interactionJaime) {
-            $em->remove($interactionJaime);
-        }
-
-        // Supprimer le livre
-        $em->remove($livre);
-        $em->flush();
-
-        return new JsonResponse(['status' => 'Livre et ses commentaires supprimés'], JsonResponse::HTTP_OK);
     }
 
+    #[Route('livre/{id}/modification', name: 'modification_livre', methods: ['GET', 'POST'])]
+    public function edit(Livre $livre = null, Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
+    {
+        if (!$livre) {
+            throw new NotFoundHttpException("Le livre que vous tentez de modifier n'existe pas.");
+        }
+
+        if ($request->isMethod('POST')) {
+            $nouvelleCouverture = $request->files->get('couverture');
+            if ($nouvelleCouverture) {
+                try {
+                    $newFilename = $slugger->slug(pathinfo($nouvelleCouverture->getClientOriginalName(), PATHINFO_FILENAME)) 
+                        . '-' . uniqid() . '.' . $nouvelleCouverture->guessExtension();
+                    $nouvelleCouverture->move($this->getParameter('uploads_directory'), $newFilename);
+                    $livre->setCouverture($newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash('error', 'Erreur lors de l\'upload de la couverture.');
+                }
+            }
+
+            $em->flush();
+            return $this->redirectToRoute('app_livre');
+        }
+
+        return $this->render('livre/modification.html.twig', ['livre' => $livre]);
+    }
 }
