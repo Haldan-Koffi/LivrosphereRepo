@@ -2,10 +2,77 @@
 
 {% block title %}Mon Espace{% endblock %}
 
+{% block stylesheets %}
+{{ encore_entry_link_tags('style_espace_utilisateur') }}
+{% endblock %}
+
+{% block javascripts %}
+{{ encore_entry_script_tags('app') }}
+{% endblock %}
+
 {% block body %}
-    <h1><p>Hello {{ app.user.pseudonyme }} !</p></h1>
 
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tableau de bord</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+GB+S:ital,wght@0,100..400;1,100..400&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <main>
+      <section class="menu_utilisateur">
+        <section class="notification-menu_utilisateur">
+          <section class="profile-buttons">
+            <a
+              class="nav-link dropdown-toggle text-black"
+              href="#"
+              id="navbarDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              {{ app.user.pseudonyme }}
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li>
+                <a class="dropdown-item" href="#">Se deconnecter</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="#"
+                  >Modifier mon mot de passe</a
+                >
+              </li>
+              
+              <li><hr class="dropdown-divider" /></li>
+              <li>
+                <a class="dropdown-item" href="#">Supprimer mon compte</a>
+              </li>
+            </ul>
+          </section>
+        </section>
+      </section>
+      <section class="titre-livrosphere">
+      </section>
+
+      <section class="coverLivre-categories" id="categoriesContainer"></section>
+    </main>
+
+        <h1><p>Hello {{ app.user.pseudonyme }} !</p></h1>
     <!-- Message personnalisé -->
     <p>Bienvenue dans votre espace</p>
 
@@ -25,4 +92,34 @@
     {% else %}
         <p>Vous n'avez ajouté aucun livre pour l'instant.</p>
     {% endif %}
+
+<footer class="footer-container">
+      <nav class="buttons-footer">
+        <a href="/Accueil.html">Accueil</a>
+        <a href="/categories.html">Catégories</a>
+        <a href="/categories.html">Nos livres</a>
+        <a href="/categories.html">Mon espace</a>
+        <a href="">À propos</a>
+        <a href="/inscription.html">S'inscrire</a>
+        <a href="/connexion.html">Se connecter</a>
+      </nav>
+
+      <section class="logo-reseaux">
+        <a href="#" class="icon-reseaux"
+          ><i class="fa-brands fa-instagram"></i
+        ></a>
+      </section>
+
+      <section class="pages-legales">
+        <a href="">Mentions légales</a>
+        <a href="">Conditions générales d'utilisation</a>
+      </section>
+
+      <section class="copyright">
+        <p>© Livrosphère 2024</p>
+      </section>
+    </footer>
+  </body>
+</html>
+
 {% endblock %}

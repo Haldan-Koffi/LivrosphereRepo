@@ -1,7 +1,3 @@
-@import "~bootstrap/dist/css/bootstrap.min.css";
-
-@import "bootstrap/scss/bootstrap";
-
 :root {
   --main-bg-color-white: white;
   --main-bg-color-black: black;
@@ -45,7 +41,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--main-bg-color-blue);
 }
 
 .search-bouton {
@@ -66,22 +61,16 @@
   padding-top: 20px;
 }
 
-.buttons-footer {
+.boutons-header {
   display: flex;
   flex-direction: column;
   margin-left: 250px;
-  .selection {
-    color: var(--main-bg-color-white);
-  }
 }
 
 .pages-legales {
   display: flex;
   justify-content: center;
   gap: 50px;
-  .selection {
-    color: var(--main-bg-color-white);
-  }
 }
 
 .logo-reseaux {
@@ -101,68 +90,36 @@
   margin-right: 50px;
 }
 
-.category-brand {
-  background-image: url("../images/image2_brand2.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  height: 300px;
-  margin-left: 50px;
-  margin-right: 50px;
-  padding-top: 50px;
-  padding-left: 20px;
-
-  h1 {
-    padding: 5px;
-    background-color: var(--main-bg-color-black);
-    color: var(--main-bg-color-white);
-  }
-
-  h3 {
-    color: var(--main-bg-color-black);
-    /* background-color: var(--main-bg-color-black); */
-    background-color: var(--main-bg-color-gray100);
-    width: fit-content;
-    padding: 5px;
-  }
-}
-
-.coverLivre-categories {
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: 50px;
-  margin-left: 50px;
-  margin-right: 50px;
-  margin-bottom: 80px;
-  gap: 89px;
-}
-
-.card-body {
-  display: flex !important;
-  justify-content: space-between;
-  flex-direction: column;
-}
-
-.card {
-  border-color: black;
-  display: flex !important;
-  justify-content: space-between;
-  flex-direction: column;
-}
-
-.card-title {
-  height: 80px;
-}
-
-.textbrand2 h2 {
+.container-form {
   display: flex;
   justify-content: center;
-  margin-top: 50px;
-  margin-bottom: 50px;
+  padding: 200px;
+  /* border: 1px solid black; */
 }
 
-.nav-link {
-  color: white;
+.bloc-inscription {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+  padding: 20px;
+  width: 50%;
+  border-radius: 2%;
+  box-shadow: black 0px 0px 20px;
+  h5 {
+    color: var(--main-bg-color-white);
+  }
+}
+
+.bloc-inscription label {
+  margin-top: 15px;
+  color: var(--main-bg-color-white);
+}
+
+.bloc-inscription input {
+  border: 1px solid var(--main-bg-color-gray);
+  border-radius: 5px;
+  outline: none;
+  box-shadow: var(--main-bg-color-black) 0px 0.5px 0px;
 }
 
 .btn {
@@ -189,6 +146,10 @@
   margin-top: 21px;
 }
 
+.gestion-password {
+  padding-top: 5%;
+}
+
 .icon-reseaux {
   color: var(--main-bg-color-white);
   font-size: 25px;
@@ -201,5 +162,58 @@
 .copyright {
   margin-top: 20px;
   margin-left: 200px;
-  color: var(--main-bg-color-white);
+}
+
+@media (min-width: 100px) and (max-width: 1024px) {
+  .header-container img {
+    height: 50px;
+  }
+
+  /* Centrer les éléments dans la barre de navigation */
+  .navbar-nav {
+    text-align: center;
+    margin: 0 auto;
+  }
+  .bloc-inscription {
+    width: auto;
+    height: auto;
+  }
+  .pages-legales {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 17px;
+  }
+
+  .logo-reseaux {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 80px;
+  }
+
+  .boutons-header {
+    padding-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Centrer le copyright */
+  .copyright {
+    display: flex;
+    justify-content: center;
+    margin-left: 0px;
+    p {
+      display: flex;
+      justify-content: start;
+    }
+  }
+
+  #navbarSupportedContent {
+    background-color: white;
+    /* collapse navbar-collapse {
+      background-color: white;
+    } */
+  }
 }

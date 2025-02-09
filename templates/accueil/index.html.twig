@@ -1,5 +1,5 @@
 {% block stylesheets %}
-{{ encore_entry_link_tags('style_acc') }}
+{{ encore_entry_link_tags('style_accueil') }}
 {% endblock %}
 
 {% block javascripts %}
@@ -31,7 +31,7 @@
     <header class="header-container">
       <nav class="navbar navbar-expand-lg navbar-light">
         <section class="container-fluid">
-          <a href="/Accueil.html">
+          <a href="{{ path('app_accueil')}}">
             <img
               title="logo_livrosphère"
               src="{{ asset('images/logo-livrosphere.png') }}"
@@ -65,7 +65,7 @@
                 <a class="nav-link" href="{{ path('mon_espace') }}">Mon espace</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">À propos</a>
+                <a class="nav-link" href="{{path('app_a_propos')}}">À propos</a>
               </li>
             </ul>
           </section>
@@ -123,31 +123,18 @@
             ></button>
           </section>
           <section class="carousel-inner">
-            <section class="carousel-item active">
-              <img
-                src="{{asset('images/captive_tome2.jpg')}}"
-                class="d-block w-100"
-                alt="Captive Tome 2"
-                height="400"
-              />
+    {% if derniersLivres is not empty %}
+        {% for livre in derniersLivres %}
+            <section class="carousel-item {% if loop.first %}active{% endif %}">
+                <img src="{{ asset('uploads/' ~ livre.couverture) }}" class="d-block w-100" alt="{{ livre.titre }}" height="400" />
             </section>
-            <section class="carousel-item active">
-              <img
-                src="{{asset('images/bonnes_habitudes.jpg')}}"
-                class="d-block w-100"
-                alt="Captive Tome 2"
-                height="400"
-              />
-            </section>
-            <section class="carousel-item">
-              <img
-                src="{{asset('images/best-seller.jpg')}}"
-                class="d-block w-100"
-                alt="Best Seller"
-                height="400"
-              />
-            </section>
-          </section>
+        {% endfor %}
+    {% else %}
+        <p>Aucune image disponible pour le carrousel.</p>
+    {% endif %}
+</section>
+
+
           <button
             class="carousel-control-prev"
             type="button"
@@ -169,54 +156,23 @@
         </section>
       </section>
       <section class="cover-livre">
+  {% if derniersLivres is not empty %}
+    {% for livre in derniersLivres %}
         <article class="card h-100" style="width: 18rem">
-          <img
-            src="{{asset('images/captive_tome2.jpg')}}"
-            class="card-img-top"
-            alt="Captive tome 2"
-            height="400"
-          />
-          <section class="card-body">
-            <p class="card-text">
-              Le tome 2 de "Captive" continue de suivre les aventures de Tessa
-              après les événements ...
-            </p>
-            <a href="#" class="btn btn-dark">DÉCOUVRIR ></a>
-          </section>
+            <img src="{{ asset('uploads/' ~ livre.couverture) }}" class="card-img-top" alt="{{ livre.titre }}" height="400" />
+            <section class="card-body">
+                <h5 class="card-title">{{ livre.titre }}</h5>
+                <p class="card-text text-truncate" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                    {{ livre.resume }}
+                </p>
+                <a href="{{ path('livre_information', { id: livre.id }) }}" class="btn btn-dark">DÉCOUVRIR ></a>
+            </section>
         </article>
-        <article class="card h-100" style="width: 18rem">
-          <img
-            src="{{asset('images/bonnes_habitudes.jpg')}}"
-            class="card-img-top"
-            alt="Bonnes habitudes"
-            height="400"
-          />
-          <section class="card-body">
-            <p class="card-text">
-              Ce livre explore les mécanismes scientifiques derrière la
-              formation et le changement des habitudes.
-            </p>
-            <a href="/livres.html" class="btn btn-dark">DÉCOUVRIR ></a>
-          </section>
-        </article>
-
-        <article class="card h-100" style="width: 18rem">
-          <img
-            src="{{asset('images/best-seller.jpg')}}"
-            class="card-img-top"
-            alt="Best seller"
-            height="400"
-          />
-          <section class="card-body">
-            <p class="card-text">
-              Ce roman explore les coulisses de la création d'un livre à succès
-              et les défis que rencontrent ...
-            </p>
-            <a href="#" class="btn btn-dark">DÉCOUVRIR ></a>
-          </section>
-        </article>
-      </section>
-
+    {% endfor %}
+    {% else %}
+    <p>Aucun livre disponible pour le moment.</p>
+    {% endif %}
+</section>
       <section class="message2-homepage">
         <h3>UNE COMMUNAUTÉ PEU COMMUNE</h3>
         <h4 class="text-gray">Rejoignez une communauté de lecteur engagé</h4>
@@ -238,6 +194,8 @@
       <nav class="boutons-footer">
         <a href="/Accueil.html">Accueil</a>
         <a href="/categories.html">Catégories</a>
+        <a href="/categories.html">Nos livres</a>
+        <a href="/categories.html">Mon espace</a>
         <a href="">À propos</a>
         <a href="/inscription.html">S'inscrire</a>
         <a href="/connexion.html">Se connecter</a>
@@ -247,7 +205,7 @@
         <a href="#" class="icon-reseaux"
           ><i class="fa-brands fa-instagram"></i
         ></a>
-        <a href="#" class="icon-reseaux"
+        {# <a href="#" class="icon-reseaux"
           ><i class="fa-brands fa-snapchat"></i
         ></a>
         <a href="#" class="icon-reseaux"
@@ -255,16 +213,16 @@
         ></a>
         <a href="#" class="icon-reseaux"
           ><i class="fa-brands fa-x-twitter"></i
-        ></a>
+        ></a> #}
       </section>
 
       <nav class="pages-legales">
-        <a href="">Mentions légales</a>
-        <a href="">Conditions générales d'utilisation</a>
+        <a href="{{ path('app_mentions_legales') }}">Mentions légales</a>
+        <a href="{{ path('app_cgu') }}">Conditions générales d'utilisation</a>
       </nav>
 
       <section class="copyright">
-        <p>© Livrosphère 2024</p>
+        <p>© Livrosphère 2025</p>
       </section>
     </footer>
   </body>

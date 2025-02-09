@@ -1,10 +1,12 @@
 {% block stylesheets %}
-{{ encore_entry_link_tags('style_categorie') }}
+{{ encore_entry_link_tags('style_liste_livre') }}
 {% endblock %}
 
 {% block javascripts %}
 {{ encore_entry_script_tags('app') }}
 {% endblock %}
+
+{% extends "base.html.twig" %}
 
 {% block body %}
 <html lang="en">
@@ -29,141 +31,118 @@
     />
   </head>
   <body>
-    <header class="header-container bg-blue">
-      <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-          <a href="{{ path('app_accueil') }}"
-            ><img
-              href="#"
-              title="logo_livrosphère"
-              src="{{ asset('images/logo-livrosphere.png') }}"
-              height="80"
-          /></a>
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="#">À propos</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Catégories</a>
-              </li>
-
-              <li class="nav-item">
-                <a class="nav-link" href="/index.html">Accueil</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-    </header>
-
-    <h1>Liste des Livres</h1>
+<main>
+    <h1>
+        {% if app.request.query.get('categorie') %}
+            Livres de la catégorie sélectionnée
+        {% else %}
+            Tous les livres
+        {% endif %}
+    </h1>
 
     <!-- Formulaire de filtre par catégorie -->
-    <form method="get">
-        <div>
+    <form id="filterForm">
+        <section>
             <label for="categorie">Filtrer par catégorie :</label>
             <select id="categorie" name="categorie">
                 <option value="">Toutes les catégories</option>
                 {% for categorie in categories %}
-                    <option value="{{ categorie.id }}" {% if categorie.id == app.request.query.get('categorie') %}selected{% endif %}>
+                    <option value="{{ categorie.id }}" {% if app.request.query.get('categorie') == categorie.id %}selected{% endif %}>
                         {{ categorie.nom }}
                     </option>
                 {% endfor %}
             </select>
-        </div>
-        <button type="submit">Filtrer</button>
+        </section>
     </form>
 
-    <h1>Liste des livres</h1>
+    <!-- Conteneur des livres -->
+    <section id="livresContainer" class="d-flex flex-wrap gap-3"></section>
 
-<!-- Conteneur pour les cartes des livres -->
-<div id="livresContainer" class="d-flex flex-wrap gap-3"></div>
+    <!-- Script AJAX pour le filtrage des livres -->
+    <script>
+        async function chargerLivres(categorieId = "") {
+            let url = `/livres/filtrer?categorie=${categorieId}`;
+            
+            try {
+                let response = await fetch(url);
+                let livres = await response.json();
 
-<!-- Génération des données en JSON -->
-<script>
-    const livres = [
-        {% for livre in livres %}
-        {
-            title: "{{ livre.titre|e('js') }}",
-            auteur: "{{ livre.auteur|e('js') }}",
-            anneePublication: "{{ livre.anneePublication|date('Y') }}",
-            description: `{{ livre.resume|e('js') }}`,
-            image: "{{ asset('uploads/' ~ livre.couverture) }}",
-            link: "{{ path('livre_information', {id: livre.id}) }}"
-        },
-        {% endfor %}
-    ];
-</script>
+                let livresContainer = document.getElementById("livresContainer");
+                livresContainer.innerHTML = ""; // Vide la liste actuelle
 
-<!-- Script pour le rendu dynamique des livres -->
-<script>
-    const livresContainer = document.getElementById("livresContainer");
+                if (livres.length === 0) {
+                    livresContainer.innerHTML = "<p>Aucun livre trouvé pour cette catégorie.</p>";
+                    return;
+                }
 
-    livres.forEach((livre) => {
-        const card = document.createElement("div");
-        card.className = "card h-100";
-        card.style.width = "18rem";
+                livres.forEach((livre) => {
+                    let card = document.createElement("div");
+                    card.className = "card h-100";
+                    card.style.width = "18rem";
 
-        card.innerHTML = `
-            <img src="${livre.image}" class="card-img-top" alt="${livre.title}" style="height: 300px; object-fit: cover;" />
-            <div class="card-body">
-                <h5 class="card-title">${livre.title}</h5>
-                <p class="card-text text-truncate" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">${livre.description}</p>
-                <p class="card-text"><small class="text-muted">Par ${livre.auteur}, ${livre.anneePublication}</small></p>
-                <a href="${livre.link}" class="btn btn-primary">Voir les détails</a>
-            </div>
-        `;
+                    card.innerHTML = `
+                        <img src="/uploads/${livre.couverture}" class="card-img-top" alt="${livre.titre}" style="height: 300px; object-fit: cover;" />
+                        <div class="card-body">
+                            <h5 class="card-title">${livre.titre}</h5>
+                            <p class="card-text text-truncate" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                                ${livre.resume || 'Pas de résumé disponible'}
+                            </p>
+                            <p class="card-text"><small class="text-muted">Par ${livre.auteur}, ${livre.anneePublication || 'Date inconnue'}</small></p>
+                            <a href="/livre/${livre.id}/info" class="btn btn-primary">Voir les détails</a>
+                        </div>
+                    `;
 
-        livresContainer.appendChild(card);
-    });
-</script>
+                    livresContainer.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error("Erreur lors du filtrage des livres :", error);
+                document.getElementById("livresContainer").innerHTML = "<p>Une erreur est survenue lors du chargement.</p>";
+            }
+        }
+
+        // Écouteur d'événement sur le changement de catégorie
+        document.getElementById("categorie").addEventListener("change", function () {
+            chargerLivres(this.value);
+        });
+
+        // Charger les livres au chargement initial en fonction de l'URL
+        document.addEventListener("DOMContentLoaded", () => {
+            let categorieId = new URLSearchParams(window.location.search).get("categorie") || "";
+            document.getElementById("categorie").value = categorieId;
+            chargerLivres(categorieId);
+        });
+    </script>
 
     <a href="{{ path('nouveau_livre') }}">Ajouter un nouveau livre</a>
 
+</main>
 
-<footer class="footer-container bg-blue">
-      <div class="boutons-header">
-        <a href="" class="text-white">À propos</a>
-        <a href="" class="text-white">Catégories</a>
-        <a href="" class="text-white">Accueil</a>
-        <a href="" class="text-white">S'inscrire</a>
-        <a href="" class="text-white">Se connecter</a>
-      </div>
 
-      <div class="logo-reseaux">
+<footer class="footer-container">
+      <section class="buttons-footer">
+        <a href="" class="selection">Accueil</a>
+        <a href="" class="selection">Catégories</a>
+        <a href="" class="selection">Nos livres</a>
+        <a href="" class="selection">Mon espace</a>
+        <a href="" class="selection">À propos</a>
+        <a href="" class="selection">S'inscrire</a>
+        <a href="" class="selection">Se connecter</a>
+      </section>
+
+      <section class="logo-reseaux">
         <a href="#" class="icon-reseaux"
           ><i class="fa-brands fa-instagram"></i
         ></a>
-        <a href="#" class="icon-reseaux"
-          ><i class="fa-brands fa-snapchat"></i
-        ></a>
-        <a href="#" class="icon-reseaux"
-          ><i class="fa-brands fa-facebook"></i
-        ></a>
-        <a href="#" class="icon-reseaux"
-          ><i class="fa-brands fa-x-twitter"></i
-        ></a>
-      </div>
+      </section>
 
-      <div class="pages-legales">
-        <a href="" class="text-white">Mentions légales</a>
-        <a href="" class="text-white">Conditions générales d'utilisation</a>
-      </div>
+      <section class="pages-legales">
+        <a href="" class="selection">Mentions légales</a>
+        <a href="" class="selection">Conditions générales d'utilisation</a>
+      </section>
 
-      <div class="copyright text-white">
-        <p>© Livrosphère 2024</p>
-      </div>
-    </footer>
+      <section class="copyright">
+        <p>© Livrosphère 2025</p>
+      </section>
+</footer>
 {% endblock %}

@@ -41,6 +41,30 @@ class LivreController extends AbstractController
         ]);
     }
 
+    #[Route('/livres/filtrer', name: 'filtrer_livres', methods: ['GET'])]
+    public function filtrerLivres(Request $request, LivreRepository $livreRepository): JsonResponse
+    {
+        $categorieId = $request->query->get('categorie');
+
+        if ($categorieId) {
+            $livres = $livreRepository->findBy(['categorie' => $categorieId]);
+        } else {
+            $livres = $livreRepository->findAll();
+        }
+
+        $data = array_map(function ($livre) {
+            return [
+                'id' => $livre->getId(),
+                'titre' => $livre->getTitre(),
+                'auteur' => $livre->getAuteur(),
+                'couverture' => $livre->getCouverture(),
+            ];
+        }, $livres);
+
+        return new JsonResponse($data);
+    }
+
+
     public function indexapi(Request $request, LivreRepository $livreRepository, EntityManagerInterface $em): Response 
      {
         $livres = $livreRepository->findAll();
@@ -121,7 +145,7 @@ class LivreController extends AbstractController
         }
     } 
 
-    #[Route('/livre/{id}/info', name: 'livre_information', methods: ['GET', 'POST'])]
+    #[Route('livre/{id}/info', name: 'livre_information', methods: ['GET', 'POST'])]
     public function show(Livre $livre, Request $request, EntityManagerInterface $em): Response
     {
         if (!$livre) {

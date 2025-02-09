@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
 class UtilisateurController extends AbstractController
@@ -46,27 +47,45 @@ class UtilisateurController extends AbstractController
         ]);
     }
 
+    // Injecte le service ValidatorInterface dans la méthode
     #[Route('/inscription', name: 'utilisateur_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): Response
+    public function new(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator): Response
     {
-        if ($request->isMethod('POST')) {
-            $utilisateur = new Utilisateur();
-            $utilisateur->setNom($request->request->get('nom'));
-            $utilisateur->setPrenom($request->request->get('prenom'));
-            $utilisateur->setEmail($request->request->get('email'));
-            $utilisateur->setPseudonyme($request->request->get('pseudonyme'));
-            $formMotDePasse = $request->request->get('mot_de_passe');
-            $hashedMotDePasse = $passwordHasher->hashPassword($utilisateur, $formMotDePasse);
-            $utilisateur->setMotDePasse($hashedMotDePasse);
-            $utilisateur->setRoles(['ROLE_USER']);
+    if ($request->isMethod('POST')) {
+        $utilisateur = new Utilisateur();
+        $utilisateur->setNom($request->request->get('nom'));
+        $utilisateur->setPrenom($request->request->get('prenom'));
+        $utilisateur->setEmail($request->request->get('email'));
+        $utilisateur->setPseudonyme($request->request->get('pseudonyme'));
 
-            $em->persist($utilisateur);
-            $em->flush();
-
-            return $this->redirectToRoute('app_accueil');
+        $formMotDePasse = $request->request->get('mot_de_passe');
+        
+        // Vérifie les contraintes de validation
+        $utilisateur->setMotDePasse($formMotDePasse);
+        $errors = $validator->validate($utilisateur);
+        
+        if (count($errors) > 0) {
+            $errorMessages = [];
+            foreach ($errors as $error) {
+                $errorMessages[] = $error->getMessage();
+            }
+            return $this->render('utilisateur/new.html.twig', [
+                'errors' => $errorMessages
+            ]);
         }
 
-        return $this->render('utilisateur/new.html.twig');
+        // Hashage et persistance si validation OK
+        $hashedMotDePasse = $passwordHasher->hashPassword($utilisateur, $formMotDePasse);
+        $utilisateur->setMotDePasse($hashedMotDePasse);
+        $utilisateur->setRoles(['ROLE_USER']);
+
+        $em->persist($utilisateur);
+        $em->flush();
+
+        return $this->redirectToRoute('app_accueil');
+    }
+
+    return $this->render('utilisateur/new.html.twig');
     }
 
     #[Route('utilisateur/{id}/modification', name: 'utilisateur_modification', methods: ['GET', 'POST'])]

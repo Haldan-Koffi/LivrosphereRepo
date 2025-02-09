@@ -39,6 +39,10 @@
   color: var(--main-bg-color-gray);
 }
 
+body {
+  font-family: "Montserrat", "Roboto", "Poppins";
+}
+
 .header-container {
   border-bottom: 1px solid;
   height: 80px;
@@ -53,24 +57,20 @@
   align-content: center;
 }
 
-/* .btn {
-  display: flex;
-  align-items: center;
-} */
-
 .footer-container {
   margin-top: 50px;
   display: flex;
   flex-direction: column;
   padding-bottom: 20px;
   padding-top: 20px;
+  background-color: var(--main-bg-color-blue);
 }
 
 .buttons-footer {
   display: flex;
   flex-direction: column;
   margin-left: 250px;
-  .selection {
+  a {
     color: var(--main-bg-color-white);
   }
 }
@@ -79,7 +79,7 @@
   display: flex;
   justify-content: center;
   gap: 50px;
-  .selection {
+  a {
     color: var(--main-bg-color-white);
   }
 }
@@ -101,40 +101,63 @@
   margin-right: 50px;
 }
 
-.category-brand {
-  background-image: url("../images/image2_brand2.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  height: 300px;
-  margin-left: 50px;
-  margin-right: 50px;
-  padding-top: 50px;
-  padding-left: 20px;
+.icon-reseaux {
+  color: var(--main-bg-color-white);
+  font-size: 25px;
+}
 
-  h1 {
-    padding: 5px;
-    background-color: var(--main-bg-color-black);
+.navbar {
+  width: 100%;
+}
+
+.nav-link {
+  color: var(--main-bg-color-white);
+}
+
+.copyright {
+  margin-top: 20px;
+  margin-left: 200px;
+  p {
     color: var(--main-bg-color-white);
   }
+}
 
-  h3 {
-    color: var(--main-bg-color-black);
-    /* background-color: var(--main-bg-color-black); */
-    background-color: var(--main-bg-color-gray100);
-    width: fit-content;
-    padding: 5px;
+.bouton {
+  border-radius: 15%;
+}
+
+.ajout {
+  display: flex;
+  justify-content: space-between;
+  gap: 170px;
+  margin-top: 50px;
+  margin-left: 50px;
+  margin-right: 50px;
+  border-bottom: 1px solid;
+  padding-bottom: 50px;
+
+  figure {
+    margin-top: 35px;
   }
+}
+.titre-livrosphere {
+  margin: 30px;
+}
+
+.ajout-livre {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
 }
 
 .coverLivre-categories {
   display: flex;
   flex-wrap: wrap;
   margin-top: 50px;
-  margin-left: 50px;
-  margin-right: 50px;
+  justify-content: center;
+
   margin-bottom: 80px;
-  gap: 89px;
+  gap: 50px;
 }
 
 .card-body {
@@ -151,55 +174,51 @@
 }
 
 .card-title {
-  height: 80px;
+  height: 89px;
 }
 
-.textbrand2 h2 {
+.nav-item {
+  display: flex !important;
+  justify-content: end !important;
+
+  dropdown {
+    display: flex !important;
+    justify-content: end !important;
+  }
+}
+
+.profile-buttons {
   display: flex;
-  justify-content: center;
-  margin-top: 50px;
-  margin-bottom: 50px;
+  justify-content: end;
+  gap: 10px;
+  margin-right: 50px;
+  /* align-items: center; */
 }
 
-.nav-link {
+.menu_utilisateur {
+  background-color: var(--main-bg-color-gray100);
+  width: 100%;
+  padding-top: 20px;
+}
+
+.notification-menu_utilisateur {
+  display: flex;
+  justify-content: end;
+  gap: 30px;
+}
+
+.notification-btn {
+  position: relative;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background-color: red;
   color: white;
-}
-
-.btn {
-  width: 100%;
-}
-
-.btnU {
-  width: 100%;
-  margin-top: 30px;
-}
-
-.bar-footer {
-  background-color: var(--main-bg-color-black);
-  padding: 50px;
-}
-
-.logo-titre {
-  display: flex;
-  justify-content: start;
-  gap: 145px;
-}
-
-.logo-titre h5 {
-  margin-top: 21px;
-}
-
-.icon-reseaux {
-  color: var(--main-bg-color-white);
-  font-size: 25px;
-}
-
-.navbar {
-  width: 100%;
-}
-
-.copyright {
-  margin-top: 20px;
-  margin-left: 200px;
-  color: var(--main-bg-color-white);
+  border-radius: 50%;
+  padding: 0.25em 0.6em;
+  font-size: 0.8rem;
+  font-weight: bold;
 }

@@ -31,7 +31,7 @@
     />
   </head>
   <body>
-    <header class="header-container bg-blue">
+    <header class="header-container">
       <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
           <a href="{{ path('app_accueil') }}"
@@ -62,7 +62,7 @@
               </li>
 
               <li class="nav-item">
-                <a class="nav-link" href="/index.html">Accueil</a>
+                <a class="nav-link" href="{{ path('app_accueil') }}">Accueil</a>
               </li>
             </ul>
           </div>
@@ -71,97 +71,82 @@
     </header>
 
     <main>
-      <div class="titre-livrosphere">
+      <section class="titre-livrosphere">
         <h2>LIVROSPHÈRE</h2>
-      </div>
+      </section>
 
-      <div class="category-brand">
-        <h1>
-          <span class="bg-black text-white"
-            >Explorez notre univers littéraire</span
-          >
-        </h1>
+      <section class="category-brand">
+        <h1>Explorez notre univers littéraire</h1>
         <h3>Il y en a pour chaque lecteur</h3>
-      </div>
+      </section>
 
-      <div class="textbrand2">
+      <section class="textbrand2">
         <h2>
           Chaque catégorie, une aventure littéraire, trouvez votre prochaine
           lecture !
         </h2>
-      </div>
-
-
+      </section>
     <h1>Liste des catégories</h1>
-    
-    <!-- Conteneur où les cartes seront ajoutées -->
-    <div id="categoriesContainer" class="d-flex flex-wrap gap-3"></div>
-
-    <!-- Génération des données en JSON -->
+    <!-- Conteneur des cartes -->
+    <section id="categoriesContainer" class="d-flex flex-wrap gap-3"></section>
+    <!-- Création des données -->
     <script>
-        const categories = [
-            {% for categorie in categories %}
-            {
-                title: "{{ categorie.nom|e('js') }}",
-                image: "{{ asset('uploads/' ~ categorie.couvertureCategorie) }}",
-            },
-            {% endfor %}
-        ];
-    </script>
+    const categories = [
+    {% for categorie in categories %}
+    {
+        id: {{ categorie.id }},
+        title: "{{ categorie.nom|e('js') }}",
+        image: "{{ asset('uploads/' ~ categorie.couvertureCategorie) }}",
+        link: "{{ path('app_livre', {'categorie': categorie.id}) }}"
+    },
+    {% endfor %}
+];
 
-    <!-- Script pour le rendu dynamique -->
-    <script>
-        const container = document.getElementById("categoriesContainer");
+const container = document.getElementById("categoriesContainer");
 
-        categories.forEach((category) => {
-            const card = document.createElement("div");
-            card.className = "card h-100";
-            card.style.width = "18rem";
+categories.forEach((category) => {
+    const card = document.createElement("div");
+    card.className = "card h-100";
+    card.style.width = "18rem";
 
-            card.innerHTML = `
-                <img src="${category.image}" class="card-img-top" alt="${category.title}" height="400" />
-                <div class="card-body h-100">
-                    <h5 class="card-title">${category.title}</h5>
-                    <a href="${category.link}" class="btn btn-dark">DÉCOUVRIR ></a>
-                </div>
-            `;
+    card.innerHTML = `
+        <img src="${category.image}" class="card-img-top" alt="${category.title}" height="400" />
+        <div class="card-body h-100">
+            <h5 class="card-title">${category.title}</h5>
+            <a href="${category.link}" class="btn btn-primary">Découvrir</a>
+        </div>
+    `;
 
-            container.appendChild(card);
-        });
-    </script>
+    container.appendChild(card);
+});
+
+</script>
 
     </main>
     <footer class="footer-container bg-blue">
-      <div class="boutons-header">
-        <a href="" class="text-white">À propos</a>
-        <a href="" class="text-white">Catégories</a>
-        <a href="" class="text-white">Accueil</a>
-        <a href="" class="text-white">S'inscrire</a>
-        <a href="" class="text-white">Se connecter</a>
-      </div>
+      <section class="buttons-footer">
+        <a href="{{ path('app_accueil') }}" class="selection">Accueil</a>
+        <a href="" class="selection">Catégories</a>
+        <a href="" class="selection">Nos livres</a>
+        <a href="" class="selection">Mon espace</a>
+        <a href="" class="selection">À propos</a>
+        <a href="" class="selection">S'inscrire</a>
+        <a href="" class="selection">Se connecter</a>
+      </section>
 
-      <div class="logo-reseaux">
+      <section class="logo-reseaux">
         <a href="#" class="icon-reseaux"
           ><i class="fa-brands fa-instagram"></i
         ></a>
-        <a href="#" class="icon-reseaux"
-          ><i class="fa-brands fa-snapchat"></i
-        ></a>
-        <a href="#" class="icon-reseaux"
-          ><i class="fa-brands fa-facebook"></i
-        ></a>
-        <a href="#" class="icon-reseaux"
-          ><i class="fa-brands fa-x-twitter"></i
-        ></a>
-      </div>
+      </section>
 
-      <div class="pages-legales">
-        <a href="" class="text-white">Mentions légales</a>
-        <a href="" class="text-white">Conditions générales d'utilisation</a>
-      </div>
+      <section class="pages-legales">
+        <a href="" class="selection">Mentions légales</a>
+        <a href="" class="selection">Conditions générales d'utilisation</a>
+      </section>
 
-      <div class="copyright text-white">
-        <p>© Livrosphère 2024</p>
-      </div>
+      <section class="copyright">
+        <p>© Livrosphère 2025</p>
+      </section>
     </footer>
 {% endblock %}
