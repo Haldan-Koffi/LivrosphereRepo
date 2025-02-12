@@ -20,6 +20,8 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
 
 class LivreController extends AbstractController
 {
@@ -58,11 +60,14 @@ class LivreController extends AbstractController
                 'titre' => $livre->getTitre(),
                 'auteur' => $livre->getAuteur(),
                 'couverture' => $livre->getCouverture(),
+                'resume' => $livre->getResume(),  // Ajoute le résumé
+                'annee_publication' => $livre->getAnneePublication() ? $livre->getAnneePublication()->format('Y-m-d') : null, // Format de la date de publication
             ];
         }, $livres);
 
         return new JsonResponse($data);
     }
+
 
 
     public function indexapi(Request $request, LivreRepository $livreRepository, EntityManagerInterface $em): Response 
@@ -90,35 +95,45 @@ class LivreController extends AbstractController
         return $this->json($data);
     }
 
-    #[Route('livre/nouveau', name: 'nouveau_livre', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $em, CategorieRepository $categorieRepository, Security $security): Response
+    #[Route('/livre/nouveau', name: 'nouveau_livre', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $em, CategorieRepository $categorieRepository, Security $security, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         try {
+            // Vérifier si l'utilisateur est connecté
             $user = $security->getUser();
-
             if (!$user) {
                 throw new AccessDeniedHttpException('Vous devez être connecté pour ajouter un nouveau livre.');
             }
 
-            $livre = new Livre();
+            // Générer un token CSRF pour la création de livre
+            $csrfToken = $csrfTokenManager->getToken('nouveau_livre')->getValue();
 
+            // Si la méthode est POST, vérifier et traiter le formulaire
             if ($request->isMethod('POST')) {
+                // Récupérer et vérifier le token CSRF
+                $token = $request->request->get('_csrf_token');
+                if (!$csrfTokenManager->isTokenValid(new CsrfToken('nouveau_livre', $token))) {
+                    throw new AccessDeniedHttpException('Le token CSRF est invalide.');
+                }
+
+                // Traitement du formulaire
+                $livre = new Livre();
                 $livre->setTitre($request->request->get('titre'));
                 $livre->setAuteur($request->request->get('auteur'));
-                $livre->setAnneePublication(new \DateTime($request->request->get('date_publication')));
+                $livre->setAnneePublication(new \DateTime($request->request->get('annee_publication')));
                 $livre->setResume($request->request->get('resume'));
 
+                // Gestion de la couverture
                 if ($request->files->get('couverture')) {
                     $file = $request->files->get('couverture');
                     $fileName = uniqid() . '.' . $file->guessExtension();
-
                     $file->move($this->getParameter('upload_directory'), $fileName);
                     $livre->setCouverture($fileName);
                 }
 
+                // Récupération de la catégorie
                 $categorieId = $request->request->get('categorie');
                 $categorie = $categorieRepository->find($categorieId);
-
                 if (!$categorie) {
                     throw new NotFoundHttpException('Catégorie non trouvée.');
                 }
@@ -127,16 +142,20 @@ class LivreController extends AbstractController
                 $livre->setUtilisateur($user);
                 $livre->setDateAjout(new \DateTime());
 
+                // Enregistrer le livre dans la base de données
                 $em->persist($livre);
                 $em->flush();
 
                 return $this->redirectToRoute('app_livre');
             }
 
+            // Récupération des catégories
             $categories = $categorieRepository->findAll();
 
+            // Rendre la vue avec le token CSRF
             return $this->render('livre/nouveau_livre.html.twig', [
                 'categories' => $categories,
+                'csrf_token' => $csrfToken, // Passe le token CSRF à la vue
             ]);
         } catch (AccessDeniedHttpException $e) {
             throw new AccessDeniedHttpException('Accès refusé.', $e);
@@ -145,7 +164,7 @@ class LivreController extends AbstractController
         }
     } 
 
-    #[Route('livre/{id}/info', name: 'livre_information', methods: ['GET', 'POST'])]
+    #[Route('/livre/{id}/info', name: 'livre_information', methods: ['GET', 'POST'])]
     public function show(Livre $livre, Request $request, EntityManagerInterface $em): Response
     {
         if (!$livre) {
@@ -196,7 +215,7 @@ class LivreController extends AbstractController
         ]);
     }
 
-    #[Route('livre/{id}/supprimer', name: 'suppression_livre', methods: ['GET'])]
+    #[Route('/livre/{id}/supprimer', name: 'suppression_livre', methods: ['GET'])]
     public function delete(Livre $livre = null, EntityManagerInterface $em): Response
     {
         if (!$livre) {
@@ -242,30 +261,60 @@ class LivreController extends AbstractController
         }
     }
 
-    #[Route('livre/{id}/modification', name: 'modification_livre', methods: ['GET', 'POST'])]
-    public function edit(Livre $livre = null, Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
-    {
-        if (!$livre) {
-            throw new NotFoundHttpException("Le livre que vous tentez de modifier n'existe pas.");
-        }
-
-        if ($request->isMethod('POST')) {
-            $nouvelleCouverture = $request->files->get('couverture');
-            if ($nouvelleCouverture) {
-                try {
-                    $newFilename = $slugger->slug(pathinfo($nouvelleCouverture->getClientOriginalName(), PATHINFO_FILENAME)) 
-                        . '-' . uniqid() . '.' . $nouvelleCouverture->guessExtension();
-                    $nouvelleCouverture->move($this->getParameter('uploads_directory'), $newFilename);
-                    $livre->setCouverture($newFilename);
-                } catch (FileException $e) {
-                    $this->addFlash('error', 'Erreur lors de l\'upload de la couverture.');
-                }
-            }
-
-            $em->flush();
-            return $this->redirectToRoute('app_livre');
-        }
-
-        return $this->render('livre/modification.html.twig', ['livre' => $livre]);
+    #[Route('/livre/{id}/modification', name: 'modification_livre', methods: ['GET', 'POST'])]
+public function edit(Livre $livre, Request $request, EntityManagerInterface $em, SluggerInterface $slugger, CsrfTokenManagerInterface $csrfTokenManager, CategorieRepository $categorieRepository): Response
+{
+    // Vérification si le livre existe
+    if (!$livre) {
+        throw new NotFoundHttpException("Le livre que vous tentez de modifier n'existe pas.");
     }
+
+    // Récupérer toutes les catégories pour le formulaire
+    $categories = $categorieRepository->findAll();
+
+    // Générer un token CSRF pour la modification de livre
+    $csrfToken = $csrfTokenManager->getToken('modification_livre_' . $livre->getId())->getValue();
+
+    if ($request->isMethod('POST')) {
+        // Vérification du token CSRF
+        $token = $request->request->get('_csrf_token');
+        if (!$csrfTokenManager->isTokenValid(new CsrfToken('modification_livre_' . $livre->getId(), $token))) {
+            throw new AccessDeniedHttpException('Le token CSRF est invalide.');
+        }
+
+        // Traitement de la modification du livre
+        $livre->setTitre($request->request->get('titre'));
+        $livre->setAuteur($request->request->get('auteur'));
+        $livre->setAnneePublication(new \DateTime($request->request->get('annee_publication')));
+        $livre->setResume($request->request->get('resume'));
+
+        // Gestion de la nouvelle couverture
+        $nouvelleCouverture = $request->files->get('couverture');
+        if ($nouvelleCouverture) {
+            try {
+                $newFilename = $slugger->slug(pathinfo($nouvelleCouverture->getClientOriginalName(), PATHINFO_FILENAME))
+                    . '-' . uniqid() . '.' . $nouvelleCouverture->guessExtension();
+                $nouvelleCouverture->move($this->getParameter('uploads_directory'), $newFilename);
+                $livre->setCouverture($newFilename);
+            } catch (FileException $e) {
+                $this->addFlash('error', 'Erreur lors de l\'upload de la couverture.');
+            }
+        }
+
+        // Enregistrer les modifications dans la base de données
+        $em->flush();
+
+        // Rediriger vers la liste des livres après modification
+        return $this->redirectToRoute('app_livre');
+    }
+
+    // Rendre la vue avec le livre, le token CSRF et les catégories
+    return $this->render('livre/modification.html.twig', [
+        'livre' => $livre,
+        'csrf_token' => $csrfToken, // Passe le token CSRF à la vue
+        'categories' => $categories, // Passe les catégories à la vue
+    ]);
+}
+
+
 }

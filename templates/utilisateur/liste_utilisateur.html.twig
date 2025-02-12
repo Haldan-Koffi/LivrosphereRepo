@@ -1,10 +1,38 @@
-{# templates/utilisateur/index.html.twig #}
-
 {% extends 'base.html.twig' %}
+{% block stylesheets %}
+{{ encore_entry_link_tags('style_accueil') }}
+{% endblock %}
+
+{% block javascripts %}
+{{ encore_entry_script_tags('app') }}
+{% endblock %}
 
 {% block title %}Liste des utilisateurs{% endblock %}
 
 {% block body %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page d'accueil</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+GB+S:ital,wght@0,100..400;1,100..400&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+  <main>
 
     <h2>Liste des utilisateurs :</h2>
     <ul>
@@ -16,4 +44,35 @@
             <li>Aucun utilisateur trouvé.</li>
         {% endfor %}
     </ul>
+
+    </main>
+    
+    <footer class="footer-container">
+      <nav class="boutons-footer">
+        <a href="{{ path('app_accueil')}}">Accueil</a>
+        <a href="{{ path('app_categorie')}}">Catégories</a>
+        <a href="{{ path('app_livre')}}">Nos livres</a>
+        <a href="{{ path('mon_espace')}}">Mon espace</a>
+        <a href="{{ path('app_a_propos')}}">À propos</a>
+        <a href="{{ path('utilisateur_new')}}">S'inscrire</a>
+        <a href="{{ path('app_connexion')}}">Se connecter</a>
+      </nav>
+
+      <section class="logo-reseaux">
+        <a href="#" class="icon-reseaux"
+          ><i class="fa-brands fa-instagram"></i
+        ></a>
+      </section>
+
+      <nav class="pages-legales">
+        <a href="{{ path('app_mentions_legales') }}">Mentions légales</a>
+        <a href="{{ path('app_cgu') }}">Conditions générales d'utilisation</a>
+      </nav>
+
+      <section class="copyright">
+        <p>© Livrosphère 2025</p>
+      </section>
+    </footer>
+  </body>
+</html>
 {% endblock %}

@@ -53,7 +53,7 @@
           <section class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link" href="/Accueil.html">Accueil</a>
+                <a class="nav-link" href="{{ path('app_accueil')}}">Accueil</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{{ path('app_categorie') }}">Catégories</a>
@@ -192,28 +192,19 @@
 
     <footer class="footer-container">
       <nav class="boutons-footer">
-        <a href="/Accueil.html">Accueil</a>
-        <a href="/categories.html">Catégories</a>
-        <a href="/categories.html">Nos livres</a>
-        <a href="/categories.html">Mon espace</a>
-        <a href="">À propos</a>
-        <a href="/inscription.html">S'inscrire</a>
-        <a href="/connexion.html">Se connecter</a>
+        <a href="{{ path('app_accueil')}}">Accueil</a>
+        <a href="{{ path('app_categorie')}}">Catégories</a>
+        <a href="{{ path('app_livre')}}">Nos livres</a>
+        <a href="{{ path('mon_espace')}}">Mon espace</a>
+        <a href="{{ path('app_a_propos')}}">À propos</a>
+        <a href="{{ path('utilisateur_new')}}">S'inscrire</a>
+        <a href="{{ path('app_connexion')}}">Se connecter</a>
       </nav>
 
       <section class="logo-reseaux">
         <a href="#" class="icon-reseaux"
           ><i class="fa-brands fa-instagram"></i
         ></a>
-        {# <a href="#" class="icon-reseaux"
-          ><i class="fa-brands fa-snapchat"></i
-        ></a>
-        <a href="#" class="icon-reseaux"
-          ><i class="fa-brands fa-facebook"></i
-        ></a>
-        <a href="#" class="icon-reseaux"
-          ><i class="fa-brands fa-x-twitter"></i
-        ></a> #}
       </section>
 
       <nav class="pages-legales">

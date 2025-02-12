@@ -61,10 +61,20 @@
   padding-top: 20px;
 }
 
-.boutons-header {
+// .boutons-header {
+//   display: flex;
+//   flex-direction: column;
+//   margin-left: 250px;
+// }
+
+.boutons-footer {
   display: flex;
   flex-direction: column;
   margin-left: 250px;
+  a {
+    color: var(--main-bg-color-white);
+    width: 10%;
+  }
 }
 
 .pages-legales {

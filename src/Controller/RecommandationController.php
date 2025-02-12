@@ -9,10 +9,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/livre')]
+
 class RecommandationController extends AbstractController
 {
-    #[Route('/{id}/toggle-recommandation', name: 'toggle_recommandation', methods: ['POST'])]
+    #[Route('/livre/{id}/toggle-recommandation', name: 'toggle_recommandation', methods: ['POST'])]
     public function toggleRecommandation(
         Livre $livre,
         RecommandationService $recommandationService

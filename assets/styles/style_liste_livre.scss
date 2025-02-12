@@ -39,6 +39,20 @@
   color: var(--main-bg-color-gray);
 }
 
+main {
+  min-height: 100vh; /* Assure que le main occupe au moins la hauteur de l'écran */
+  display: flex;
+  flex-direction: column;
+}
+
+footer {
+  margin-top: auto; /* Pousse le footer au bas */
+}
+
+body {
+  font-family: "Montserrat", "Roboto", "Poppins";
+}
+
 .header-container {
   border-bottom: 1px solid;
   height: 80px;
@@ -48,15 +62,41 @@
   background-color: var(--main-bg-color-blue);
 }
 
-.search-bouton {
+#livresContainer {
   display: flex;
-  align-content: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 50px;
+  margin-bottom: 20px;
+  // margin-left: 150px;
+  // margin-right: 50px;
+  // margin-bottom: 80px;
+  // padding-left: 50px;
+  width: auto;
 }
 
-/* .btn {
-  display: flex;
-  align-items: center;
-} */
+.text_categorie {
+  text-align: center;
+  h1 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+}
+
+.creation_bouton {
+  form {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+  }
+
+  button {
+    display: flex;
+    justify-content: center;
+    width: 18%;
+  }
+}
 
 .footer-container {
   margin-top: 50px;
@@ -67,20 +107,20 @@
   background-color: var(--main-bg-color-blue);
 }
 
-.buttons-footer {
+.boutons-footer {
   display: flex;
   flex-direction: column;
   margin-left: 250px;
-  .selection {
+  a {
     color: var(--main-bg-color-white);
+    width: 10%;
   }
 }
-
 .pages-legales {
   display: flex;
   justify-content: center;
   gap: 50px;
-  .selection {
+  a {
     color: var(--main-bg-color-white);
   }
 }
@@ -203,4 +243,135 @@
   margin-top: 20px;
   margin-left: 200px;
   color: var(--main-bg-color-white);
+}
+
+// modification livre
+
+.titre {
+  h1 {
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 30px;
+  }
+}
+
+.form_modification {
+  display: flex;
+  justify-content: center;
+  margin-left: 20px;
+  input {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  button {
+    margin-top: 20px;
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    margin-left: 100px;
+  }
+}
+
+.btn {
+  display: flex;
+  justify-content: center;
+}
+
+/* Mobile portrait */
+@media (max-width: 576px) {
+  .creation_bouton {
+    button {
+      width: 50%;
+    }
+  }
+
+  #categoriesContainer {
+    gap: 30px;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding-left: 20px;
+    width: auto;
+  }
+
+  .textbrand2 h2 {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    margin-left: 10%;
+  }
+
+  .category-brand {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 200px;
+  }
+
+  .category-brand h1 {
+    width: 80%;
+    font-size: 1.5em;
+  }
+
+  .category-brand h3 {
+    font-size: 1em;
+    width: fit-content;
+    padding: 3px;
+  }
+
+  .card-body {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .card {
+    margin-bottom: 20px;
+  }
+
+  .navbar-nav {
+    text-align: center;
+  }
+
+  .navbar-toggler {
+    display: block;
+  }
+
+  .btnU {
+    margin-top: 10px;
+    width: 100%;
+  }
+
+  .boutons-footer {
+    display: flex;
+    flex-direction: column;
+    margin-left: 25px;
+    a {
+      color: var(--main-bg-color-white);
+      width: 35%;
+    }
+  }
+
+  .pages-legales {
+    display: flex;
+    justify-content: center;
+    margin-left: 10px;
+    gap: 30px;
+    a {
+      color: var(--main-bg-color-white);
+    }
+  }
+
+  .container-fluid {
+    flex-wrap: inherit;
+    justify-content: space-between;
+    background-color: var(--main-bg-color-blue);
+  }
+
+  .navbar-collapse {
+    align-items: center;
+    flex-basis: 100%;
+    flex-grow: 1;
+    margin-top: 200px;
+  }
 }

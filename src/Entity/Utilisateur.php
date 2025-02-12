@@ -33,12 +33,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le mot de passe est obligatoire.")]
     #[Assert\Length(
-    min: 12,
+    min: 5,
     minMessage: "Le mot de passe doit contenir au moins 12 caractères."
     )]
     #[Assert\Regex(
     pattern: "/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_])(?=(?:.*?\s+){11,}).{12,}$/",
-    message: "Le mot de passe doit contenir au moins une majuscule, un chiffre, un caractère spécial et douze mots."
+    message: "Le mot de passe doit contenir au moins une majuscule, un chiffre, un caractère spécial."
     )]
     private ?string $mot_de_passe = null;
 

@@ -2,9 +2,27 @@
 
 {% block title %}Créer un nouveau Livre{% endblock %}
 
-{% block body %}
-    <h1>Créer un nouveau Livre</h1>
+{% block stylesheets %}
+    {{ encore_entry_link_tags('style_liste_livre') }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+          integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
+{% endblock %}
 
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
+
+{% block body %}
+<main>
+  <section class="titre">
+    <h1>Ajouter un nouveau livre</h1>
+  </section>
+
+  <section class="form_modification">
     <form method="post" enctype="multipart/form-data">
         <div>
             <label for="titre">Titre :</label>
@@ -33,13 +51,43 @@
 
         <div>
             <label for="categorie">Catégorie :</label>
-            <select id="categorie" name="categorie">
+            <select id="categorie" name="categorie" required>
                 {% for categorie in categories %}
                     <option value="{{ categorie.id }}">{{ categorie.nom }}</option>
                 {% endfor %}
             </select>
         </div>
 
-        <button type="submit">Créer le livre</button>
+        <!-- Ajout du champ CSRF -->
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+
+        <button type="submit" class="btn btn-dark">Ajouter</button>
     </form>
+  </section>
+</main>
+
+<footer class="footer-container">
+    <nav class="boutons-footer">
+        <a href="{{ path('app_accueil')}}">Accueil</a>
+        <a href="{{ path('app_categorie')}}">Catégories</a>
+        <a href="{{ path('app_livre')}}">Nos livres</a>
+        <a href="{{ path('mon_espace')}}">Mon espace</a>
+        <a href="{{ path('app_a_propos')}}">À propos</a>
+        <a href="{{ path('utilisateur_new')}}">S'inscrire</a>
+        <a href="{{ path('app_connexion')}}">Se connecter</a>
+    </nav>
+
+    <section class="logo-reseaux">
+        <a href="#" class="icon-reseaux"><i class="fa-brands fa-instagram"></i></a>
+    </section>
+
+    <nav class="pages-legales">
+        <a href="{{ path('app_mentions_legales') }}">Mentions légales</a>
+        <a href="{{ path('app_cgu') }}">Conditions générales d'utilisation</a>
+    </nav>
+
+    <section class="copyright">
+        <p>© Livrosphère 2025</p>
+    </section>
+</footer>
 {% endblock %}

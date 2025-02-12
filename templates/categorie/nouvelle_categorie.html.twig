@@ -1,21 +1,84 @@
 {% extends 'base.html.twig' %}
+{% block stylesheets %}
+{{ encore_entry_link_tags('style_accueil') }}
+{% endblock %}
+
+{% block javascripts %}
+{{ encore_entry_script_tags('app') }}
+{% endblock %}
 
 {% block title %}Créer une Nouvelle Catégorie{% endblock %}
 
 {% block body %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page d'accueil</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+GB+S:ital,wght@0,100..400;1,100..400&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <main>
     <h1>Nouvelle Catégorie</h1>
 
     <form method="post" action="{{ path('nouvelle_categorie') }}" enctype="multipart/form-data">
-        <div>
-            <label for="nom">Nom de la catégorie :</label>
-            <input type="text" id="nom" name="nom" required>
-        </div>
+    <div>
+        <label for="nom">Nom de la catégorie :</label>
+        <input type="text" id="nom" name="nom" required>
+    </div>
 
-        <div>
-            <label for="couverture_categorie">Couverture de la catégorie :</label>
-            <input type="file" id="couverture_categorie" name="couverture_categorie" accept="image/*" required>
-        </div>
+    <div>
+        <label for="couverture_categorie">Couverture de la catégorie :</label>
+        <input type="file" id="couverture_categorie" name="couverture_categorie" accept="image/*" required>
+    </div>
 
-        <button type="submit">Créer</button>
-    </form>
+    <!-- Ajout du champ CSRF -->
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+
+    <button type="submit">Créer</button>
+</form>
+
+    </main>
+    <footer class="footer-container">
+      <nav class="boutons-footer">
+        <a href="{{ path('app_accueil')}}">Accueil</a>
+        <a href="{{ path('app_categorie')}}">Catégories</a>
+        <a href="{{ path('app_livre')}}">Nos livres</a>
+        <a href="{{ path('mon_espace')}}">Mon espace</a>
+        <a href="{{ path('app_a_propos')}}">À propos</a>
+        <a href="{{ path('utilisateur_new')}}">S'inscrire</a>
+        <a href="{{ path('app_connexion')}}">Se connecter</a>
+      </nav>
+
+      <section class="logo-reseaux">
+        <a href="#" class="icon-reseaux"
+          ><i class="fa-brands fa-instagram"></i
+        ></a>
+      </section>
+
+      <nav class="pages-legales">
+        <a href="{{ path('app_mentions_legales') }}">Mentions légales</a>
+        <a href="{{ path('app_cgu') }}">Conditions générales d'utilisation</a>
+      </nav>
+
+      <section class="copyright">
+        <p>© Livrosphère 2025</p>
+      </section>
+    </footer>
+  </body>
+</html>
 {% endblock %}

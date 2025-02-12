@@ -55,5 +55,11 @@ security:
     - { path: ^/connexion, roles: PUBLIC_ACCESS }
     - { path: ^/inscription, roles: PUBLIC_ACCESS }
     - { path: ^/utilisateurs, roles: ROLE_ADMIN }
+    - { path: ^/utilisateur, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/livres, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/livre, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/categorie, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/commentaire, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/a_propos, roles: PUBLIC_ACCESS }
+    - { path: ^/conditions_generales_d_utilisation, roles: PUBLIC_ACCESS }
+    - { path: ^/mentions_legales, roles: PUBLIC_ACCESS }

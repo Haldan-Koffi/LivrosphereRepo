@@ -17,7 +17,7 @@ use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 
 class CommentaireController extends AbstractController
 {
-    #[Route('admin/commentaires', name: 'app_commentaire', methods: ['GET'])]
+    #[Route('/admin/commentaires', name: 'app_commentaire', methods: ['GET'])]
     public function index(CommentaireRepository $commentaireRepository): Response
     {
         $commentaires = $commentaireRepository->findAll();

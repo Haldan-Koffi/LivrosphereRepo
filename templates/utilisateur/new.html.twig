@@ -1,7 +1,13 @@
 {# templates/user/new.html.twig #}
 
 {% extends 'base.html.twig' %}
+{% block stylesheets %}
+{{ encore_entry_link_tags('style_accueil') }}
+{% endblock %}
 
+{% block javascripts %}
+{{ encore_entry_script_tags('app') }}
+{% endblock %}
 {% block title %}Créer un nouvel utilisateur{% endblock %}
 
 {% block body %}
@@ -33,44 +39,6 @@
     <link rel="stylesheet" href="css/style.inscription.css" />
   </head>
   <body>
-    <header class="header-container bg-blue">
-      <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container-fluid">
-          <!-- <a class="navbar-brand" href="#">Navbar</a> -->
-          <a href="/index.html"
-            ><img
-              href="#"
-              title="logo_livrosphère"
-              src="{{ asset('images/logo-livrosphere.png') }}"
-              height="80"
-          /></a>
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="#">À propos</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/categories.html">Catégories</a>
-              </li>
-
-              <li class="nav-item">
-                <a class="nav-link" href="/index.html">Accueil</a>
-              </li>
-            </ul>
-        </div>
-      </nav>
-    </header>
     <main class="">
       <section class="container-form bg-white">
       {% if errors is defined and errors|length > 0 %}
@@ -83,76 +51,64 @@
         </div>
       {% endif %}
         <form class="bloc-inscription bg-blue" method="post">
-          <section class="logo-titre">
-            <a href="/index.html"
-              ><img
-                src="{{ asset('images/logo-livrosphere.png') }}"
-                height="50px"
-                width="50px"
-            /></a>
-            <h5>INSCRIPTION</h5>
-          </section>
+    <section class="logo-titre">
+        <a href="/index.html"><img src="{{ asset('images/logo-livrosphere.png') }}" height="50px" width="50px" /></a>
+        <h5>INSCRIPTION</h5>
+    </section>
 
-          <section>
-            <label for="nom">Nom</label>
-            <input type="text" id="nom" name="nom" required />
+    <section>
+        <label for="nom">Nom</label>
+        <input type="text" id="nom" name="nom" required />
 
-            <label for="prenom">Prénom</label>
-            <input type="text" id="prenom" name="prenom" required />
+        <label for="prenom">Prénom</label>
+        <input type="text" id="prenom" name="prenom" required />
 
-            <label for="pseudonyme">Pseudonyme</label>
-            <input type="text" id="pseudonyme" name="pseudonyme" required />
+        <label for="pseudonyme">Pseudonyme</label>
+        <input type="text" id="pseudonyme" name="pseudonyme" required />
 
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required />
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
 
-            <label for="mot_de_passe">Mot de passe</label>
-            <input
-              type="password"
-              id="mot_de_passe"
-              name="mot_de_passe"
-              required
-            />
-          </section>
-          <section class="btnU">
-            <button type="submit" class="btn btn-dark">M'inscrire</button>
-          </section>
-        </form>
+        <label for="mot_de_passe">Mot de passe</label>
+        <input type="password" id="mot_de_passe" name="mot_de_passe" required />
+    </section>
+
+    <!-- Ajout du token CSRF -->
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+
+    <section class="btnU">
+        <button type="submit" class="btn btn-dark">M'inscrire</button>
+    </section>
+</form>
+
       </section>
     </main>
 
-    <footer class="footer-container bg-blue">
-      <div class="boutons-header">
-        <a href="" class="text-white">À propos</a>
-        <a href="" class="text-white">Catégories</a>
-        <a href="" class="text-white">Accueil</a>
-        <a href="" class="text-white">S'inscrire</a>
-        <a href="" class="text-white">Se connecter</a>
-      </div>
+    <footer class="footer-container">
+      <nav class="boutons-footer">
+        <a href="{{ path('app_accueil')}}">Accueil</a>
+        <a href="{{ path('app_categorie')}}">Catégories</a>
+        <a href="{{ path('app_livre')}}">Nos livres</a>
+        <a href="{{ path('mon_espace')}}">Mon espace</a>
+        <a href="{{ path('app_a_propos')}}">À propos</a>
+        <a href="{{ path('utilisateur_new')}}">S'inscrire</a>
+        <a href="{{ path('app_connexion')}}">Se connecter</a>
+      </nav>
 
-      <div class="logo-reseaux">
+      <section class="logo-reseaux">
         <a href="#" class="icon-reseaux"
           ><i class="fa-brands fa-instagram"></i
         ></a>
-        <a href="#" class="icon-reseaux"
-          ><i class="fa-brands fa-snapchat"></i
-        ></a>
-        <a href="#" class="icon-reseaux"
-          ><i class="fa-brands fa-facebook"></i
-        ></a>
-        <a href="#" class="icon-reseaux"
-          ><i class="fa-brands fa-x-twitter"></i
-        ></a>
-      </div>
+      </section>
 
-      <div class="pages-legales">
-        <a href="" class="text-white">Mentions légales</a>
-        <a href="" class="text-white">Conditions générales d'utilisation</a>
-      </div>
+      <nav class="pages-legales">
+        <a href="{{ path('app_mentions_legales') }}">Mentions légales</a>
+        <a href="{{ path('app_cgu') }}">Conditions générales d'utilisation</a>
+      </nav>
 
-      <div class="copyright text-white">
-        <p>© Livrosphère 2024</p>
-      </div>
+      <section class="copyright">
+        <p>© Livrosphère 2025</p>
+      </section>
     </footer>
 
     <script
@@ -162,7 +118,4 @@
     ></script>
   </body>
 </html>
-
-
-    {# <a href="{{ path('app_utilisateur') }}">Retour à la liste des utilisateurs</a> #}
 {% endblock %}
