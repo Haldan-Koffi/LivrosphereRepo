@@ -164,7 +164,7 @@ class LivreController extends AbstractController
         }
     } 
 
-    #[Route('/livre/{id}/info', name: 'livre_information', methods: ['GET', 'POST'])]
+    #[Route('/livre/{id}/information', name: 'livre_information', methods: ['GET', 'POST'])]
     public function show(Livre $livre, Request $request, EntityManagerInterface $em): Response
     {
         if (!$livre) {

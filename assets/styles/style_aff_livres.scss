@@ -129,8 +129,7 @@ body {
 
 .ajout {
   display: flex;
-  justify-content: space-between;
-  gap: 170px;
+  gap: 50px;
   margin-top: 50px;
   margin-left: 50px;
   margin-right: 50px;
@@ -141,6 +140,12 @@ body {
     margin-top: 35px;
   }
 }
+
+// .photo_ajout {
+//   display: flex;
+//   justify-content: center;
+// }
+
 .titre-livrosphere {
   margin: 30px;
 }
@@ -165,6 +170,41 @@ body {
   margin-right: 50px;
   padding-bottom: 50px;
   gap: 10px;
+}
+
+.commentaires-ajouts {
+  align-items: center;
+  display: flex;
+  gap: 100px;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.form_com {
+  display: flex;
+  justify-content: center;
+  button {
+    margin-top: 10px;
+  }
+}
+
+.titre_com {
+  h3 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+}
+
+.action_livre {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.informations-ajout {
+  margin-left: 50px;
 }
 
 .bouton-interaction {
@@ -215,5 +255,86 @@ body {
     color: white;
     font-size: 24px;
     padding: 5px;
+  }
+}
+
+/* Pour les petits écrans (mobile) */
+@media (max-width: 768px) {
+  .ajout {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .info-livre {
+    margin-right: 0;
+    text-align: center;
+  }
+
+  .cover-ajout img {
+    height: auto;
+    max-width: 100%;
+  }
+
+  /* Modifier les espacements des boutons */
+  .action_livre {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+  }
+
+  .espace-interaction {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .boutons-footer {
+    display: flex;
+    flex-direction: column;
+    margin-left: 25px;
+    a {
+      color: var(--main-bg-color-white);
+      width: 35%;
+    }
+  }
+
+  .pages-legales {
+    display: flex;
+    justify-content: center;
+    margin-left: 10px;
+    gap: 30px;
+    a {
+      color: var(--main-bg-color-white);
+    }
+  }
+
+  .container-fluid {
+    flex-wrap: inherit;
+    justify-content: space-between;
+    background-color: var(--main-bg-color-blue);
+  }
+
+  .navbar-collapse {
+    align-items: center;
+    flex-basis: 100%;
+    flex-grow: 1;
+    margin-top: 200px;
+  }
+}
+
+/* Styles pour les écrans plus larges */
+@media (min-width: 769px) {
+  .ajout {
+    display: flex;
+    gap: 50px;
+  }
+
+  .cover-ajout img {
+    height: 400px;
+    object-fit: cover;
   }
 }

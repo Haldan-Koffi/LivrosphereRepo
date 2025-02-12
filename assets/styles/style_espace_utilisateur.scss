@@ -39,6 +39,16 @@
   color: var(--main-bg-color-gray);
 }
 
+main {
+  min-height: 100vh; /* Assure que le main occupe au moins la hauteur de l'écran */
+  display: flex;
+  flex-direction: column;
+}
+
+footer {
+  margin-top: auto; /* Pousse le footer au bas */
+}
+
 body {
   font-family: "Montserrat", "Roboto", "Poppins";
 }
