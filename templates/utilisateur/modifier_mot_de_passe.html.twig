@@ -14,34 +14,29 @@
     {{ encore_entry_script_tags('app') }}
 {% endblock %}
 
-{% block title %}Modification{% endblock %}
+{% block title %}Modifier mon mot de passe{% endblock %}
 
 {% block body %}
     <main>
       <section class="titre_modif">
-        <h1>Vos informations</h1>
+        <h1>Modifier mon mot de passe</h1>
       </section>
 
-      <section class="modif_info_utilisateur">
+      <section class="modif_mdp">
         <form method="post">
             <div>
-                <label for="nom">Nom</label>
-                <input type="text" id="nom" name="nom" value="{{ utilisateur.nom }}" required>
+                <label for="current_password">Mot de passe actuel</label>
+                <input type="password" id="current_password" name="current_password" required>
             </div>
 
             <div>
-                <label for="prenom">Prénom</label>
-                <input type="text" id="prenom" name="prenom" value="{{ utilisateur.prenom }}" required>
+                <label for="new_password">Nouveau mot de passe</label>
+                <input type="password" id="new_password" name="new_password" required>
             </div>
 
             <div>
-                <label for="pseudonyme">Pseudonyme</label>
-                <input type="text" id="pseudonyme" name="pseudonyme" value="{{ utilisateur.pseudonyme }}" required>
-            </div>
-
-            <div>
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" value="{{ utilisateur.email }}" required>
+                <label for="confirm_password">Confirmer le nouveau mot de passe</label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
             </div>
 
             <!-- Ajout du token CSRF -->

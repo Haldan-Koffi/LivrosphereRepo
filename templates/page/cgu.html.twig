@@ -1,79 +1,75 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    {{ encore_entry_link_tags('style_espace_utilisateur') }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+          integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
+
+{% block title %}Conditions Générales d'Utilisation{% endblock %}
+
 {% block body %}
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conditions Générales d'Utilisation</title>
-</head>
-<body>
-    <main>
-        <section>
-            <h1>Conditions Générales d'Utilisation</h1>
-            <p>Dernière mise à jour : <strong>09/02/2025</strong></p>
+<main>
+    <section class="information">
+        <h1>Conditions Générales d'Utilisation</h1>
+        <p>Dernière mise à jour : <strong>09/02/2025</strong></p>
 
-            <h2>1. Introduction</h2>
-            <p>Bienvenue sur Livrosphère. En accédant à notre site et en utilisant nos services, vous acceptez les présentes Conditions Générales d’Utilisation (CGU).</p>
+        <h2>1. Introduction</h2>
+        <p>Bienvenue sur Livrosphère. En accédant à notre site et en utilisant nos services, vous acceptez les présentes Conditions Générales d’Utilisation (CGU).</p>
 
-            <h2>2. Accès au service</h2>
-            <p>Notre plateforme est accessible gratuitement à tout utilisateur disposant d’un accès Internet. Cependant, certaines fonctionnalités peuvent être réservées aux utilisateurs inscrits.</p>
+        <h2>2. Accès au service</h2>
+        <p>Notre plateforme est accessible gratuitement à tout utilisateur disposant d’un accès Internet. Cependant, certaines fonctionnalités peuvent être réservées aux utilisateurs inscrits.</p>
 
-            <h2>3. Inscription</h2>
-            <p>Pour accéder à certaines fonctionnalités, vous devez créer un compte. Vous vous engagez à fournir des informations exactes et à les mettre à jour si nécessaire.</p>
+        <h2>3. Inscription</h2>
+        <p>Pour accéder à certaines fonctionnalités, vous devez créer un compte. Vous vous engagez à fournir des informations exactes et à les mettre à jour si nécessaire.</p>
 
-            <h2>4. Responsabilités des utilisateurs</h2>
-            <p>Vous vous engagez à utiliser le site de manière légale et respectueuse des droits d’autrui. Tout comportement abusif ou frauduleux entraînera la suspension de votre compte.</p>
+        <h2>4. Responsabilités des utilisateurs</h2>
+        <p>Vous vous engagez à utiliser le site de manière légale et respectueuse des droits d’autrui. Tout comportement abusif ou frauduleux entraînera la suspension de votre compte.</p>
 
-            <h2>5. Propriété intellectuelle</h2>
-            <p>Tous les contenus présents sur le site (textes, images, logos) sont protégés par les lois sur la propriété intellectuelle et ne peuvent être utilisés sans autorisation.</p>
+        <h2>5. Propriété intellectuelle</h2>
+        <p>Tous les contenus présents sur le site (textes, images, logos) sont protégés par les lois sur la propriété intellectuelle et ne peuvent être utilisés sans autorisation.</p>
 
-            <h2>6. Protection des données personnelles</h2>
-            <p>Nous nous engageons à protéger vos données personnelles conformément à notre <a href="#">Politique de confidentialité</a>.</p>
+        <h2>6. Protection des données personnelles</h2>
+        <p>Nous nous engageons à protéger vos données personnelles .</p>
 
-            <h2>7. Modifications des CGU</h2>
-            <p>Nous nous réservons le droit de modifier ces CGU à tout moment. Les utilisateurs seront informés des changements via le site.</p>
+        <h2>7. Modifications des CGU</h2>
+        <p>Nous nous réservons le droit de modifier ces CGU à tout moment. Les utilisateurs seront informés des changements via le site.</p>
 
-            <h2>8. Contact</h2>
-            <p>Pour toute question concernant ces CGU, vous pouvez nous contacter à l’adresse suivante : <a href="mailto:support@livrosphere.com">support@livrosphere.com</a>.</p>
-        </section>
-    </main>
-    <footer class="footer-container">
-      <nav class="boutons-footer">
-        <a href="/Accueil.html">Accueil</a>
-        <a href="/categories.html">Catégories</a>
-        <a href="/categories.html">Nos livres</a>
-        <a href="/categories.html">Mon espace</a>
-        <a href="">À propos</a>
-        <a href="/inscription.html">S'inscrire</a>
-        <a href="/connexion.html">Se connecter</a>
-      </nav>
+        <h2>8. Contact</h2>
+        <p>Pour toute question concernant ces CGU, vous pouvez nous contacter à l’adresse suivante : <a href="mailto:e.haldankoffi@gmail.com">e.haldankoffi@gmail.com</a>.</p>
+    </section>
+</main>
 
-      <section class="logo-reseaux">
-        <a href="#" class="icon-reseaux"
-          ><i class="fa-brands fa-instagram"></i
-        ></a>
-        {# <a href="#" class="icon-reseaux"
-          ><i class="fa-brands fa-snapchat"></i
-        ></a>
-        <a href="#" class="icon-reseaux"
-          ><i class="fa-brands fa-facebook"></i
-        ></a>
-        <a href="#" class="icon-reseaux"
-          ><i class="fa-brands fa-x-twitter"></i
-        ></a> #}
-      </section>
+<footer class="footer-container">
+    <nav class="boutons-footer">
+        <a href="{{ path('app_accueil') }}">Accueil</a>
+        <a href="{{ path('app_categorie') }}">Catégories</a>
+        <a href="{{ path('app_livre') }}">Nos livres</a>
+        <a href="{{ path('mon_espace') }}">Mon espace</a>
+        <a href="{{ path('app_a_propos') }}">À propos</a>
+        <a href="{{ path('utilisateur_new') }}">S'inscrire</a>
+        <a href="{{ path('app_connexion') }}">Se connecter</a>
+    </nav>
 
-      <nav class="pages-legales">
-        <a href="">Mentions légales</a>
-        <a href="">Conditions générales d'utilisation</a>
-      </nav>
+    <section class="logo-reseaux">
+        <a href="#" class="icon-reseaux"><i class="fa-brands fa-instagram"></i></a>
+    </section>
 
-      <section class="copyright">
+    <nav class="pages-legales">
+        <a href="{{ path('app_mentions_legales') }}">Mentions légales</a>
+        <a href="{{ path('app_cgu') }}">Conditions générales d'utilisation</a>
+    </nav>
+
+    <section class="copyright">
         <p>© Livrosphère 2025</p>
-      </section>
-    </footer>
-</body>
-</html>
+    </section>
+</footer>
 {% endblock %}
