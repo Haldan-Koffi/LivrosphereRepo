@@ -1,0 +1,78 @@
+{
+  "entrypoints": {
+    "app": {
+      "js": [
+        "/build/runtime.944a8d9f.js",
+        "/build/336.adfc6344.js",
+        "/build/app.dc76a988.js"
+      ],
+      "css": [
+        "/build/792.f3925b7d.css",
+        "/build/app.41615a6b.css"
+      ]
+    },
+    "style_accueil": {
+      "js": [
+        "/build/runtime.944a8d9f.js"
+      ],
+      "css": [
+        "/build/792.f3925b7d.css",
+        "/build/style_accueil.24b66b89.css"
+      ]
+    },
+    "style_categorie": {
+      "js": [
+        "/build/runtime.944a8d9f.js"
+      ],
+      "css": [
+        "/build/792.f3925b7d.css",
+        "/build/style_categorie.e5e3db55.css"
+      ]
+    },
+    "style_liste_livre": {
+      "js": [
+        "/build/runtime.944a8d9f.js"
+      ],
+      "css": [
+        "/build/792.f3925b7d.css",
+        "/build/style_liste_livre.a39822aa.css"
+      ]
+    },
+    "style_aff_livres": {
+      "js": [
+        "/build/runtime.944a8d9f.js"
+      ],
+      "css": [
+        "/build/792.f3925b7d.css",
+        "/build/style_aff_livres.80be22fa.css"
+      ]
+    },
+    "style_espace_utilisateur": {
+      "js": [
+        "/build/runtime.944a8d9f.js"
+      ],
+      "css": [
+        "/build/792.f3925b7d.css",
+        "/build/style_espace_utilisateur.e09927c3.css"
+      ]
+    },
+    "styleConnexion": {
+      "js": [
+        "/build/runtime.944a8d9f.js"
+      ],
+      "css": [
+        "/build/792.f3925b7d.css",
+        "/build/styleConnexion.af3c9303.css"
+      ]
+    },
+    "style_inscription": {
+      "js": [
+        "/build/runtime.944a8d9f.js"
+      ],
+      "css": [
+        "/build/792.f3925b7d.css",
+        "/build/style_inscription.c35c4ae8.css"
+      ]
+    }
+  }
+}
