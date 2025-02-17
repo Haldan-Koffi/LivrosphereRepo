@@ -36,6 +36,9 @@
                 <img src="/path/to/default_cover.jpg" height="400px" alt="Pas de couverture disponible" />
             {% endif %}
         </figure>
+    
+    
+    {# <section class="ajout"> #}
 
         <article class="info-livre">
             <h1>{{ livre.titre }}</h1>
@@ -60,14 +63,14 @@
         <section class="bouton-interaction">
             <form method="POST" action="{{ path('toggle_like', {'id': livre.id}) }}" style="display: inline;">
                 <button type="submit" aria-label="J'aime">
-                    <i class="like fa fa-heart {{ utilisateurALike ? 'btn-danger' : 'btn-primary' }}" aria-hidden="true"></i>
+                    <i class="like fa fa-heart {{ utilisateurALike ? 'btn-dark' : 'btn-primary' }}" aria-hidden="true"></i>
                 </button>
             </form>
             <span class="badge bg-secondary">{{ nombreLikes }}</span>
 
             <form method="POST" action="{{ path('toggle_recommandation', {'id': livre.id}) }}" style="display: inline;">
                 <button type="submit" aria-label="Recommander">
-                    <i class="recommander fa fa-star {{ utilisateurARecommande ? 'btn-danger' : 'btn-success' }}" aria-hidden="true"></i>
+                    <i class="recommander fa fa-star {{ utilisateurARecommande ? 'btn-dark' : 'btn-secondary' }}" aria-hidden="true"></i>
                 </button>
             </form>
             <span class="badge bg-secondary">{{ nombreRecommandations }}</span>
@@ -86,11 +89,11 @@
                                 <p><em>(Modifié)</em></p>
                             {% endif %}
                             {% if commentaire.utilisateur == app.user %}
-                                <a href="{{ path('edit_commentaire', {'id': commentaire.id}) }}" class="btn btn-warning">Modifier</a>
+                                <a href="{{ path('edit_commentaire', {'id': commentaire.id}) }}" class="btn btn-secondary">Modifier</a>
                             {% endif %}
                             {% if commentaire.utilisateur == app.user or is_granted('ROLE_ADMIN') %}
                                 <form action="{{ path('delete_commentaire', {'id': commentaire.id}) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">
-                                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                                    <button type="submit" class="btn btn-dark">Supprimer</button>
                                 </form>
                             {% endif %}
                         </div>
@@ -101,25 +104,31 @@
             </section>
 
             <!-- Formulaire pour ajouter un commentaire -->
-            <h3>Ajouter un commentaire</h3>
-            {{ form_start(form) }}
-            {{ form_row(form.message) }}
-            <button type="submit">Ajouter Commentaire</button>
-            {{ form_end(form) }}
+            <section class="titre_com">
+                <h3>Ajouter un commentaire</h3>
+            </section>
+            <section class="form_com">
+                {{ form_start(form) }}
+                {{ form_row(form.message) }}
+                <button type="submit">Ajouter Commentaire</button>
+                {{ form_end(form) }}
+            </section>
         </section>
     </section>
 
     <!-- Affichage du bouton "Modifier le livre" si l'utilisateur est le créateur du livre -->
-    {% if livre.utilisateur == app.user %}
-        <a href="{{ path('modification_livre', {'id': livre.id}) }}" class="btn btn-warning">Modifier le livre</a>
-    {% endif %}
+    <section class="action_livre">
+        {% if livre.utilisateur == app.user %}
+            <a href="{{ path('modification_livre', {'id': livre.id}) }}" class="btn btn-secondary">Modifier le livre</a>
+        {% endif %}
 
-    <!-- Affichage du bouton "Supprimer le livre" si l'utilisateur est le créateur ou admin -->
-    {% if livre.utilisateur == app.user or is_granted('ROLE_ADMIN') %}
-        <form method="POST" action="{{ path('suppression_livre', {'id': livre.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?');">
-            <button type="submit" class="btn btn-danger">Supprimer le livre</button>
-        </form>
-    {% endif %}
+        <!-- Affichage du bouton "Supprimer le livre" si l'utilisateur est le créateur ou admin -->
+        {% if livre.utilisateur == app.user or is_granted('ROLE_ADMIN') %}
+            <form method="POST" action="{{ path('suppression_livre', {'id': livre.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?');">
+                <button type="submit" class="btn btn-dark">Supprimer le livre</button>
+            </form>
+        {% endif %}
+    </section>
 </main>
 
 <!-- Footer -->

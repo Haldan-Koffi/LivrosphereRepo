@@ -1,106 +1,75 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>À propos</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-
+{% block stylesheets %}
+    {{ encore_entry_link_tags('style_espace_utilisateur') }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+          integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+GB+S:ital,wght@0,100..400;1,100..400&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
+{% endblock %}
 
-  <main>
-        <section>
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
 
+{% block title %}À propos{% endblock %}
+
+{% block body %}
+<main>
+    <section class="information">
         <h1>À propos de Livrosphère</h1>
-
         <p>Bienvenue sur Livrosphère, la plateforme dédiée aux passionnés de lecture !</p>
 
         <h3>Qui suis-je ?</h3>
-
         <p>Je m'appelle Haldan Koffi, développeur web et créateur de Livrosphère. 
         Mon objectif est de bâtir une communauté où chaque lecteur peut partager ses découvertes littéraires, recommander ses ouvrages préférés et interagir avec d'autres passionnés de lecture.</p>
 
         <h3>La mission de Livrosphère</h3>
-
         <p>Livrosphère est conçu pour simplifier la recherche de livres en fonction des goûts et des intérêts de chacun. 
         Grâce à un système de catégories bien structuré, une interface intuitive et des fonctionnalités interactives, la plateforme permet aux utilisateurs de :</p>
-
-        <p>Explorer un large choix de livres classés par catégories,
-
-        Recommander des ouvrages aux autres membres,
-
-        Échanger via les commentaires et les avis,
-
-        Découvrir les nouveautés littéraires et les tendances du moment.</p>
+        <ul>
+            <li>Explorer un large choix de livres classés par catégories,</li>
+            <li>Recommander des ouvrages aux autres membres,</li>
+            <li>Échanger via les commentaires et les avis,</li>
+            <li>Découvrir les nouveautés littéraires et les tendances du moment.</li>
+        </ul>
 
         <h3>Pourquoi ce projet ?</h3>
-
         <p>En tant qu’amateur de lecture et passionné de développement web, j’ai voulu allier ces deux univers pour créer un espace collaboratif où chacun peut enrichir sa bibliothèque personnelle et partager son amour des livres. 
         Livrosphère est né de cette volonté de connecter les lecteurs autour de la littérature.</p>
 
         <h3>Rejoignez la communauté !</h3>
-
         <p>Que vous soyez un lecteur occasionnel ou un dévoreur de livres, Livrosphère vous offre un espace dédié à la découverte et au partage. 
         Ensemble, faisons grandir cette communauté et donnons aux livres la place qu’ils méritent !</p>
 
         <p>📚 Bienvenue sur Livrosphère !</p>
     </section>
-
 </main>
 
 <footer class="footer-container">
-      <nav class="boutons-footer">
-        <a href="/Accueil.html">Accueil</a>
-        <a href="/categories.html">Catégories</a>
-        <a href="/categories.html">Nos livres</a>
-        <a href="/categories.html">Mon espace</a>
-        <a href="">À propos</a>
-        <a href="/inscription.html">S'inscrire</a>
-        <a href="/connexion.html">Se connecter</a>
-      </nav>
+    <nav class="boutons-footer">
+        <a href="{{ path('app_accueil') }}">Accueil</a>
+        <a href="{{ path('app_categorie') }}">Catégories</a>
+        <a href="{{ path('app_livre') }}">Nos livres</a>
+        <a href="{{ path('mon_espace') }}">Mon espace</a>
+        <a href="{{ path('app_a_propos') }}">À propos</a>
+        <a href="{{ path('utilisateur_new') }}">S'inscrire</a>
+        <a href="{{ path('app_connexion') }}">Se connecter</a>
+    </nav>
 
-      <section class="logo-reseaux">
-        <a href="#" class="icon-reseaux"
-          ><i class="fa-brands fa-instagram"></i
-        ></a>
-        {# <a href="#" class="icon-reseaux"
-          ><i class="fa-brands fa-snapchat"></i
-        ></a>
-        <a href="#" class="icon-reseaux"
-          ><i class="fa-brands fa-facebook"></i
-        ></a>
-        <a href="#" class="icon-reseaux"
-          ><i class="fa-brands fa-x-twitter"></i
-        ></a> #}
-      </section>
+    <section class="logo-reseaux">
+        <a href="#" class="icon-reseaux"><i class="fa-brands fa-instagram"></i></a>
+    </section>
 
-      <nav class="pages-legales">
-        <a href="">Mentions légales</a>
-        <a href="">Conditions générales d'utilisation</a>
-      </nav>
+    <nav class="pages-legales">
+        <a href="{{ path('app_mentions_legales') }}">Mentions légales</a>
+        <a href="{{ path('app_cgu') }}">Conditions générales d'utilisation</a>
+    </nav>
 
-      <section class="copyright">
+    <section class="copyright">
         <p>© Livrosphère 2025</p>
-      </section>
-    </footer>
-  </body>
-</html>
-
+    </section>
+</footer>
 {% endblock %}

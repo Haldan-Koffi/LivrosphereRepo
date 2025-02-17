@@ -26,7 +26,7 @@ class UtilisateurController extends AbstractController
             'utilisateurs' => $utilisateurs]);
     }
 
-    #[Route('/utilisateurs/info', name: 'utilisateur_info', methods: ['GET'])]
+    #[Route('/utilisateurs/information', name: 'utilisateur_info', methods: ['GET'])]
     public function show(): Response
     {
         $currentUtilisateur = $this->getUser();
@@ -129,6 +129,65 @@ class UtilisateurController extends AbstractController
             'csrf_token' => $csrfToken,
         ]);
     }
+
+    #[Route('/utilisateur/{id}/modifier_mot_de_passe', name: 'utilisateur_modifier_mot_de_passe', methods: ['GET', 'POST'])]
+    public function changePassword(Utilisateur $utilisateur, Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, CsrfTokenManagerInterface $csrfTokenManager): Response
+    {
+        // Vérifier si l'utilisateur connecté est bien celui qu'on veut modifier
+        if ($utilisateur !== $this->getUser()) {
+            throw $this->createAccessDeniedException('Vous ne pouvez pas modifier ces informations.');
+        }
+
+        if ($request->isMethod('POST')) {
+            // Vérification du token CSRF
+            $token = $request->request->get('_csrf_token');
+            if (!$csrfTokenManager->isTokenValid(new CsrfToken('utilisateur_modifier_mot_de_passe_' . $utilisateur->getId(), $token))) {
+                throw new AccessDeniedHttpException('Le token CSRF est invalide.');
+            }
+
+            // Traitement du mot de passe actuel
+            $currentPassword = $request->request->get('current_password');
+            $newPassword = $request->request->get('new_password');
+            $confirmPassword = $request->request->get('confirm_password');
+
+            // Vérification du mot de passe actuel
+            if (!$passwordHasher->isPasswordValid($utilisateur, $currentPassword)) {
+                $this->addFlash('error', 'Le mot de passe actuel est incorrect.');
+                return $this->render('utilisateur/modifier_mot_de_passe.html.twig', [
+                    'utilisateur' => $utilisateur,
+                    'csrf_token' => $csrfTokenManager->getToken('utilisateur_modifier_mot_de_passe_' . $utilisateur->getId())->getValue(),
+                ]);
+            }
+
+            // Vérification de la correspondance des nouveaux mots de passe
+            if ($newPassword !== $confirmPassword) {
+                $this->addFlash('error', 'Les nouveaux mots de passe ne correspondent pas.');
+                return $this->render('utilisateur/modifier_mot_de_passe.html.twig', [
+                    'utilisateur' => $utilisateur,
+                    'csrf_token' => $csrfTokenManager->getToken('utilisateur_modifier_mot_de_passe_' . $utilisateur->getId())->getValue(),
+                ]);
+            }
+
+            // Hashage du nouveau mot de passe et mise à jour de l'utilisateur
+            $hashedNewPassword = $passwordHasher->hashPassword($utilisateur, $newPassword);
+            $utilisateur->setMotDePasse($hashedNewPassword);
+
+            // Sauvegarde des modifications dans la base de données
+            $em->flush();
+
+            // Redirection après modification
+            return $this->redirectToRoute('mon_espace');
+        }
+
+        // Génération du token CSRF pour sécuriser le formulaire
+        $csrfToken = $csrfTokenManager->getToken('utilisateur_modifier_mot_de_passe_' . $utilisateur->getId())->getValue();
+
+        return $this->render('utilisateur/modifier_mot_de_passe.html.twig', [
+            'utilisateur' => $utilisateur,
+            'csrf_token' => $csrfToken,
+        ]);
+    }
+
 
 
     

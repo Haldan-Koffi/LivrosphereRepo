@@ -1,3 +1,7 @@
+@import "~bootstrap/dist/css/bootstrap.min.css";
+
+@import "bootstrap/scss/bootstrap";
+
 :root {
   --main-bg-color-white: white;
   --main-bg-color-black: black;
@@ -41,17 +45,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: var(--main-bg-color-blue);
 }
-
-.search-bouton {
-  display: flex;
-  align-content: center;
-}
-
-/* .btn {
-  display: flex;
-  align-items: center;
-} */
 
 .footer-container {
   margin-top: 50px;
@@ -59,18 +54,26 @@
   flex-direction: column;
   padding-bottom: 20px;
   padding-top: 20px;
+  background-color: var(--main-bg-color-blue);
 }
 
-.boutons-header {
+.boutons-footer {
   display: flex;
   flex-direction: column;
   margin-left: 250px;
+  color: var(--main-bg-color-white);
+  a {
+    color: var(--main-bg-color-white);
+  }
 }
 
 .pages-legales {
   display: flex;
   justify-content: center;
   gap: 50px;
+  a {
+    color: var(--main-bg-color-white);
+  }
 }
 
 .logo-reseaux {
@@ -93,7 +96,8 @@
 .container-form {
   display: flex;
   justify-content: center;
-  padding: 200px;
+  padding: 193px;
+  background-color: var(--main-bg-color-white);
   /* border: 1px solid black; */
 }
 
@@ -108,6 +112,7 @@
   h5 {
     color: var(--main-bg-color-white);
   }
+  background-color: var(--main-bg-color-blue);
 }
 
 .bloc-inscription label {
@@ -155,20 +160,27 @@
   width: 100%;
 }
 
+.nav-link {
+  color: white;
+}
+
 .copyright {
   margin-top: 20px;
   margin-left: 200px;
+  color: var(--main-bg-color-white);
 }
 
 @media (min-width: 100px) and (max-width: 1024px) {
   .header-container img {
     height: 50px;
+    width: auto;
   }
 
   /* Centrer les éléments dans la barre de navigation */
   .navbar-nav {
     text-align: center;
-    margin: 0 auto;
+    margin: 0;
+    width: auto;
   }
   .bloc-inscription {
     width: auto;
@@ -206,10 +218,46 @@
     }
   }
 
-  #navbarSupportedContent {
-    background-color: white;
-    /* collapse navbar-collapse {
-      background-color: white;
-    } */
+  // #navbarSupportedContent {
+  //   background-color: white;
+  //   /* collapse navbar-collapse {
+  //     background-color: white;
+  //   } */
+  // }
+}
+
+/* Mobile portrait */
+@media (max-width: 576px) {
+  .boutons-footer {
+    display: flex;
+    flex-direction: column;
+    margin-left: 25px;
+    a {
+      color: var(--main-bg-color-white);
+      width: 35%;
+    }
+  }
+
+  .pages-legales {
+    display: flex;
+    justify-content: center;
+    margin-left: 10px;
+    gap: 30px;
+    a {
+      color: var(--main-bg-color-white);
+    }
+  }
+
+  .container-fluid {
+    flex-wrap: inherit;
+    justify-content: space-between;
+    background-color: var(--main-bg-color-blue);
+  }
+
+  .navbar-collapse {
+    align-items: center;
+    flex-basis: 100%;
+    flex-grow: 1;
+    margin-top: 200px;
   }
 }

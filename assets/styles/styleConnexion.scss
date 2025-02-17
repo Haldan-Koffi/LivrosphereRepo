@@ -1,3 +1,7 @@
+@import "~bootstrap/dist/css/bootstrap.min.css";
+
+@import "bootstrap/scss/bootstrap";
+
 :root {
   --main-bg-color-white: white;
   --main-bg-color-black: black;
@@ -41,6 +45,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: var(--main-bg-color-blue);
 }
 
 .search-bouton {
@@ -55,6 +60,8 @@
 
 .footer-container {
   margin-top: 50px;
+  background-color: var(--main-bg-color-blue);
+  height: 300px;
   display: flex;
   flex-direction: column;
   padding-bottom: 20px;
@@ -102,12 +109,14 @@
 
 .container-form {
   display: flex;
+  background-color: var(--main-bg-color-white);
   justify-content: center;
-  padding: 200px;
+  padding: 193px;
   /* border: 1px solid black; */
 }
 
 .bloc-inscription {
+  background-color: var(--main-bg-color-blue);
   display: flex;
   flex-direction: column;
   border: 1px solid black;

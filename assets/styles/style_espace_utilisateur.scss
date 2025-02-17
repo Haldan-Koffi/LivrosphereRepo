@@ -39,8 +39,26 @@
   color: var(--main-bg-color-gray);
 }
 
+main {
+  min-height: 100vh; /* Assure que le main occupe au moins la hauteur de l'écran */
+  display: flex;
+  flex-direction: column;
+}
+
+footer {
+  margin-top: auto; /* Pousse le footer au bas */
+}
+
 body {
   font-family: "Montserrat", "Roboto", "Poppins";
+}
+
+.paragraphe_reset_token {
+  p {
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
 }
 
 .header-container {
@@ -212,14 +230,92 @@ body {
   position: relative;
 }
 
-.notification-badge {
-  position: absolute;
-  top: -5px;
-  right: -10px;
-  background-color: red;
-  color: white;
-  border-radius: 50%;
-  padding: 0.25em 0.6em;
-  font-size: 0.8rem;
-  font-weight: bold;
+.titre_modif {
+  h1 {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+}
+
+.modif_info_utilisateur {
+  display: flex;
+  justify-content: center;
+  label {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+  input {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+}
+
+.modif_mdp {
+  display: flex;
+  justify-content: center;
+  label {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+  input {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+}
+
+.information {
+  margin-left: 20px;
+  h1 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .boutons-footer {
+    display: flex;
+    flex-direction: column;
+    margin-left: 25px;
+    a {
+      color: var(--main-bg-color-white);
+      width: 35%;
+    }
+  }
+  .pages-legales {
+    display: flex;
+    justify-content: center;
+    margin-left: 10px;
+    gap: 30px;
+    a {
+      color: var(--main-bg-color-white);
+    }
+  }
+
+  .container-fluid {
+    flex-wrap: inherit;
+    justify-content: space-between;
+    background-color: var(--main-bg-color-blue);
+  }
+
+  .navbar-collapse {
+    align-items: center;
+    flex-basis: 100%;
+    flex-grow: 1;
+    margin-top: 200px;
+  }
+
+  .modif_mdp {
+    display: flex;
+    justify-content: center;
+    margin-left: 10px;
+    label {
+      margin-top: 15px;
+      margin-bottom: 15px;
+    }
+    input {
+      margin-top: 15px;
+      margin-bottom: 15px;
+    }
+  }
 }

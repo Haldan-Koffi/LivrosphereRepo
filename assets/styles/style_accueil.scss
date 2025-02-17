@@ -48,11 +48,6 @@
   background-color: var(--main-bg-color-blue);
 }
 
-.search-bouton {
-  display: flex;
-  align-content: center;
-}
-
 .footer-container {
   margin-top: 50px;
   display: flex;
@@ -70,6 +65,11 @@
     color: var(--main-bg-color-white);
     width: 10%;
   }
+}
+
+.bouton-inscriptionc {
+  display: flex !important;
+  gap: 5px;
 }
 
 .pages-legales {
@@ -313,10 +313,44 @@ body {
     }
   }
 
-  #navbarSupportedContent {
-    background-color: white;
-    /* collapse navbar-collapse {
-      background-color: white;
-    } */
+  // #navbarSupportedContent {
+  //   background-color: white;
+  //   /* collapse navbar-collapse {
+  //     background-color: white;
+  //   } */
+  // }
+}
+
+@media (max-width: 576px) {
+  .boutons-footer {
+    display: flex;
+    flex-direction: column;
+    margin-left: 25px;
+    a {
+      color: var(--main-bg-color-white);
+      width: 35%;
+    }
+  }
+  .pages-legales {
+    display: flex;
+    justify-content: center;
+    margin-left: 10px;
+    gap: 30px;
+    a {
+      color: var(--main-bg-color-white);
+    }
+  }
+
+  .container-fluid {
+    flex-wrap: inherit;
+    justify-content: space-between;
+    background-color: var(--main-bg-color-blue);
+  }
+
+  .navbar-collapse {
+    align-items: center;
+    flex-basis: 100%;
+    flex-grow: 1;
+    margin-top: 200px;
   }
 }

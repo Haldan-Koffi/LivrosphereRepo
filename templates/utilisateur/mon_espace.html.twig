@@ -3,123 +3,89 @@
 {% block title %}Mon Espace{% endblock %}
 
 {% block stylesheets %}
-{{ encore_entry_link_tags('style_espace_utilisateur') }}
+    {{ encore_entry_link_tags('style_espace_utilisateur') }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+          integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block javascripts %}
-{{ encore_entry_script_tags('app') }}
+    {{ encore_entry_script_tags('app') }}
 {% endblock %}
 
 {% block body %}
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tableau de bord</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+GB+S:ital,wght@0,100..400;1,100..400&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <main>
-      <section class="menu_utilisateur">
+<main>
+    <!-- Menu Utilisateur -->
+    <section class="menu_utilisateur">
         <section class="notification-menu_utilisateur">
-          <section class="profile-buttons">
-            <a
-              class="nav-link dropdown-toggle text-black"
-              href="#"
-              id="navbarDropdown"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              {{ app.user.pseudonyme }}
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li>
-                <a class="dropdown-item" href="#">Se deconnecter</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="#"
-                  >Modifier mon mot de passe</a
-                >
-              </li>
-              
-              <li><hr class="dropdown-divider" /></li>
-              <li>
-                <a class="dropdown-item" href="#">Supprimer mon compte</a>
-              </li>
-            </ul>
-          </section>
+            <section class="profile-buttons">
+                <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ app.user.pseudonyme }}
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="{{ path('app_logout')}}">Se déconnecter</a></li>
+                    <li><a class="dropdown-item" href="{{ path('utilisateur_modification', {'id': app.user.id})}}">Afficher et modifier mes informations</a></li>
+                    <li><a class="dropdown-item" href="{{ path('utilisateur_modifier_mot_de_passe',  {'id': app.user.id})}}">Modifier mon mot de passe</a></li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li><a class="dropdown-item" href="{{ path('utilisateur_supprimer', {'id': app.user.id})}}">Supprimer mon compte</a></li>
+                </ul>
+            </section>
         </section>
-      </section>
-      <section class="titre-livrosphere">
-      </section>
+    </section>
 
-      <section class="coverLivre-categories" id="categoriesContainer"></section>
-    </main>
+    <!-- Bienvenue utilisateur -->
+    <section class="titre-livrosphere">
+        <h1>Hello {{ app.user.pseudonyme }} !</h1>
+        <p>Bienvenue dans votre espace</p>
+    </section>
 
-        <h1><p>Hello {{ app.user.pseudonyme }} !</p></h1>
-    <!-- Message personnalisé -->
-    <p>Bienvenue dans votre espace</p>
+    <!-- Section des livres ajoutés -->
+    <section class="coverLivre-categories" id="categoriesContainer"></section>
+    <section class="livres-ajoutes">
+        <h2>Vos livres ajoutés</h2>
+        {% if livres is not empty %}
+            <ul>
+                {% for livre in livres %}
+                    <li>
+                        <strong>{{ livre.titre }}</strong> par {{ livre.auteur }}
+                        (Ajouté le {{ livre.dateAjout|date('d/m/Y') }})
+                        <a href="{{ path('livre_information', { id: livre.id }) }}" class="btn btn-primary">Voir les détails</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Vous n'avez ajouté aucun livre pour l'instant.</p>
+        {% endif %}
+    </section>
+</main>
 
-    <h2>Vos livres ajoutés</h2>
-    {% if livres is not empty %}
-        <ul>
-            {% for livre in livres %}
-                <li>
-                    <strong>{{ livre.titre }}</strong> par {{ livre.auteur }}
-                    (Ajouté le {{ livre.dateAjout|date('d/m/Y') }})
-                    
-                    <!-- Bouton pour accéder aux détails -->
-                    <a href="{{ path('livre_information', { id: livre.id }) }}" class="btn btn-primary">Voir les détails</a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>Vous n'avez ajouté aucun livre pour l'instant.</p>
-    {% endif %}
-
+<!-- Footer -->
 <footer class="footer-container">
-      <nav class="buttons-footer">
-        <a href="/Accueil.html">Accueil</a>
-        <a href="/categories.html">Catégories</a>
-        <a href="/categories.html">Nos livres</a>
-        <a href="/categories.html">Mon espace</a>
-        <a href="">À propos</a>
-        <a href="/inscription.html">S'inscrire</a>
-        <a href="/connexion.html">Se connecter</a>
-      </nav>
+    <nav class="boutons-footer">
+        <a href="{{ path('app_accueil')}}">Accueil</a>
+        <a href="{{ path('app_categorie')}}">Catégories</a>
+        <a href="{{ path('app_livre')}}">Nos livres</a>
+        <a href="{{ path('mon_espace')}}">Mon espace</a>
+        <a href="{{ path('app_a_propos')}}">À propos</a>
+        <a href="{{ path('utilisateur_new')}}">S'inscrire</a>
+        <a href="{{ path('app_connexion')}}">Se connecter</a>
+    </nav>
 
-      <section class="logo-reseaux">
-        <a href="#" class="icon-reseaux"
-          ><i class="fa-brands fa-instagram"></i
-        ></a>
-      </section>
+    <section class="logo-reseaux">
+        <a href="#" class="icon-reseaux"><i class="fa-brands fa-instagram"></i></a>
+    </section>
 
-      <section class="pages-legales">
-        <a href="">Mentions légales</a>
-        <a href="">Conditions générales d'utilisation</a>
-      </section>
+    <nav class="pages-legales">
+        <a href="{{ path('app_mentions_legales') }}">Mentions légales</a>
+        <a href="{{ path('app_cgu') }}">Conditions générales d'utilisation</a>
+    </nav>
 
-      <section class="copyright">
-        <p>© Livrosphère 2024</p>
-      </section>
-    </footer>
-  </body>
-</html>
+    <section class="copyright">
+        <p>© Livrosphère 2025</p>
+    </section>
+</footer>
 
 {% endblock %}
