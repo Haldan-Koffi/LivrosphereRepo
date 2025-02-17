@@ -1,5 +1,18 @@
 controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
-    type: attribute
+  resource:
+    path: ../src/Controller/
+    namespace: App\Controller
+  type: attribute
+
+login_api:
+  path: /api/login
+
+afficher_commentaire:
+  path: /api/commentaires
+  controller: App\Controller\CommentaireController::indexapi
+  methods: [GET]
+
+supprimer_commentaire:
+  path: /api/commentaire/{id}/supprimer
+  controller: App\Controller\CommentaireController::deleteapi
+  methods: [POST]

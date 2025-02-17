@@ -26,7 +26,7 @@ class UtilisateurController extends AbstractController
     #[Route('/utilisateurs/info', name: 'utilisateur_info', methods: ['GET'])]
     public function show(): Response
     {
-        $currentUtilisateur = $this->getUtilisateur();
+        $currentUtilisateur = $this->getUser();
 
         // Vérifier si l'utilisateur est connecté
         if (!$currentUtilisateur) {
@@ -53,6 +53,7 @@ class UtilisateurController extends AbstractController
             $utilisateur->setNom($request->request->get('nom'));
             $utilisateur->setPrenom($request->request->get('prenom'));
             $utilisateur->setEmail($request->request->get('email'));
+            $utilisateur->setPseudonyme($request->request->get('pseudonyme'));
             $formMotDePasse = $request->request->get('mot_de_passe');
             $hashedMotDePasse = $passwordHasher->hashPassword($utilisateur, $formMotDePasse);
             $utilisateur->setMotDePasse($hashedMotDePasse);
@@ -73,6 +74,7 @@ class UtilisateurController extends AbstractController
         if ($request->isMethod('POST')) {
             $utilisateur->setNom($request->request->get('nom'));
             $utilisateur->setPrenom($request->request->get('prenom'));
+            $utilisateur->setPseudonyme($request->request->get('pseudonyme'));
             $utilisateur->setEmail($request->request->get('email'));
             $em->flush();
 

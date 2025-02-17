@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le Livre{% endblock %}
+
+{% block body %}
+    <h1>Modifier le Livre</h1>
+
+    <form method="post" action="{{ path('modification_livre', {id: livre.id}) }}" enctype="multipart/form-data">
+        <div>
+            <label for="titre">Titre du livre :</label>
+            <input type="text" id="titre" name="titre" value="{{ livre.titre }}" required>
+        </div>
+
+        <div>
+            <label for="auteur">Auteur du livre :</label>
+            <input type="text" id="auteur" name="auteur" value="{{ livre.auteur }}" required>
+        </div>
+
+        <div>
+            <label for="annee_publication">Année de publication :</label>
+            <input type="number" id="annee_publication" name="annee_publication" value="{{ livre.anneePublication|date('Y') }}" required>
+        </div>
+
+        <div>
+            <label for="resume">Résumé du livre :</label>
+            <textarea id="resume" name="resume" rows="5" required>{{ livre.resume }}</textarea>
+        </div>
+
+        <div>
+            <label for="couverture">Couverture actuelle :</label>
+            {% if livre.couverture %}
+                <img src="{{ asset('uploads/' ~ livre.couverture) }}" alt="Couverture du livre" style="max-width: 100px; max-height: 100px;">
+            {% else %}
+                <p>Aucune couverture disponible.</p>
+            {% endif %}
+        </div>
+
+        <div>
+            <label for="couverture">Nouvelle couverture :</label>
+            <input type="file" id="couverture" name="couverture" accept="image/*">
+        </div>
+
+        <div>
+            <label for="categorie">Catégorie :</label>
+            <select id="categorie" name="categorie" required>
+                {% for categorie in categories %}
+                    <option value="{{ categorie.id }}" {% if categorie.id == livre.categorie.id %}selected{% endif %}>
+                        {{ categorie.nom }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit">Modifier</button>
+    </form>
+
+{% endblock %}

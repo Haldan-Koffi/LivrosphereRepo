@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le Commentaire{% endblock %}
+
+{% block body %}
+    <h1>Modifier le Commentaire</h1>
+
+    {{ form_start(form) }}
+        {{ form_row(form.message) }}
+        <button class="btn btn-primary" type="submit">Modifier</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('livre_info', {'id': commentaire.livre.id}) }}">Retour à la page du livre</a>
+{% endblock %}

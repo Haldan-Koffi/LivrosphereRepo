@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du Livre{% endblock %}
+
+{% block body %}
+    <h1>Détails du Livre</h1>
+
+    <ul>
+        <li><strong>Titre :</strong> {{ livre.titre }}</li>
+        <li><strong>Auteur :</strong> {{ livre.auteur }}</li>
+        <li><strong>Résumé :</strong> {{ livre.resume }}</li>
+        <li>
+            <strong>Couverture :</strong>
+            {% if livre.couverture %}
+                <img src="{{ asset('uploads/' ~ livre.couverture) }}" alt="Couverture" style="max-width: 200px;">
+            {% else %}
+                Pas de couverture disponible.
+            {% endif %}
+        </li>
+        <li>
+        <form method="POST" action="{{ path('toggle_like', {'id': livre.id}) }}" style="display: inline;">
+            <button type="submit" class="btn {{ utilisateurALike ? 'btn-danger' : 'btn-primary' }}">
+                {{ utilisateurALike ? 'Je n\'aime plus' : 'J\'aime' }}
+            </button>
+        </form>
+        <span class="badge bg-secondary">{{ nombreLikes }}{{ nombreLikes > 1 ? 's' }}</span>
+        </li>
+        <li>
+        <form method="POST" action="{{ path('toggle_recommandation', {'id': livre.id}) }}" style="display: inline;">
+            <button type="submit" class="btn {{ utilisateurARecommande ? 'btn-danger' : 'btn-success' }}">
+                {{ utilisateurARecommande ? 'Retirer la recommandation' : 'Recommander' }}
+            </button>
+        </form>
+        <span class="badge bg-secondary">{{ nombreRecommandations }}{{ nombreRecommandations > 1 ? 's' }}</span>
+        </li>
+    </ul>
+
+    <a href="{{ path('app_livre') }}">Retour à la liste des livres</a>
+
+    <h2>Commentaires</h2>
+    <div>
+        {% if commentaires is not empty %}
+            {% for commentaire in commentaires %}
+                <div>
+                    <p><strong>{{ commentaire.utilisateur.pseudonyme }}</strong> ({{ commentaire.dateCommentaire|date('d/m/Y H:i') }})</p>
+                    <p>{{ commentaire.message }}</p>
+                    {% if commentaire.modificationCommentaire %}
+                        <p><em>(Modifié)</em></p>
+                    {% endif %}
+
+                    {# Affichage du bouton "Modifier" uniquement si l'utilisateur est celui qui a écrit le commentaire #}
+                    {% if commentaire.utilisateur == app.user %}
+                        <a href="{{ path('edit_commentaire', {'id': commentaire.id}) }}" class="btn btn-warning">Modifier</a>
+                    {% endif %}
+
+                    {# Affichage du bouton "Supprimer" uniquement si l'utilisateur est celui qui a écrit le commentaire ou s'il est un administrateur #}
+                    {% if commentaire.utilisateur == app.user or is_granted('ROLE_ADMIN') %}
+                        <form action="{{ path('delete_commentaire', {'id': commentaire.id}) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Aucun commentaire pour ce livre.</p>
+        {% endif %}
+    </div>
+
+    <h3>Ajouter un commentaire</h3>
+    {{ form_start(form) }}
+        {{ form_row(form.message) }}  {# Affichage du champ de message #}
+        <button type="submit">Ajouter Commentaire</button>
+    {{ form_end(form) }}
+{% endblock %}
