@@ -1,17 +1,97 @@
-<ul>
-    {% for categorie in categories %}
-        <li>
-            <h3>{{ categorie.nom }}</h3>
-            {% if categorie.couvertureCategorie %}
-                <img 
-                    src="{{ asset('uploads/' ~ categorie.couvertureCategorie) }}" 
-                    alt="{{ categorie.nom }}" 
-                    style="max-width: 100px; max-height: 100px;"
-                >
-            {% else %}
-                <p>Pas d'image disponible</p>
-            {% endif %}
-            <p>Date de création : {{ categorie.dateCreation|date('d/m/Y H:i') }}</p>
-        </li>
-    {% endfor %}
-</ul>
+{% extends 'base.html.twig' %}
+
+{% block title %}Catégories{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('style_categorie') }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+          integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
+
+{% block body %}
+<main>
+    <!-- Titre principal -->
+    <section class="titre-livrosphere">
+        <h2>LIVROSPHÈRE</h2>
+    </section>
+
+    <!-- Introduction de la page -->
+    <section class="category-brand">
+        <h1>Explorez notre univers littéraire</h1>
+        <h3>Il y en a pour chaque lecteur</h3>
+    </section>
+
+    <section class="textbrand2">
+        <h2>Chaque catégorie, une aventure littéraire, trouvez votre prochaine lecture !</h2>
+    </section>
+
+    <!-- Conteneur des catégories -->
+    <section id="categoriesContainer" class="d-flex flex-wrap gap-3"></section>
+
+    <!-- Création dynamique des cartes de catégories -->
+    <script>
+        const categories = [
+            {% for categorie in categories %}
+            {
+                id: {{ categorie.id }},
+                title: "{{ categorie.nom|e('js') }}",
+                image: "{{ asset('uploads/' ~ categorie.couvertureCategorie) }}",
+                link: "{{ path('app_livre', {'categorie': categorie.id}) }}"
+            },
+            {% endfor %}
+        ];
+
+        const container = document.getElementById("categoriesContainer");
+
+        categories.forEach((category) => {
+            const card = document.createElement("section");
+            card.className = "card h-100";
+            card.style.width = "18rem";
+
+            card.innerHTML = `
+                <img src="${category.image}" class="card-img-top" alt="${category.title}" height="400" />
+                <div class="card-body h-100">
+                    <h5 class="card-title">${category.title}</h5>
+                    <a href="${category.link}" class="btn btn-primary">Découvrir</a>
+                </div>
+            `;
+
+            container.appendChild(card);
+        });
+    </script>
+</main>
+
+<!-- Footer -->
+<footer class="footer-container">
+    <nav class="boutons-footer">
+        <a href="{{ path('app_accueil') }}">Accueil</a>
+        <a href="{{ path('app_categorie') }}">Catégories</a>
+        <a href="{{ path('app_livre') }}">Nos livres</a>
+        <a href="{{ path('mon_espace') }}">Mon espace</a>
+        <a href="{{ path('app_a_propos') }}">À propos</a>
+        <a href="{{ path('utilisateur_new') }}">S'inscrire</a>
+        <a href="{{ path('app_connexion') }}">Se connecter</a>
+    </nav>
+
+    <section class="logo-reseaux">
+        <a href="#" class="icon-reseaux"><i class="fa-brands fa-instagram"></i></a>
+    </section>
+
+    <nav class="pages-legales">
+        <a href="{{ path('app_mentions_legales') }}">Mentions légales</a>
+        <a href="{{ path('app_cgu') }}">Conditions générales d'utilisation</a>
+    </nav>
+
+    <section class="copyright">
+        <p>© Livrosphère 2025</p>
+    </section>
+</footer>
+{% endblock %}

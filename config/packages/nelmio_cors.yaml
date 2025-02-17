@@ -1,14 +1,15 @@
 nelmio_cors:
   defaults:
     origin_regex: true
-    allow_origin: ["%env(CORS_ALLOW_ORIGIN)%"]
-    allow_methods: ["GET", "OPTIONS", "POST", "PUT", "PATCH", "DELETE"]
-    allow_headers: ["Content-Type", "Authorization"]
-    expose_headers: ["Link"]
+    allow_origin: ["http://localhost:4200"] # Permet les requêtes depuis ton front Angular
+    allow_methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"] # OPTIONS est crucial pour CORS
+    allow_headers: ["Content-Type", "Authorization"] # Autorise les en-têtes nécessaires
+    expose_headers: ["Link", "Authorization"] # Expose les en-têtes utiles
     max_age: 3600
   paths:
-    "^/api":
-      allow_origin: ["*"]
-      allow_headers: ["*"]
-      allow_methods: ["POST", "PUT", "GET", "DELETE"]
+    "^/api/": # Appliquer la configuration CORS uniquement sur les routes API
+      allow_origin: ["http://localhost:4200"]
+      allow_methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+      allow_headers: ["Content-Type", "Authorization"]
+      expose_headers: ["Link", "Authorization"]
       max_age: 3600

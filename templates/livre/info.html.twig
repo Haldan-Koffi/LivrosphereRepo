@@ -1,74 +1,150 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Détails du Livre{% endblock %}
+{% block title %}Consultation{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('style_aff_livres') }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+          integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
 
 {% block body %}
-    <h1>Détails du Livre</h1>
+<main>
+    <!-- Section titre -->
+    <section class="titre-livrosphere">
+        <h2>LIVROSPHÈRE</h2>
+    </section>
 
-    <ul>
-        <li><strong>Titre :</strong> {{ livre.titre }}</li>
-        <li><strong>Auteur :</strong> {{ livre.auteur }}</li>
-        <li><strong>Résumé :</strong> {{ livre.resume }}</li>
-        <li>
-            <strong>Couverture :</strong>
+    <!-- Section des détails du livre -->
+    <section class="informations-ajout">
+        <h3>Ajouté par {{ livre.utilisateur.pseudonyme }} le {{ livre.dateAjout|date('d/m/Y H:i') }}</h3>
+    </section>
+
+    <section class="ajout">
+        <figure class="cover-ajout">
             {% if livre.couverture %}
-                <img src="{{ asset('uploads/' ~ livre.couverture) }}" alt="Couverture" style="max-width: 200px;">
+                <img src="{{ asset('uploads/' ~ livre.couverture) }}" height="400px" alt="Couverture du livre '{{ livre.titre }}'" />
             {% else %}
-                Pas de couverture disponible.
+                <img src="/path/to/default_cover.jpg" height="400px" alt="Pas de couverture disponible" />
             {% endif %}
-        </li>
-        <li>
-        <form method="POST" action="{{ path('toggle_like', {'id': livre.id}) }}" style="display: inline;">
-            <button type="submit" class="btn {{ utilisateurALike ? 'btn-danger' : 'btn-primary' }}">
-                {{ utilisateurALike ? 'Je n\'aime plus' : 'J\'aime' }}
-            </button>
+        </figure>
+
+        <article class="info-livre">
+            <h1>{{ livre.titre }}</h1>
+            <dl>
+                <dt>Auteur</dt>
+                <dd>{{ livre.auteur }}</dd>
+
+                <dt>Date de publication</dt>
+                <dd>{{ livre.anneePublication|date('Y') }}</dd>
+
+                <dt>Catégorie</dt>
+                <dd>{{ livre.categorie.nom }}</dd>
+
+                <dt>Résumé</dt>
+                <dd>{{ livre.resume }}</dd>
+            </dl>
+        </article>
+    </section>
+
+    <!-- Section des interactions -->
+    <section class="espace-interaction">
+        <section class="bouton-interaction">
+            <form method="POST" action="{{ path('toggle_like', {'id': livre.id}) }}" style="display: inline;">
+                <button type="submit" aria-label="J'aime">
+                    <i class="like fa fa-heart {{ utilisateurALike ? 'btn-danger' : 'btn-primary' }}" aria-hidden="true"></i>
+                </button>
+            </form>
+            <span class="badge bg-secondary">{{ nombreLikes }}</span>
+
+            <form method="POST" action="{{ path('toggle_recommandation', {'id': livre.id}) }}" style="display: inline;">
+                <button type="submit" aria-label="Recommander">
+                    <i class="recommander fa fa-star {{ utilisateurARecommande ? 'btn-danger' : 'btn-success' }}" aria-hidden="true"></i>
+                </button>
+            </form>
+            <span class="badge bg-secondary">{{ nombreRecommandations }}</span>
+        </section>
+
+        <!-- Section des commentaires -->
+        <section class="commentaires">
+            <h3>Commentaires</h3>
+            <section class="commentaires-ajouts">
+                {% if commentaires is not empty %}
+                    {% for commentaire in commentaires %}
+                        <div>
+                            <p><b>{{ commentaire.utilisateur.pseudonyme }}</b> ({{ commentaire.dateCommentaire|date('d/m/Y H:i') }})</p>
+                            <p>{{ commentaire.message }}</p>
+                            {% if commentaire.modificationCommentaire %}
+                                <p><em>(Modifié)</em></p>
+                            {% endif %}
+                            {% if commentaire.utilisateur == app.user %}
+                                <a href="{{ path('edit_commentaire', {'id': commentaire.id}) }}" class="btn btn-warning">Modifier</a>
+                            {% endif %}
+                            {% if commentaire.utilisateur == app.user or is_granted('ROLE_ADMIN') %}
+                                <form action="{{ path('delete_commentaire', {'id': commentaire.id}) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">
+                                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>Aucun commentaire pour ce livre.</p>
+                {% endif %}
+            </section>
+
+            <!-- Formulaire pour ajouter un commentaire -->
+            <h3>Ajouter un commentaire</h3>
+            {{ form_start(form) }}
+            {{ form_row(form.message) }}
+            <button type="submit">Ajouter Commentaire</button>
+            {{ form_end(form) }}
+        </section>
+    </section>
+
+    <!-- Affichage du bouton "Modifier le livre" si l'utilisateur est le créateur du livre -->
+    {% if livre.utilisateur == app.user %}
+        <a href="{{ path('modification_livre', {'id': livre.id}) }}" class="btn btn-warning">Modifier le livre</a>
+    {% endif %}
+
+    <!-- Affichage du bouton "Supprimer le livre" si l'utilisateur est le créateur ou admin -->
+    {% if livre.utilisateur == app.user or is_granted('ROLE_ADMIN') %}
+        <form method="POST" action="{{ path('suppression_livre', {'id': livre.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?');">
+            <button type="submit" class="btn btn-danger">Supprimer le livre</button>
         </form>
-        <span class="badge bg-secondary">{{ nombreLikes }}{{ nombreLikes > 1 ? 's' }}</span>
-        </li>
-        <li>
-        <form method="POST" action="{{ path('toggle_recommandation', {'id': livre.id}) }}" style="display: inline;">
-            <button type="submit" class="btn {{ utilisateurARecommande ? 'btn-danger' : 'btn-success' }}">
-                {{ utilisateurARecommande ? 'Retirer la recommandation' : 'Recommander' }}
-            </button>
-        </form>
-        <span class="badge bg-secondary">{{ nombreRecommandations }}{{ nombreRecommandations > 1 ? 's' }}</span>
-        </li>
-    </ul>
+    {% endif %}
+</main>
 
-    <a href="{{ path('app_livre') }}">Retour à la liste des livres</a>
+<!-- Footer -->
+<footer class="footer-container">
+    <nav class="boutons-footer">
+        <a href="{{ path('app_accueil')}}">Accueil</a>
+        <a href="{{ path('app_categorie')}}">Catégories</a>
+        <a href="{{ path('app_livre')}}">Nos livres</a>
+        <a href="{{ path('mon_espace')}}">Mon espace</a>
+        <a href="{{ path('app_a_propos')}}">À propos</a>
+        <a href="{{ path('utilisateur_new')}}">S'inscrire</a>
+        <a href="{{ path('app_connexion')}}">Se connecter</a>
+    </nav>
 
-    <h2>Commentaires</h2>
-    <div>
-        {% if commentaires is not empty %}
-            {% for commentaire in commentaires %}
-                <div>
-                    <p><strong>{{ commentaire.utilisateur.pseudonyme }}</strong> ({{ commentaire.dateCommentaire|date('d/m/Y H:i') }})</p>
-                    <p>{{ commentaire.message }}</p>
-                    {% if commentaire.modificationCommentaire %}
-                        <p><em>(Modifié)</em></p>
-                    {% endif %}
+    <section class="logo-reseaux">
+        <a href="#" class="icon-reseaux"><i class="fa-brands fa-instagram"></i></a>
+    </section>
 
-                    {# Affichage du bouton "Modifier" uniquement si l'utilisateur est celui qui a écrit le commentaire #}
-                    {% if commentaire.utilisateur == app.user %}
-                        <a href="{{ path('edit_commentaire', {'id': commentaire.id}) }}" class="btn btn-warning">Modifier</a>
-                    {% endif %}
+    <nav class="pages-legales">
+        <a href="{{ path('app_mentions_legales') }}">Mentions légales</a>
+        <a href="{{ path('app_cgu') }}">Conditions générales d'utilisation</a>
+    </nav>
 
-                    {# Affichage du bouton "Supprimer" uniquement si l'utilisateur est celui qui a écrit le commentaire ou s'il est un administrateur #}
-                    {% if commentaire.utilisateur == app.user or is_granted('ROLE_ADMIN') %}
-                        <form action="{{ path('delete_commentaire', {'id': commentaire.id}) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">
-                            <button type="submit" class="btn btn-danger">Supprimer</button>
-                        </form>
-                    {% endif %}
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>Aucun commentaire pour ce livre.</p>
-        {% endif %}
-    </div>
-
-    <h3>Ajouter un commentaire</h3>
-    {{ form_start(form) }}
-        {{ form_row(form.message) }}  {# Affichage du champ de message #}
-        <button type="submit">Ajouter Commentaire</button>
-    {{ form_end(form) }}
+    <section class="copyright">
+        <p>© Livrosphère 2025</p>
+    </section>
+</footer>
 {% endblock %}

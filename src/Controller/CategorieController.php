@@ -3,96 +3,90 @@
 namespace App\Controller;
 
 use App\Entity\Categorie;
-use App\Repository\CategorieRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\CategorieService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
 
-#[Route('/admin')]
+
+
 class CategorieController extends AbstractController
 {
-    #[Route('/categorie', name: 'app_categorie')]
-    public function index(CategorieRepository $categorieRepository): Response
+    private CategorieService $categorieService;
+
+    public function __construct(CategorieService $categorieService)
     {
-        $categories = $categorieRepository->findAll();
+        $this->categorieService = $categorieService;
+    }
+
+    #[Route('/categorie', name: 'app_categorie')]
+    public function index(): Response
+    {
+        $categories = $this->categorieService->getAllCategories();
         return $this->render('categorie/liste_categorie.html.twig', ['categories' => $categories]);
     }
 
-    #[Route('/nouvelle/categorie', name: 'nouvelle_categorie', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $em): Response
+    #[Route('/admin/nouvelle/categorie', name: 'nouvelle_categorie', methods: ['GET', 'POST'])]
+    public function new(Request $request, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
+        // Générer le token CSRF pour la création de catégorie
+        $csrfToken = $csrfTokenManager->getToken('nouvelle_categorie')->getValue();
+
         if ($request->isMethod('POST')) {
-            $categorie = new Categorie();
-            $categorie->setNom($request->request->get('nom'));
+            // Vérification du token CSRF
+            $token = $request->request->get('_csrf_token');
+            if (!$csrfTokenManager->isTokenValid(new CsrfToken('nouvelle_categorie', $token))) {
+                throw new AccessDeniedHttpException('Le token CSRF est invalide.');
+            }
 
-
-            if ($request->files->get('couverture_categorie')) {
+            $nom = $request->request->get('nom');
             $file = $request->files->get('couverture_categorie');
-            $fileName = uniqid() . '.' . $file->guessExtension();
 
-            // Déplace le fichier dans le répertoire de téléchargement
-            $file->move($this->getParameter('upload_directory'), $fileName);
-
-            // Définit le nom du fichier dans l'entité
-            $categorie->setCouvertureCategorie($fileName);
-        }
-            $categorie->setDateCreation(new \DateTime());
-
-            $em->persist($categorie);
-            $em->flush();
+            $this->categorieService->createCategorie($nom, $file);
 
             return $this->redirectToRoute('app_categorie');
         }
 
-        return $this->render('categorie/nouvelle_categorie.html.twig');
+        return $this->render('categorie/nouvelle_categorie.html.twig', [
+            'csrf_token' => $csrfToken
+        ]);
     }
 
-    #[Route('categorie/{id}/modification', name: 'modification_categorie', methods: ['GET', 'POST'])]
-    public function edit(Categorie $categorie, Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
+    #[Route('/categorie/{id}/modification', name: 'modification_categorie', methods: ['GET', 'POST'])]
+    public function edit(Categorie $categorie, Request $request, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
-    if ($request->isMethod('POST')) {
-        $categorie->setNom($request->request->get('nom'));
+        // Générer le token CSRF pour la modification de catégorie
+        $csrfToken = $csrfTokenManager->getToken('modification_categorie_' . $categorie->getId())->getValue();
 
-        // Gestion de la couverture de la catégorie
-        $nouvelleCouverture = $request->files->get('couverture_categorie');
-        if ($nouvelleCouverture) {
-            // Gérer l'upload du fichier
-            $originalFilename = pathinfo($nouvelleCouvertureCategorie->getClientOriginalName(), PATHINFO_FILENAME);
-            $safeFilename = $slugger->slug($originalFilename);
-            $newFilename = $safeFilename . '-' . uniqid() . '.' . $nouvelleCouvertureCategorie->guessExtension();
-
-            // Déplacer le fichier dans le dossier 'uploads'
-            try {
-                $nouvelleCouvertureCategorie->move(
-                    $this->getParameter('uploads_directory'), // Dossier de destination
-                    $newFilename
-                );
-                $categorie->setCouvertureCategorie($newFilename);
-            } catch (FileException $e) {
-                // Gérer l'erreur de téléchargement si nécessaire
+        if ($request->isMethod('POST')) {
+            // Vérification du token CSRF
+            $token = $request->request->get('_csrf_token');
+            if (!$csrfTokenManager->isTokenValid(new CsrfToken('modification_categorie_' . $categorie->getId(), $token))) {
+                throw new AccessDeniedHttpException('Le token CSRF est invalide.');
             }
+
+            $nom = $request->request->get('nom');
+            $file = $request->files->get('couvertureCategorie');
+
+            $this->categorieService->updateCategorie($categorie, $nom, $file);
+
+            return $this->redirectToRoute('app_categorie');
         }
 
-        $categorie->setDateCreation(new \DateTime($request->request->get('date_creation')));
-
-        $em->flush();
-
-        return $this->redirectToRoute('app_categorie');
-    }
-
-    return $this->render('categorie/modification.html.twig', ['categorie' => $categorie]);
+        return $this->render('categorie/modification.html.twig', [
+            'categorie' => $categorie,
+            'csrf_token' => $csrfToken
+        ]);
     }
 
 
-    #[Route('categorie/{id}/supprimer', name: 'supprimer_categorie', methods: ['GET'])]
-    public function delete(Categorie $categorie, EntityManagerInterface $em): Response
+    #[Route('/categorie/{id}/supprimer', name: 'supprimer_categorie', methods: ['GET'])]
+    public function delete(Categorie $categorie): Response
     {
-        $em->remove($categorie);
-        $em->flush();
-
+        $this->categorieService->deleteCategorie($categorie);
         return $this->redirectToRoute('app_categorie');
     }
 }

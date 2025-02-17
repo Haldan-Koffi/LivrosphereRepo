@@ -1,66 +1,152 @@
-{% extends 'base.html.twig' %}
+{% extends "base.html.twig" %}
 
-{% block title %}Liste des Livres{% endblock %}
+{% block stylesheets %}
+    {{ encore_entry_link_tags('style_liste_livre') }}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+    />
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
 
 {% block body %}
-    <h1>Liste des Livres</h1>
+<main>
+    <section class="creation_bouton">
+    <form action="{{ path('nouveau_livre') }}" method="get">
+    <button type="submit" class="btn btn-dark">Ajouter un nouveau livre</button>
+    </form>
+    <section class="text_categorie">
+    <h1>
+        {% if app.request.query.get('categorie') %}
+            Livres de la catégorie sélectionnée
+        {% else %}
+            Tous les livres
+        {% endif %}
+    </h1>
+    </section>
 
     <!-- Formulaire de filtre par catégorie -->
-    <form method="get">
-        <div>
+    <section class="text_categorie">
+    <form id="filterForm">
+        <section>
             <label for="categorie">Filtrer par catégorie :</label>
             <select id="categorie" name="categorie">
                 <option value="">Toutes les catégories</option>
                 {% for categorie in categories %}
-                    <option value="{{ categorie.id }}" {% if categorie.id == app.request.query.get('categorie') %}selected{% endif %}>
+                    <option value="{{ categorie.id }}" 
+                        {% if app.request.query.get('categorie') == categorie.id %}selected{% endif %}>
                         {{ categorie.nom }}
                     </option>
                 {% endfor %}
             </select>
-        </div>
-        <button type="submit">Filtrer</button>
+        </section>
     </form>
+    </section>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Titre</th>
-                <th>Auteur</th>
-                <th>Année de Publication</th>
-                <th>Couverture</th>
-                <th>Catégorie</th>
-                <th>Résumé</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for livre in livres %}
-                <tr>
-                    <td>{{ livre.titre }}</td>
-                    <td>{{ livre.auteur }}</td>
-                    <td>{{ livre.anneePublication|date('Y') }}</td>
-                    <td>
-                        {% if livre.couverture %}
-                            <img src="{{ asset('uploads/' ~ livre.couverture) }}" alt="Couverture" style="max-width: 100px;">
-                        {% else %}
-                            Pas de couverture
-                        {% endif %}
-                    </td>
-                    <td>{{ livre.categorie.nom }}</td>
-                    <td>{{ livre.resume }}</td>
-                    <td>
-                        <a href="{{ path('modification_livre', {id: livre.id}) }}">Modifier</a>
-                        <a href="{{ path('supprimer_livre', {id: livre.id}) }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?');">Supprimer</a>
-                        <a href="{{ path('livre_info', {id: livre.id}) }}" class="btn btn-info">Voir les détails</a> <!-- Nouveau bouton -->
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="7">Aucun livre n'a été ajouté.</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <!-- Conteneur des livres -->
+    <section id="livresContainer" class="d-flex flex-wrap gap-3"></section>
 
-    <a href="{{ path('nouveau_livre') }}">Ajouter un nouveau livre</a>
+    <!-- Script AJAX pour le filtrage des livres -->
+    <script>
+        async function chargerLivres(categorieId = "") {
+            let url = `/livres/filtrer?categorie=${categorieId}`;
+
+            try {
+                let response = await fetch(url);
+                let livres = await response.json();
+
+                console.log(livres); // Vérifie que les champs resume et annee_publication sont maintenant présents
+
+                let livresContainer = document.getElementById("livresContainer");
+                livresContainer.innerHTML = ""; // Vide la liste actuelle
+
+                if (livres.length === 0) {
+                    livresContainer.innerHTML = "<p>Aucun livre trouvé pour cette catégorie.</p>";
+                    return;
+                }
+
+                livres.forEach((livre) => {
+                    let card = document.createElement("div");
+                    card.className = "card h-100";
+                    card.style.width = "18rem";
+
+                    // Formater le résumé si disponible
+                    let resume = livre.resume || 'Pas de résumé disponible';
+
+                    // Vérification de la date et formatage
+                    let anneePublication = livre.annee_publication || 'Date inconnue'; // Utiliser directement la donnée si elle est présente
+
+                    console.log(`Résumé: ${resume}, Date de publication: ${anneePublication}`); // Vérifie les valeurs avant de les afficher
+
+                    card.innerHTML = `
+                        <img src="/uploads/${livre.couverture}" class="card-img-top" alt="${livre.titre}" style="height: 300px; object-fit: cover;" />
+                        <div class="card-body">
+                            <h5 class="card-title">${livre.titre}</h5>
+                            <p class="card-text text-truncate" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                                ${resume}
+                            </p>
+                            <p class="card-text"><small class="text-muted">Par ${livre.auteur}, ${anneePublication}</small></p>
+                            <a href="/livre/${livre.id}/info" class="btn btn-primary">Voir les détails</a>
+                        </div>
+                    `;
+
+                    livresContainer.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error("Erreur lors du filtrage des livres :", error);
+                document.getElementById("livresContainer").innerHTML = "<p>Une erreur est survenue lors du chargement.</p>";
+            }
+        }
+
+        // Écouteur d'événement sur le changement de catégorie
+        document.getElementById("categorie").addEventListener("change", function () {
+            chargerLivres(this.value);
+        });
+
+        // Charger les livres au chargement initial en fonction de l'URL
+        document.addEventListener("DOMContentLoaded", () => {
+            let categorieId = new URLSearchParams(window.location.search).get("categorie") || "";
+            document.getElementById("categorie").value = categorieId;
+            chargerLivres(categorieId);
+        });
+    </script>
+
+</main>
+
+<footer class="footer-container">
+    <nav class="boutons-footer">
+        <a href="{{ path('app_accueil') }}">Accueil</a>
+        <a href="{{ path('app_categorie') }}">Catégories</a>
+        <a href="{{ path('app_livre') }}">Nos livres</a>
+        <a href="{{ path('mon_espace') }}">Mon espace</a>
+        <a href="{{ path('app_a_propos') }}">À propos</a>
+        <a href="{{ path('utilisateur_new') }}">S'inscrire</a>
+        <a href="{{ path('app_connexion') }}">Se connecter</a>
+    </nav>
+
+    <section class="logo-reseaux">
+        <a href="#" class="icon-reseaux"><i class="fa-brands fa-instagram"></i></a>
+    </section>
+
+    <nav class="pages-legales">
+        <a href="{{ path('app_mentions_legales') }}">Mentions légales</a>
+        <a href="{{ path('app_cgu') }}">Conditions générales d'utilisation</a>
+    </nav>
+
+    <section class="copyright">
+        <p>© Livrosphère 2025</p>
+    </section>
+</footer>
+
 {% endblock %}

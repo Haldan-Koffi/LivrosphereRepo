@@ -8,6 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UtilisateurRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
@@ -26,7 +28,18 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
+
+    
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le mot de passe est obligatoire.")]
+    #[Assert\Length(
+    min: 5,
+    minMessage: "Le mot de passe doit contenir au moins 12 caractères."
+    )]
+    #[Assert\Regex(
+    pattern: "/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_])(?=(?:.*?\s+){11,}).{12,}$/",
+    message: "Le mot de passe doit contenir au moins une majuscule, un chiffre, un caractère spécial."
+    )]
     private ?string $mot_de_passe = null;
 
     #[ORM\Column]

@@ -1,7 +1,221 @@
-{% extends 'base.html.twig' %}
+{% block stylesheets %}
+{{ encore_entry_link_tags('style_accueil') }}
+{% endblock %}
 
-{% block title %}Hello AccueilController!{% endblock %}
+{% block javascripts %}
+{{ encore_entry_script_tags('app') }}
+{% endblock %}
 
 {% block body %}
-<p>Page d'accueil</p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page d'accueil</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+GB+S:ital,wght@0,100..400;1,100..400&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="header-container">
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <section class="container-fluid">
+          <a href="{{ path('app_accueil')}}">
+            <img
+              title="logo_livrosphère"
+              src="{{ asset('images/logo-livrosphere.png') }}"
+              height="80"
+              alt="Logo_livrosphère"
+            />
+          </a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <section class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_accueil')}}">Accueil</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_categorie') }}">Catégories</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_livre') }}">Nos livres</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ path('mon_espace') }}">Mon espace</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{path('app_a_propos')}}">À propos</a>
+              </li>
+            </ul>
+          </section>
+          <section class="bouton-inscriptionc">
+          <a href="{{ path('utilisateur_new') }}" class="btn btn-dark" role="button"
+            >S'inscrire</a
+          >
+          <a href="{{ path('app_connexion') }}" class="btn btn-secondary" role="button"
+            >Se connecter</a
+          >
+        </section>
+        </section>
+      </nav>
+    </header>
+
+    <main>
+      <section class="titre-livrosphere">
+        <h2>LIVROSPHÈRE</h2>
+      </section>
+
+      <section class="message-homepage1">
+        <h3>BIBLIOTHÈQUE COLLABORATIVE</h3>
+        <h4 class="message-homepage2 text-gray">
+          Découvrez, partagez et discutez des livres que vous avez lus
+        </h4>
+      </section>
+
+      <section class="bloc-carousel bg-gray100">
+        <section
+          id="carouselExampleIndicators"
+          class="carousel slide"
+          data-bs-ride="carousel"
+          data-bs-interval="4000"
+        >
+          <section class="carousel-indicators">
+            <button
+              type="button"
+              data-bs-target="#carouselExampleIndicators"
+              data-bs-slide-to="0"
+              class="active"
+              aria-current="true"
+              aria-label="Slide 1"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#carouselExampleIndicators"
+              data-bs-slide-to="1"
+              aria-label="Slide 2"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#carouselExampleIndicators"
+              data-bs-slide-to="2"
+              aria-label="Slide 3"
+            ></button>
+          </section>
+          <section class="carousel-inner">
+    {% if derniersLivres is not empty %}
+        {% for livre in derniersLivres %}
+            <section class="carousel-item {% if loop.first %}active{% endif %}">
+                <img src="{{ asset('uploads/' ~ livre.couverture) }}" class="d-block w-100" alt="{{ livre.titre }}" height="400" />
+            </section>
+        {% endfor %}
+    {% else %}
+        <p>Aucune image disponible pour le carrousel.</p>
+    {% endif %}
+</section>
+
+
+          <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="prev"
+          >
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="next"
+          >
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </section>
+      </section>
+      <section class="cover-livre">
+  {% if derniersLivres is not empty %}
+    {% for livre in derniersLivres %}
+        <article class="card h-100" style="width: 18rem">
+            <img src="{{ asset('uploads/' ~ livre.couverture) }}" class="card-img-top" alt="{{ livre.titre }}" height="400" />
+            <section class="card-body">
+                <h5 class="card-title">{{ livre.titre }}</h5>
+                <p class="card-text text-truncate" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                    {{ livre.resume }}
+                </p>
+                <a href="{{ path('livre_information', { id: livre.id }) }}" class="btn btn-dark">DÉCOUVRIR ></a>
+            </section>
+        </article>
+    {% endfor %}
+    {% else %}
+    <p>Aucun livre disponible pour le moment.</p>
+    {% endif %}
+</section>
+      <section class="message2-homepage">
+        <h3>UNE COMMUNAUTÉ PEU COMMUNE</h3>
+        <h4 class="text-gray">Rejoignez une communauté de lecteur engagé</h4>
+      </section>
+
+      <section class="bloc-carousel bg-gray100">
+        <figure class="ajout-livre">
+          <img
+            src="{{asset('images/interaction_plateforme_maj.png')}}"
+            alt="Interaction Utilisateurs"
+            height="400"
+            class="interaction-users"
+          />
+        </figure>
+      </section>
+    </main>
+
+    <footer class="footer-container">
+      <nav class="boutons-footer">
+        <a href="{{ path('app_accueil')}}">Accueil</a>
+        <a href="{{ path('app_categorie')}}">Catégories</a>
+        <a href="{{ path('app_livre')}}">Nos livres</a>
+        <a href="{{ path('mon_espace')}}">Mon espace</a>
+        <a href="{{ path('app_a_propos')}}">À propos</a>
+        <a href="{{ path('utilisateur_new')}}">S'inscrire</a>
+        <a href="{{ path('app_connexion')}}">Se connecter</a>
+      </nav>
+
+      <section class="logo-reseaux">
+        <a href="#" class="icon-reseaux"
+          ><i class="fa-brands fa-instagram"></i
+        ></a>
+      </section>
+
+      <nav class="pages-legales">
+        <a href="{{ path('app_mentions_legales') }}">Mentions légales</a>
+        <a href="{{ path('app_cgu') }}">Conditions générales d'utilisation</a>
+      </nav>
+
+      <section class="copyright">
+        <p>© Livrosphère 2025</p>
+      </section>
+    </footer>
+  </body>
+</html>
 {% endblock %}
