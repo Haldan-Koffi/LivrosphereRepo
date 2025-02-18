@@ -11,29 +11,27 @@ class InscriptionControllerTest extends WebTestCase
         $client = static::createClient();
         $crawler = $client->request('GET', '/inscription');
 
-        // Vérifier que le formulaire est bien présent en utilisant un sélecteur plus générique
-        $this->assertSelectorExists('form'); // Vérifie simplement la présence du formulaire
-
-        // Récupérer le jeton CSRF
-        $csrfToken = $crawler->filter('input[name="_csrf_token"]')->attr('value');
         
-        // Vérifier que le jeton est bien récupéré
+        $this->assertSelectorExists('form');
+
+        $csrfToken = $crawler->filter('input[name="_csrf_token"]')->attr('value');
         $this->assertNotEmpty($csrfToken);
 
-        // Soumettre le formulaire avec les données nécessaires
         $form = $crawler->selectButton('M\'inscrire')->form([
-            'nom' => 'John',
-            'prenom' => 'Doe',
-            'email' => 'john.doe@example.com',
-            'mot_de_passe' => 'AbcD1234!@#$',
-            'pseudonyme' => 'johndoe',
-            '_csrf_token' => $csrfToken, // Utiliser le bon nom pour le CSRF
+            'nom'           => 'Jo',
+            'prenom'        => 'D',
+            'email'         => 'jod@example.com',
+            'mot_de_passe'  => 'AncD1234!@#$',
+            'pseudonyme'    => 'jod',
+            '_csrf_token'   => $csrfToken,
         ]);
 
         $client->submit($form);
 
-        // Vérifier si l'utilisateur est redirigé
-        $this->assertResponseRedirects('/accueil');
+        // Générer l'URL attendue via le routeur
+        $expectedUrl = $client->getContainer()->get('router')->generate('app_accueil');
+        
+        // Vérifier que la réponse redirige bien vers l'URL attendue
+        $this->assertResponseRedirects($expectedUrl);
     }
-
 }
