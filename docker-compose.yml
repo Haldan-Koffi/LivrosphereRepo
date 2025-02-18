@@ -1,0 +1,45 @@
+services:
+  symfony:
+    image: php:8.2-apache
+    container_name: symfony-app
+    working_dir: /var/www/symfony
+    volumes:
+      - ./livrosphere:/var/www/symfony # Chemin vers ton projet Symfony sur ton hôte
+    ports:
+      - "8001:80" # Port d'accès au backend Symfony
+    networks:
+      - app-network
+    depends_on:
+      - database # Dépend de MySQL
+
+  # angular:
+  #   image: node:16
+  #   container_name: angular-app
+  #   working_dir: /app
+  #   volumes:
+  #     - ./LivrosphereAPI:/app # Chemin vers ton projet Angular sur ton hôte
+  #   ports:
+  #     - "4201:4200" # Port d'accès au frontend Angular
+  #   command: ["npm", "start"] # Démarre l'application Angular sur le port 4200
+  #   networks:
+  #     - app-network
+  #   depends_on:
+  #     - symfony
+
+  # Service MySQL
+  database:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword} # Mot de passe root de la DB
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-livrosphere_donnees} # Nom de la base de données par défaut
+      MYSQL_USER: ${MYSQL_USER:-app} # Utilisateur MySQL
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-app_password} # Mot de passe pour l'utilisateur MySQL
+    ports:
+      - "3307:3306" # Port d'accès à MySQL
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

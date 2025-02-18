@@ -9,11 +9,12 @@ use App\Repository\UtilisateurRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
-use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UtilisateurController extends AbstractController
 {
@@ -42,6 +43,7 @@ class UtilisateurController extends AbstractController
                 'id' => $currentUtilisateur->getId(),
                 'nom' => $currentUtilisateur->getNom(),
                 'prenom' => $currentUtilisateur->getPrenom(),
+                'pseudonyme' => $currentUtilisateur->getPseudonyme(),
                 'email' => $currentUtilisateur->getEmail(),
                 'roles' => $currentUtilisateur->getRoles(),
             ]
@@ -52,9 +54,13 @@ class UtilisateurController extends AbstractController
     #[Route('/inscription', name: 'utilisateur_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
+
+        $csrfToken = $csrfTokenManager->getToken('utilisateur_new')->getValue();
+
         if ($request->isMethod('POST')) {
             // Vérification du token CSRF
             $token = $request->request->get('_csrf_token');
+            // dd($token);
             if (!$csrfTokenManager->isTokenValid(new CsrfToken('utilisateur_new', $token))) {
                 throw new AccessDeniedHttpException('Le token CSRF est invalide.');
             }
@@ -92,10 +98,6 @@ class UtilisateurController extends AbstractController
 
             return $this->redirectToRoute('app_accueil');
         }
-
-        // Génération du token CSRF
-        $csrfToken = $csrfTokenManager->getToken('utilisateur_new')->getValue();
-
         return $this->render('utilisateur/new.html.twig', [
             'csrf_token' => $csrfToken,
         ]);

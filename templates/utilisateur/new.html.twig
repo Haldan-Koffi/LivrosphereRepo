@@ -33,6 +33,10 @@
             <label for="prenom" class="form-label">Prénom</label>
             <input type="text" class="form-control" id="prenom" name="prenom" required />
 
+            <label for="pseudonyme" class="form-label">Pseudonyme</label>
+            <input type="text" class="form-control" id="pseudonyme" name="pseudonyme" required />
+
+
             <label for="email" class="form-label">Email</label>
             <input type="email" class="form-control" id="email" name="email" required />
 
@@ -41,7 +45,9 @@
         </section>
 
         <!-- Ajout du token CSRF -->
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+        
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('utilisateur_new') }}">
+
 
         <section class="btnU">
             <button type="submit" class="btn btn-dark">M'inscrire</button>

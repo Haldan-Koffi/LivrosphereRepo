@@ -112,6 +112,7 @@ class LivreController extends AbstractController
             if ($request->isMethod('POST')) {
                 // Récupérer et vérifier le token CSRF
                 $token = $request->request->get('_csrf_token');
+                dd($token);
                 if (!$csrfTokenManager->isTokenValid(new CsrfToken('nouveau_livre', $token))) {
                     throw new AccessDeniedHttpException('Le token CSRF est invalide.');
                 }

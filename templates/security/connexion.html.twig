@@ -29,7 +29,7 @@
       <div class="container-form">
         <form class="bloc-inscription" method="post" action="{{ path('app_connexion') }}">
           <div class="logo-titre">
-            <a href="/index.html"
+            <a href="{{'app_accueil'}}"
               ><img
                 src="{{ asset('images/logo-livrosphere.png') }}"
                 height="50px"
@@ -48,7 +48,7 @@
           <div class="btnU">
             <button type="submit" class="btn btn-dark">Me connecter</button>
             <section class="gestion-password">
-              <a class="text-white" href="/gestion_motdepasse.html"
+              <a class="text-white" href="{{ path('app_forgot_password_request') }}"
                 ><p>Réinitialiser mon mot de passe</p></a
               >
             </section>
