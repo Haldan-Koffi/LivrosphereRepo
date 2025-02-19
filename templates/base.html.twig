@@ -37,6 +37,13 @@
                             <li class="nav-item"><a class="nav-link" href="{{ path('app_livre') }}">Nos livres</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ path('mon_espace') }}">Mon espace</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ path('app_a_propos') }}">À propos</a></li>
+
+                            {# Affiche le bouton "Créer catégorie" uniquement pour les administrateurs #}
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('nouvelle_categorie') }}">Créer catégorie</a>
+                                </li>
+                            {% endif %}
                         </ul>
 
                         <!-- Ajout des boutons "S'inscrire" et "Se connecter" dans le toggle -->

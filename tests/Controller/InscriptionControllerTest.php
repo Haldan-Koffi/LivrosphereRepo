@@ -21,11 +21,11 @@ class InscriptionControllerTest extends WebTestCase
             'nom'           => 'Jo',
             'prenom'        => 'D',
             'email'         => 'jod@example.com',
-            'mot_de_passe'  => 'AncD1234!@#$',
+            'mot_de_passe'  => 'HalD1234!@#$',
             'pseudonyme'    => 'jod',
             '_csrf_token'   => $csrfToken,
         ]);
-
+#(UseD1234!@#$)
         $client->submit($form);
 
         // Générer l'URL attendue via le routeur

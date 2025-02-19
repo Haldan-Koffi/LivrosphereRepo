@@ -190,10 +190,8 @@ class UtilisateurController extends AbstractController
         ]);
     }
 
-
-
     
-    #[Route('/utilisateurs/{id}/supprimer', name: 'utilisateur_supprimer', methods: ['GET'])] // La route '/{id}/delete' permet de supprimer un utilisateur
+    #[Route('/utilisateur/{id}/supprimer', name: 'utilisateur_supprimer', methods: ['GET'])] // La route '/{id}/delete' permet de supprimer un utilisateur
     public function delete(Utilisateur $utilisateur, EntityManagerInterface $em): Response // La méthode delete() permet de supprimer un utilisateur existant
     {
         $em->remove($utilisateur); // Supprime l'utilisateur de la base de données
