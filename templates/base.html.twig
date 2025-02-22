@@ -40,9 +40,14 @@
 
                             {# Affiche le bouton "Créer catégorie" uniquement pour les administrateurs #}
                             {% if is_granted('ROLE_ADMIN') %}
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ path('nouvelle_categorie') }}">Créer catégorie</a>
+                                    <a class="nav-link" href="{{ path('nouvelle_categorie') }}">Créer une catégorie</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('app_utilisateur') }}">Les utilisateurs</a>
+                                </li>
+                            </ul>
                             {% endif %}
                         </ul>
 

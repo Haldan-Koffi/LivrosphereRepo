@@ -34,7 +34,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank(message: "Le mot de passe est obligatoire.")]
     #[Assert\Length(
     min: 12,
-    minMessage: "Le mot de passe doit contenir au moins 12 caractères."
+    minMessage: "Le mot de passe doit contenir au moins 12 caractères, une majuscule, un chiffre et un caractère spécial."
     )]
     #[Assert\Regex(
     pattern: "/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{12,}$/",

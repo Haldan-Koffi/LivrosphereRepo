@@ -127,6 +127,16 @@
   box-shadow: var(--main-bg-color-black) 0px 0.5px 0px;
 }
 
+#passwordHelp {
+  margin-top: 15px;
+  color: var(--main-bg-color-white);
+}
+
+.terms {
+  margin-top: 20px;
+  color: var(--main-bg-color-white);
+}
+
 .btn {
   width: 100%;
 }

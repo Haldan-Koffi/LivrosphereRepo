@@ -86,7 +86,16 @@ class CategorieController extends AbstractController
     #[Route('/categorie/{id}/supprimer', name: 'supprimer_categorie', methods: ['GET'])]
     public function delete(Categorie $categorie): Response
     {
+        // Récupérer l'utilisateur actuellement connecté
+        $currentUser = $this->getUser();
+
+        // Vérifier que l'utilisateur est connecté et qu'il possède le rôle admin
+        if (!$currentUser || !in_array('ROLE_ADMIN', $currentUser->getRoles())) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas l\'autorisation de supprimer cette catégorie.');
+        }
+
         $this->categorieService->deleteCategorie($categorie);
         return $this->redirectToRoute('app_categorie');
     }
+
 }

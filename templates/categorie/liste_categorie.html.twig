@@ -38,13 +38,17 @@
 
     <!-- Création dynamique des cartes de catégories -->
     <script>
+        // Construction du tableau de catégories à partir de la variable Twig
         const categories = [
             {% for categorie in categories %}
             {
                 id: {{ categorie.id }},
                 title: "{{ categorie.nom|e('js') }}",
                 image: "{{ asset('uploads/' ~ categorie.couvertureCategorie) }}",
-                link: "{{ path('app_livre', {'categorie': categorie.id}) }}"
+                link: "{{ path('app_livre', {'categorie': categorie.id}) }}",
+                {% if is_granted('ROLE_ADMIN') %}
+                delete_link: "{{ path('supprimer_categorie', {'id': categorie.id}) }}",
+                {% endif %}
             },
             {% endfor %}
         ];
@@ -56,11 +60,17 @@
             card.className = "card h-100";
             card.style.width = "18rem";
 
+            // Si la propriété delete_link existe, on affiche le bouton "Supprimer"
+            const adminButton = category.delete_link
+                ? `<a href="${category.delete_link}" class="btn btn-danger mt-2" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');">Supprimer</a>`
+                : '';
+
             card.innerHTML = `
                 <img src="${category.image}" class="card-img-top" alt="${category.title}" height="400" />
                 <div class="card-body h-100">
                     <h5 class="card-title">${category.title}</h5>
                     <a href="${category.link}" class="btn btn-primary">Découvrir</a>
+                    ${adminButton}
                 </div>
             `;
 

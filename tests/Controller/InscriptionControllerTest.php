@@ -18,14 +18,15 @@ class InscriptionControllerTest extends WebTestCase
         $this->assertNotEmpty($csrfToken);
 
         $form = $crawler->selectButton('M\'inscrire')->form([
-            'nom'           => 'Jo',
-            'prenom'        => 'D',
-            'email'         => 'jod@example.com',
-            'mot_de_passe'  => 'HalD1234!@#$',
-            'pseudonyme'    => 'jod',
+            'nom'           => 'Test',
+            'prenom'        => 'us',
+            'email'         => 'usd@example.com',
+            'mot_de_passe'  => 'UsdD1234!@#$',
+            'pseudonyme'    => 'ud',
             '_csrf_token'   => $csrfToken,
         ]);
 #(UseD1234!@#$)
+#'HalD1234!@#$'
         $client->submit($form);
 
         // Générer l'URL attendue via le routeur

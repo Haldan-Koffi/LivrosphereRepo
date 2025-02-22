@@ -191,14 +191,44 @@ class UtilisateurController extends AbstractController
     }
 
     
-    #[Route('/utilisateur/{id}/supprimer', name: 'utilisateur_supprimer', methods: ['GET'])] // La route '/{id}/delete' permet de supprimer un utilisateur
-    public function delete(Utilisateur $utilisateur, EntityManagerInterface $em): Response // La méthode delete() permet de supprimer un utilisateur existant
+    #[Route('/utilisateur/{id}/supprimer', name: 'utilisateur_supprimer', methods: ['GET'])]
+    public function delete(Utilisateur $utilisateur, EntityManagerInterface $em): Response
     {
-        $em->remove($utilisateur); // Supprime l'utilisateur de la base de données
-        $em->flush(); // Sauvegarde la suppression dans la base de données
+        // Récupérer l'utilisateur actuellement connecté
+        $currentUser = $this->getUser();
 
-        return $this->redirectToRoute('app_accueil'); // Redirige vers la liste des utilisateurs après suppression
+        // Vérifier que l'utilisateur est connecté et qu'il est soit admin, soit lui-même
+        if (!$currentUser || (!in_array('ROLE_ADMIN', $currentUser->getRoles()) && $currentUser->getId() !== $utilisateur->getId())) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas la permission de supprimer cet utilisateur.');
+        }
+
+        // Supprimer tous les livres associés à l'utilisateur
+        foreach ($utilisateur->getLivres() as $livre) {
+            $em->remove($livre);
+        }
+
+        // Supprimer tous les commentaires associés à l'utilisateur
+        foreach ($utilisateur->getCommentaires() as $commentaire) {
+            $em->remove($commentaire);
+        }
+
+        // Supprimer toutes les recommandations associées à l'utilisateur
+        foreach ($utilisateur->getRecommandations() as $recommandation) {
+            $em->remove($recommandation);
+        }
+
+        // Supprimer toutes les interactions "jaime" associées à l'utilisateur
+        foreach ($utilisateur->getInteractionJaimes() as $interaction) {
+            $em->remove($interaction);
+        }
+
+        // Supprimer l'utilisateur lui-même
+        $em->remove($utilisateur);
+        $em->flush();
+
+        return $this->redirectToRoute('app_accueil');
     }
+
     #[Route('/mon-espace', name: 'mon_espace', methods: ['GET'])]
     public function monEspace(LivreRepository $livreRepository): Response
     {
