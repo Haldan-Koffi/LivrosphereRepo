@@ -20,7 +20,7 @@ class InscriptionControllerTest extends WebTestCase
         $form = $crawler->selectButton('M\'inscrire')->form([
             'nom'           => 'Test',
             'prenom'        => 'us',
-            'email'         => 'usd@example.com',
+            'email'         => 'azer@example.com',
             'mot_de_passe'  => 'UsdD1234!@#$',
             'pseudonyme'    => 'ud',
             '_csrf_token'   => $csrfToken,
