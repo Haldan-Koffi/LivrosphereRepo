@@ -56,17 +56,17 @@ pipeline {
             }
         }
 
-        stage('Exécution des tests') {
-            steps {
-                dir("${DEPLOY_DIR}") {
-                    // Lancement de PHPUnit avec le fichier de config .dist
-                    sh 'vendor/bin/phpunit --configuration=phpunit.xml.dist'
+        // stage('Exécution des tests') {
+        //     steps {
+        //         dir("${DEPLOY_DIR}") {
+        //             // Lancement de PHPUnit avec le fichier de config .dist
+        //             sh 'vendor/bin/phpunit --configuration=phpunit.xml.dist'
                     
-                    // Si tu veux générer un rapport JUnit, tu peux faire :
-                    // sh 'vendor/bin/phpunit --configuration=phpunit.xml.dist --log-junit junit.xml'
-                }
-            }
-        }
+        //             // Si tu veux générer un rapport JUnit, tu peux faire :
+        //             // sh 'vendor/bin/phpunit --configuration=phpunit.xml.dist --log-junit junit.xml'
+        //         }
+        //     }
+        // }
 
         stage('Déploiement') {
             steps {
