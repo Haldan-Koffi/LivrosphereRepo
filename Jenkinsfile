@@ -42,7 +42,6 @@ pipeline {
                 dir("${DEPLOY_DIR}") {
                     sh 'php bin/console doctrine:database:create --if-not-exists --env=prod'
                     sh 'php bin/console doctrine:migrations:migrate --no-interaction --env=prod'
-                    sh "chmod -R 775 /var/www/html/${DEPLOY_DIR}/public/uploads"
                 }
             }
         }
@@ -56,24 +55,16 @@ pipeline {
             }
         }
 
-        // stage('Exécution des tests') {
-        //     steps {
-        //         dir("${DEPLOY_DIR}") {
-        //             // Lancement de PHPUnit avec le fichier de config .dist
-        //             sh 'vendor/bin/phpunit --configuration=phpunit.xml.dist'
-                    
-        //             // Si tu veux générer un rapport JUnit, tu peux faire :
-        //             // sh 'vendor/bin/phpunit --configuration=phpunit.xml.dist --log-junit junit.xml'
-        //         }
-        //     }
-        // }
-
         stage('Déploiement') {
             steps {
                 sh "rm -rf /var/www/html/${DEPLOY_DIR}" // Supprime le dossier de destination
                 sh "mkdir /var/www/html/${DEPLOY_DIR}" // Recréé le dossier de destination
                 sh "cp -rT ${DEPLOY_DIR} /var/www/html/${DEPLOY_DIR}"
                 sh "chmod -R 775 /var/www/html/${DEPLOY_DIR}/var"
+
+                        // 3. Ajustement des permissions
+                //   - On autorise aussi l'écriture sur le dossier uploads
+                sh "chmod -R 775 /var/www/html/${DEPLOY_DIR}/public/uploads"
             }
         }
     }
