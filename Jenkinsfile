@@ -42,6 +42,7 @@ pipeline {
                 dir("${DEPLOY_DIR}") {
                     sh 'php bin/console doctrine:database:create --if-not-exists --env=prod'
                     sh 'php bin/console doctrine:migrations:migrate --no-interaction --env=prod'
+                    sh "chmod -R 775 /var/www/html/${DEPLOY_DIR}/public/uploads"
                 }
             }
         }
@@ -51,6 +52,18 @@ pipeline {
                 dir("${DEPLOY_DIR}") {
                     sh 'php bin/console cache:clear --env=prod'
                     sh 'php bin/console cache:warmup'
+                }
+            }
+        }
+
+        stage('Exécution des tests') {
+            steps {
+                dir("${DEPLOY_DIR}") {
+                    // Lancement de PHPUnit avec le fichier de config .dist
+                    sh 'vendor/bin/phpunit --configuration=phpunit.xml.dist'
+                    
+                    // Si tu veux générer un rapport JUnit, tu peux faire :
+                    // sh 'vendor/bin/phpunit --configuration=phpunit.xml.dist --log-junit junit.xml'
                 }
             }
         }
