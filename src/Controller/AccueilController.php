@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\MongoDBService;
 use App\Repository\LivreRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -18,8 +19,9 @@ class AccueilController extends AbstractController
     // }
 
     #[Route('/', name: 'app_accueil')]
-    public function indexLivre(LivreRepository $livreRepository): Response
+    public function indexLivre(LivreRepository $livreRepository, MongoDBService $mongoDBService): Response
     {
+        $mongoDBService->insertVisit('/');
         $derniersLivres = $livreRepository->findBy([], ['date_ajout' => 'DESC'], 3);
 
 
