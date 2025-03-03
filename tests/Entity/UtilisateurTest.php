@@ -10,8 +10,8 @@ class UtilisateurTest extends TestCase
     public function testgetNom(): void
     {
         $utilisateur = new Utilisateur();
-        $utilisateur->setNom('Ben');
-        $response_nom = $utilisateur->getNom();
+        $utilisateur->setPseudonyme('Ben');
+        $response_nom = $utilisateur->getPseudonyme();
         $this->assertIsString($response_nom);
     }
 
@@ -24,3 +24,4 @@ class UtilisateurTest extends TestCase
         $this->assertStringContainsString('@', $email_utilisateur);
     }
 }
+

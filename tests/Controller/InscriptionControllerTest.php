@@ -18,21 +18,22 @@ class InscriptionControllerTest extends WebTestCase
         $this->assertNotEmpty($csrfToken);
 
         $form = $crawler->selectButton('M\'inscrire')->form([
-            'nom'           => 'Test',
-            'prenom'        => 'us',
-            'email'         => 'azer@example.com',
+            'email'         => 'azr@example.com',
             'mot_de_passe'  => 'UsdD1234!@#$',
-            'pseudonyme'    => 'ud',
+            'pseudonyme'    => 'uol',
             '_csrf_token'   => $csrfToken,
         ]);
-#(UseD1234!@#$)
-#'HalD1234!@#$'
         $client->submit($form);
 
-        // Générer l'URL attendue via le routeur
         $expectedUrl = $client->getContainer()->get('router')->generate('app_accueil');
         
-        // Vérifier que la réponse redirige bien vers l'URL attendue
         $this->assertResponseRedirects($expectedUrl);
     }
 }
+
+
+
+
+
+#(UseD1234!@#$)
+#'HalD1234!@#$'
