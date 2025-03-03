@@ -67,8 +67,8 @@ class UtilisateurController extends AbstractController
 
             // Traitement des données
             $utilisateur = new Utilisateur();
-            $utilisateur->setNom($request->request->get('nom'));
-            $utilisateur->setPrenom($request->request->get('prenom'));
+            // $utilisateur->setNom($request->request->get('nom'));
+            // $utilisateur->setPrenom($request->request->get('prenom'));
             $utilisateur->setEmail($request->request->get('email'));
             $utilisateur->setPseudonyme($request->request->get('pseudonyme'));
 
@@ -114,8 +114,8 @@ class UtilisateurController extends AbstractController
             }
 
             // Traitement des modifications
-            $utilisateur->setNom($request->request->get('nom'));
-            $utilisateur->setPrenom($request->request->get('prenom'));
+            // $utilisateur->setNom($request->request->get('nom'));
+            // $utilisateur->setPrenom($request->request->get('prenom'));
             $utilisateur->setPseudonyme($request->request->get('pseudonyme'));
             $utilisateur->setEmail($request->request->get('email'));
             $em->flush();

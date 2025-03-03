@@ -323,7 +323,7 @@ class LivreController extends AbstractController
                 try {
                     $newFilename = $slugger->slug(pathinfo($nouvelleCouverture->getClientOriginalName(), PATHINFO_FILENAME))
                         . '-' . uniqid() . '.' . $nouvelleCouverture->guessExtension();
-                    $nouvelleCouverture->move($this->getParameter('uploads_directory'), $newFilename);
+                    $nouvelleCouverture->move($this->getParameter('upload_directory'), $newFilename);
                     $livre->setCouverture($newFilename);
                 } catch (FileException $e) {
                     $this->addFlash('error', 'Erreur lors de l\'upload de la couverture.');

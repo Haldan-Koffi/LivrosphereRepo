@@ -21,7 +21,7 @@
                     <tr>
                         <td>{{ commentaire.id }}</td>
                         <td>{{ commentaire.utilisateur.pseudonyme }}</td>
-                        <td>{{ commentaire.dateCommentaire|date('d/m/Y H:i') }}</td>
+                        <td>{{ commentaire.dateCommentaire|date('d/m/Y') }}</td>
                         <td>{{ commentaire.message }}</td>
                         <td>
                             <form method="post" action="{{ path('delete_commentaire', {'id': commentaire.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">
