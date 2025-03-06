@@ -15,6 +15,8 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class UtilisateurController extends AbstractController
 {
@@ -192,9 +194,8 @@ class UtilisateurController extends AbstractController
 
     
     #[Route('/utilisateur/{id}/supprimer', name: 'utilisateur_supprimer', methods: ['GET'])]
-    public function delete(Utilisateur $utilisateur, EntityManagerInterface $em): Response
+    public function delete(Utilisateur $utilisateur, EntityManagerInterface $em, TokenStorageInterface $tokenStorage, SessionInterface $session): Response 
     {
-        // Récupérer l'utilisateur actuellement connecté
         $currentUser = $this->getUser();
 
         // Vérifier que l'utilisateur est connecté et qu'il est soit admin, soit lui-même
@@ -202,30 +203,31 @@ class UtilisateurController extends AbstractController
             throw $this->createAccessDeniedException('Vous n\'avez pas la permission de supprimer cet utilisateur.');
         }
 
-        // Supprimer tous les livres associés à l'utilisateur
+        // Suppression des entités liées AVANT de supprimer l'utilisateur
         foreach ($utilisateur->getLivres() as $livre) {
             $em->remove($livre);
         }
-
-        // Supprimer tous les commentaires associés à l'utilisateur
         foreach ($utilisateur->getCommentaires() as $commentaire) {
             $em->remove($commentaire);
         }
-
-        // Supprimer toutes les recommandations associées à l'utilisateur
         foreach ($utilisateur->getRecommandations() as $recommandation) {
             $em->remove($recommandation);
         }
-
-        // Supprimer toutes les interactions "jaime" associées à l'utilisateur
         foreach ($utilisateur->getInteractionJaimes() as $interaction) {
             $em->remove($interaction);
         }
 
-        // Supprimer l'utilisateur lui-même
+        // Suppression de l'utilisateur
         $em->remove($utilisateur);
         $em->flush();
 
+        // Déconnecter l'utilisateur s'il supprime son propre compte
+        if ($currentUser->getId() === $utilisateur->getId()) {
+            $tokenStorage->setToken(null); // Supprime le token d'authentification
+            $session->invalidate(); // Détruit la session
+        }
+
+        // Redirection après suppression
         return $this->redirectToRoute('app_accueil');
     }
 

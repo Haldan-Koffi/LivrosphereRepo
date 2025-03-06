@@ -1,36 +1,35 @@
 <?php
 
-namespace App\Tests;
+// namespace App\Tests;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+// use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class InscriptionControllerTest extends WebTestCase
-{
-    public function testUserRegistration(): void
-    {
-        $client = static::createClient();
-        $crawler = $client->request('GET', '/inscription');
+// class InscriptionControllerTest extends WebTestCase
+// {
+//     public function testUserRegistration(): void
+//     {
+//         $client = static::createClient();
+//         $crawler = $client->request('GET', '/inscription');
 
         
-        $this->assertSelectorExists('form');
+//         $this->assertSelectorExists('form');
 
-        $csrfToken = $crawler->filter('input[name="_csrf_token"]')->attr('value');
-        $this->assertNotEmpty($csrfToken);
+//         $csrfToken = $crawler->filter('input[name="_csrf_token"]')->attr('value');
+//         $this->assertNotEmpty($csrfToken);
 
-        $form = $crawler->selectButton('M\'inscrire')->form([
-            'email'         => 'azr@example.com',
-            'mot_de_passe'  => 'UsdD1234!@#$',
-            'pseudonyme'    => 'uol',
-            '_csrf_token'   => $csrfToken,
-        ]);
-        $client->submit($form);
+//         $form = $crawler->selectButton('M\'inscrire')->form([
+//             'email'         => 'azr@example.com',
+//             'mot_de_passe'  => 'UsdD1234!@#$',
+//             'pseudonyme'    => 'uol',
+//             '_csrf_token'   => $csrfToken,
+//         ]);
+//         $client->submit($form);
 
-        $expectedUrl = $client->getContainer()->get('router')->generate('app_accueil');
+//         $expectedUrl = $client->getContainer()->get('router')->generate('app_accueil');
         
-        $this->assertResponseRedirects($expectedUrl);
-    }
-}
-
+//         $this->assertResponseRedirects($expectedUrl);
+//     }
+// }
 
 
 

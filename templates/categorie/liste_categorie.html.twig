@@ -34,49 +34,52 @@
     </section>
 
     <!-- Conteneur des catégories -->
-    <section id="categoriesContainer" class="d-flex flex-wrap gap-3"></section>
+   <section id="categoriesContainer" class="d-flex flex-wrap gap-3"></section>
 
-    <!-- Création dynamique des cartes de catégories -->
-    <script>
-        // Construction du tableau de catégories à partir de la variable Twig
-        const categories = [
-            {% for categorie in categories %}
-            {
-                id: {{ categorie.id }},
-                title: "{{ categorie.nom|e('js') }}",
-                image: "{{ asset('uploads/' ~ categorie.couvertureCategorie) }}",
-                link: "{{ path('app_livre', {'categorie': categorie.id}) }}",
-                {% if is_granted('ROLE_ADMIN') %}
-                delete_link: "{{ path('supprimer_categorie', {'id': categorie.id}) }}",
-                {% endif %}
-            },
-            {% endfor %}
-        ];
+<!-- Création dynamique des cartes de catégories -->
+<script>
+    // Construction du tableau de catégories à partir de la variable Twig
+    const categories = [
+        {% for categorie in categories %}
+        {
+            id: {{ categorie.id }},
+            title: "{{ categorie.nom|e('js') }}",
+            image: "{{ asset('uploads/' ~ categorie.couvertureCategorie) }}",
+            link: "{{ path('app_livre', {'categorie': categorie.id}) }}",
+            {% if is_granted('ROLE_ADMIN') %}
+            delete_link: "{{ path('supprimer_categorie', {'id': categorie.id}) }}",
+            edit_link: "{{ path('modification_categorie', {'id': categorie.id}) }}",
+            {% endif %}
+        },
+        {% endfor %}
+    ];
 
-        const container = document.getElementById("categoriesContainer");
+    const container = document.getElementById("categoriesContainer");
 
-        categories.forEach((category) => {
-            const card = document.createElement("section");
-            card.className = "card h-100";
-            card.style.width = "18rem";
+    categories.forEach((category) => {
+        const card = document.createElement("section");
+        card.className = "card h-100";
+        card.style.width = "18rem";
 
-            // Si la propriété delete_link existe, on affiche le bouton "Supprimer"
-            const adminButton = category.delete_link
-                ? `<a href="${category.delete_link}" class="btn btn-danger mt-2" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');">Supprimer</a>`
-                : '';
+        // Si l'utilisateur est admin, affichage des boutons Modifier et Supprimer
+        const adminButtons = category.delete_link
+            ? `<a href="${category.edit_link}" class="btn btn-dark mt-2">Modifier</a>
+               <a href="${category.delete_link}" class="btn btn-dark mt-2" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');">Supprimer</a>`
+            : '';
 
-            card.innerHTML = `
-                <img src="${category.image}" class="card-img-top" alt="${category.title}" height="400" />
-                <div class="card-body h-100">
-                    <h5 class="card-title">${category.title}</h5>
-                    <a href="${category.link}" class="btn btn-primary">Découvrir</a>
-                    ${adminButton}
-                </div>
-            `;
+        card.innerHTML = `
+            <img src="${category.image}" class="card-img-top" alt="${category.title}" height="400" />
+            <div class="card-body h-100">
+                <h5 class="card-title">${category.title}</h5>
+                <a href="${category.link}" class="btn btn-primary">Découvrir</a>
+                ${adminButtons}
+            </div>
+        `;
 
-            container.appendChild(card);
-        });
-    </script>
+        container.appendChild(card);
+    });
+</script>
+
 </main>
 
 <!-- Footer -->

@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\User; 
 use App\Entity\Categorie;
 use App\Repository\CategorieRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,11 +26,13 @@ class CategorieService
         return $this->categorieRepository->findAll();
     }
 
-    public function createCategorie(string $nom, $file = null): Categorie
+    public function createCategorie(string $nom, $file = null, $user): Categorie
     {
         $categorie = new Categorie();
         $categorie->setNom($nom);
         $categorie->setDateCreation(new \DateTime());
+
+        $categorie->setUtilisateur($user);
 
         if ($file) {
             $fileName = uniqid() . '.' . $file->guessExtension();

@@ -30,30 +30,40 @@ class CategorieController extends AbstractController
     }
 
     #[Route('/admin/nouvelle/categorie', name: 'nouvelle_categorie', methods: ['GET', 'POST'])]
-    public function new(Request $request, CsrfTokenManagerInterface $csrfTokenManager): Response
-    {
-        // Générer le token CSRF pour la création de catégorie
-        $csrfToken = $csrfTokenManager->getToken('nouvelle_categorie')->getValue();
+#[IsGranted('ROLE_ADMIN')]
+public function new(Request $request, CsrfTokenManagerInterface $csrfTokenManager): Response
+{
+    // Générer le token CSRF pour la création de catégorie
+    $csrfToken = $csrfTokenManager->getToken('nouvelle_categorie')->getValue();
 
-        if ($request->isMethod('POST')) {
-            // Vérification du token CSRF
-            $token = $request->request->get('_csrf_token');
-            if (!$csrfTokenManager->isTokenValid(new CsrfToken('nouvelle_categorie', $token))) {
-                throw new AccessDeniedHttpException('Le token CSRF est invalide.');
-            }
+    // Récupérer l'utilisateur connecté depuis le contrôleur (hérité de AbstractController)
+    $user = $this->getUser();
+    if (!$user) {
+        throw new AccessDeniedHttpException('Vous devez être connecté pour créer une catégorie.');
+    }
 
-            $nom = $request->request->get('nom');
-            $file = $request->files->get('couverture_categorie');
-
-            $this->categorieService->createCategorie($nom, $file);
-
-            return $this->redirectToRoute('app_categorie');
+    if ($request->isMethod('POST')) {
+        // Vérification du token CSRF
+        $token = $request->request->get('_csrf_token');
+        if (!$csrfTokenManager->isTokenValid(new CsrfToken('nouvelle_categorie', $token))) {
+            throw new AccessDeniedHttpException('Le token CSRF est invalide.');
         }
 
-        return $this->render('categorie/nouvelle_categorie.html.twig', [
-            'csrf_token' => $csrfToken
-        ]);
+        // Récupération des données du formulaire
+        $nom = $request->request->get('nom');
+        $file = $request->files->get('couverture_categorie');
+
+        // Appel du service en passant l'utilisateur connecté
+        $this->categorieService->createCategorie($nom, $file, $user);
+
+        return $this->redirectToRoute('app_categorie');
     }
+
+    return $this->render('categorie/nouvelle_categorie.html.twig', [
+        'csrf_token' => $csrfToken
+    ]);
+}
+
 
     #[Route('/categorie/{id}/modification', name: 'modification_categorie', methods: ['GET', 'POST'])]
     public function edit(Categorie $categorie, Request $request, CsrfTokenManagerInterface $csrfTokenManager): Response

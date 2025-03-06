@@ -81,7 +81,7 @@ class LivreController extends AbstractController
                 'annee_publication' => $livre->getAnneePublication()->format('Y-m-d'),
                 'resume' => $livre->getResume(),
                 'couverture' => $livre->getCouverture(),
-                'date_ajout' => $livre->getDateAjout()->format('Y-m-d H:i:s'),
+                'date_ajout' => $livre->getDateAjout()->format('Y-m-d'),
                 'categorie' => [
                     'id' => $livre->getCategorie()->getId(),
                     'nom' => $livre->getCategorie()->getNom(),
