@@ -36,12 +36,22 @@ pipeline {
                 }
             }
         }
+        
 
         stage('Migration de la base de données') {
             steps {
                 dir("${DEPLOY_DIR}") {
                     sh 'php bin/console doctrine:database:create --if-not-exists --env=prod'
                     sh 'php bin/console doctrine:migrations:migrate --no-interaction --env=prod'
+                }
+            }
+        }
+        // Nouveau stage pour créer la base de test
+        stage('Création de la base de test') {
+            steps {
+                dir("${DEPLOY_DIR}") {
+                    // Assure-toi que le fichier phpunit.xml.dist (ou .env.test) configure DATABASE_URL pour pointer sur "web004_test"
+                    sh 'php bin/console doctrine:database:create --if-not-exists --env=test'
                 }
             }
         }
