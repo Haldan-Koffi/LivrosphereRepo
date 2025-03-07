@@ -24,7 +24,7 @@ class AjoutUtilisateurTest extends KernelTestCase
 
         //Récupération de l'utilisateur via le repository
         $utilisateurRepository = $entityManager->getRepository(Utilisateur::class);
-        $utilisateurTrouve = $utilisateurRepository->findOneBy(['email' => 'sof@test.com']);
+        $utilisateurTrouve = $utilisateurRepository->findOneBy(['email' => 'jea@test.com']);
         $this->assertNotNull($utilisateurTrouve);
         $this->assertEquals('Jea', $utilisateurTrouve->getPseudonyme());
 
