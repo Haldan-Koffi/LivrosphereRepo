@@ -7,12 +7,12 @@ use PHPUnit\Framework\TestCase;
 
 class UtilisateurTest extends TestCase
 {
-    public function testgetNom(): void
+    public function testgetPseudonyme(): void
     {
         $utilisateur = new Utilisateur();
         $utilisateur->setPseudonyme('Ben');
-        $response_nom = $utilisateur->getPseudonyme();
-        $this->assertIsString($response_nom);
+        $response_pseudo = $utilisateur->getPseudonyme();
+        $this->assertIsString($response_pseudo);
     }
 
     public function testgetEmail(): void 
