@@ -15,7 +15,7 @@ class AjoutUtilisateurTest extends KernelTestCase
         $entityManager = $container->get('doctrine')->getManager();
 
         $utilisateur = new Utilisateur();
-        $utilisateur->setEmail('sof@test.com');
+        $utilisateur->setEmail('jea@test.com');
         $utilisateur->setMotDePasse('Jea1234!@#$');
         $utilisateur->setPseudonyme('jea');
 
