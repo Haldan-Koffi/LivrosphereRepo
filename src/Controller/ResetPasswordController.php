@@ -135,7 +135,6 @@ class ResetPasswordController extends AbstractController
             'email' => $emailFormData,
         ]);
 
-        // Pas d'indication de si un compte d'utilisateur a été trouvé ou non pas
         if (!$user) {
             return $this->redirectToRoute('app_verification_email');
         }
@@ -159,9 +158,14 @@ class ResetPasswordController extends AbstractController
 
         $mailer->send($email);
 
-        //  Stocker le token dans la session pour le récupérer dans la route verification_email
         $this->setTokenObjectInSession($resetToken);
 
         return $this->redirectToRoute('app_verification_email');
     }
+
+
+
+
 }
+
+
