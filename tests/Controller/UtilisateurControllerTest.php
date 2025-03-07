@@ -6,15 +6,15 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UtilisateurControllerTest extends WebTestCase
 {
-    public function testSomething(): void
-    {
-        $client = static::createClient();
-        $crawler = $client->request('GET', '/inscription');
+    // public function testSomething(): void
+    // {
+    //     $client = static::createClient();
+    //     $crawler = $client->request('GET', '/inscription');
 
-        // $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('label', 'Nom');
-        $this->assertSelectorExists('form.bloc-inscription button.btn-dark', "M'inscrire");
-    }
+    //     // $this->assertResponseIsSuccessful();
+    //     $this->assertSelectorTextContains('label', 'Nom');
+    //     $this->assertSelectorExists('form.bloc-inscription button.btn-dark', "M'inscrire");
+    // }
 
     public function testSome(): void
     {
@@ -22,7 +22,7 @@ class UtilisateurControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/inscription');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('label', 'Nom');
+        $this->assertSelectorTextContains('label', 'Pseudonyme');
         $this->assertSelectorExists('form.bloc-inscription button.btn-dark', "M'inscrire");
     }
 }

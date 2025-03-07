@@ -31,6 +31,10 @@ class Categorie
     #[ORM\Column(length: 255)]
     private ?string $couverture_categorie = null;
 
+    #[ORM\ManyToOne(inversedBy: 'categories')]
+    #[ORM\JoinColumn(name: "utilisateur_id", referencedColumnName: "id", nullable: true, onDelete: "SET NULL")]
+    private ?Utilisateur $utilisateur = null;
+
     public function __construct()
     {
         $this->date_creation = new \DateTime();
@@ -104,6 +108,18 @@ class Categorie
     public function setCouvertureCategorie(string $couverture_categorie): static
     {
         $this->couverture_categorie = $couverture_categorie;
+
+        return $this;
+    }
+
+    public function getUtilisateur(): ?Utilisateur
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?Utilisateur $utilisateur): static
+    {
+        $this->utilisateur = $utilisateur;
 
         return $this;
     }

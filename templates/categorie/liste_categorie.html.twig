@@ -33,12 +33,8 @@
         <h2>Chaque catégorie, une aventure littéraire, trouvez votre prochaine lecture !</h2>
     </section>
 
-    <!-- Conteneur des catégories -->
     <section id="categoriesContainer" class="d-flex flex-wrap gap-3"></section>
-
-    <!-- Création dynamique des cartes de catégories -->
     <script>
-        // Construction du tableau de catégories à partir de la variable Twig
         const categories = [
             {% for categorie in categories %}
             {
@@ -48,6 +44,7 @@
                 link: "{{ path('app_livre', {'categorie': categorie.id}) }}",
                 {% if is_granted('ROLE_ADMIN') %}
                 delete_link: "{{ path('supprimer_categorie', {'id': categorie.id}) }}",
+                edit_link: "{{ path('modification_categorie', {'id': categorie.id}) }}",
                 {% endif %}
             },
             {% endfor %}
@@ -60,9 +57,9 @@
             card.className = "card h-100";
             card.style.width = "18rem";
 
-            // Si la propriété delete_link existe, on affiche le bouton "Supprimer"
-            const adminButton = category.delete_link
-                ? `<a href="${category.delete_link}" class="btn btn-danger mt-2" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');">Supprimer</a>`
+            const adminButtons = category.delete_link
+                ? `<a href="${category.edit_link}" class="btn btn-dark mt-2">Modifier</a>
+                   <a href="${category.delete_link}" class="btn btn-dark mt-2" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');">Supprimer</a>`
                 : '';
 
             card.innerHTML = `
@@ -70,10 +67,9 @@
                 <div class="card-body h-100">
                     <h5 class="card-title">${category.title}</h5>
                     <a href="${category.link}" class="btn btn-primary">Découvrir</a>
-                    ${adminButton}
+                    ${adminButtons}
                 </div>
             `;
-
             container.appendChild(card);
         });
     </script>

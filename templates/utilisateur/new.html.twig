@@ -27,22 +27,15 @@
         </section>
 
         <section>
-            {# <label for="nom" class="form-label">Nom</label>
-            <input type="text" class="form-control" id="nom" name="nom" required /> #}
-
-            {# <label for="prenom" class="form-label">Prénom</label>
-            <input type="text" class="form-control" id="prenom" name="prenom" required /> #}
-
             <label for="pseudonyme" class="form-label">Pseudonyme</label>
             <input type="text" class="form-control" id="pseudonyme" name="pseudonyme" required />
-
 
             <label for="email" class="form-label">Email</label>
             <input type="email" class="form-control" id="email" name="email" required />
 
             <label for="password" class="form-label">Mot de passe</label>
             <input type="password" class="form-control" id="password" name="mot_de_passe" required minlength="12" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{12,}" />
-            <div id="passwordHelp">Le mot de passe doit contenir au moins 12 caractères, une majuscule, un caractère spécial et un chiffre.</div>
+            <section id="passwordHelp">Le mot de passe doit contenir au moins 12 caractères, une majuscule, un caractère spécial et un chiffre.</section>
         </section>
 
         <section class="terms">
@@ -51,16 +44,16 @@
                 <a href="{{ path('app_cgu') }}">Conditions Générales d'Utilisation</a>.
             </p>
         </section>
-
-        <!-- Ajout du token CSRF -->
         
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('utilisateur_new') }}">
-
 
         <section class="btnU">
             <button type="submit" class="btn btn-dark">M'inscrire</button>
         </section>
     </form>
+
+
+    
 </main>
 
 <footer class="footer-container">

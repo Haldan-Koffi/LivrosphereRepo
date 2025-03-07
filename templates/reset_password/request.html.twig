@@ -18,24 +18,24 @@
 
 {% block body %}
     <main class="container-form">
-        <div class="bg-white p-4">
+        <section class="bg-white p-4">
             <h1>Réinitialiser votre mot de passe</h1>
 
             {% for flash_error in app.flashes('reset_password_error') %}
-                <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+                <section class="alert alert-danger" role="alert">{{ flash_error }}</section>
             {% endfor %}
 
             {{ form_start(requestForm) }}
-                <div class="mb-3">
+                <section class="mb-3">
                     {{ form_row(requestForm.email) }}
-                </div>
-                <div class="form-text mb-3">
+                </section>
+                <section class="form-text mb-3">
                     Entrez votre e-mail, et nous vous enverrons un lien pour réinitialiser votre mot de passe.
-                </div>
+                </section>
 
                 <button class="btn btn-primary">Envoyer</button>
             {{ form_end(requestForm) }}
-        </div>
+        </section>
     </main>
 
     <footer class="footer-container">
