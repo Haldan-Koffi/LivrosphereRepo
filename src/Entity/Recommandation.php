@@ -25,6 +25,12 @@ class Recommandation
     #[ORM\JoinColumn(nullable: false)]
     private ?Utilisateur $utilisateur = null;
 
+    public function __construct()
+    {
+        date_default_timezone_set('Europe/Paris'); // Forcer le fuseau horaire
+        $this->date_recommandation = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
+    }
+
     public function getId(): ?int
     {
         return $this->id;

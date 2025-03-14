@@ -31,6 +31,12 @@ class Commentaire
     #[ORM\JoinColumn(nullable: false)]
     private ?Livre $livre = null;
 
+    public function __construct()
+    {
+        date_default_timezone_set('Europe/Paris'); // Forcer le fuseau horaire
+        $this->date_commentaire = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
+    }
+
     public function getId(): ?int
     {
         return $this->id;

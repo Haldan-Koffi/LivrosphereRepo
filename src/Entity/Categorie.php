@@ -37,7 +37,10 @@ class Categorie
 
     public function __construct()
     {
-        $this->date_creation = new \DateTime();
+        date_default_timezone_set('Europe/Paris'); // Forcer le fuseau horaire
+        $this->date_creation = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
+
+        // $this->date_creation = new \DateTime();
         $this->livres = new ArrayCollection();
     }
 

@@ -46,13 +46,11 @@ pipeline {
                 }
             }
         }
-        // Nouveau stage pour créer la base de test
+        
         stage('Création de la base de test') {
             steps {
                 dir("${DEPLOY_DIR}") {
-                    // Assure-toi que le fichier phpunit.xml.dist (ou .env.test) configure DATABASE_URL pour pointer sur "web004_test"
                     sh 'php bin/console doctrine:database:create --if-not-exists --env=test'
-                    // sh 'php bin/console doctrine:migrations:migrate --no-interaction --env=test'
                 }
             }
         }
@@ -60,11 +58,7 @@ pipeline {
         stage('Exécution des tests') {
             steps {
                 dir("${DEPLOY_DIR}") {
-            // Lancement de PHPUnit avec le fichier de config .dist
                     sh 'vendor/bin/phpunit --configuration=phpunit.xml.dist'
-            
-            // Si tu veux générer un rapport JUnit, tu peux faire :
-            // sh 'vendor/bin/phpunit --configuration=phpunit.xml.dist --log-junit junit.xml'
                 }
             }
         }

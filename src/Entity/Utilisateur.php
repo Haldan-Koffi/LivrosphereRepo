@@ -2,13 +2,15 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use DateTimeInterface;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UtilisateurRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
@@ -79,8 +81,15 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Categorie::class, mappedBy: 'utilisateur')]
     private Collection $categories;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $date_inscription = null;
+
     public function __construct()
     {
+        date_default_timezone_set('Europe/Paris'); // Forcer le fuseau horaire
+        $this->date_inscription = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
+
+
         $this->livres = new ArrayCollection();
         $this->commentaires = new ArrayCollection();
         $this->interactionJaimes = new ArrayCollection();
@@ -336,6 +345,18 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
                 $category->setUtilisateur(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDateInscription(): ?DateTimeInterface
+    {
+        return $this->date_inscription;
+    }
+
+    public function setDateInscription(\DateTimeInterface $date_inscription): static
+    {
+        $this->date_inscription = $date_inscription;
 
         return $this;
     }
