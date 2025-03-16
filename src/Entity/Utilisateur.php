@@ -74,13 +74,13 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Categorie::class, mappedBy: 'utilisateur')]
     private Collection $categories;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable:true)]
     private ?\DateTimeInterface $date_inscription = null;
 
     public function __construct()
     {
         date_default_timezone_set('Europe/Paris');
-        $this->date_inscription = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
+        $this->date_inscription = null;
 
 
         $this->livres = new ArrayCollection();
