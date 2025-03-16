@@ -42,6 +42,7 @@ pipeline {
             steps {
                 dir("${DEPLOY_DIR}") {
                     sh 'php bin/console doctrine:database:create --if-not-exists --env=prod'
+                    sh 'php bin/console doctrine:migrations:migrate --no-interaction --env=prod'
                 }
             }
         }
@@ -50,7 +51,6 @@ pipeline {
             steps {
                 dir("${DEPLOY_DIR}") {
                     sh 'php bin/console doctrine:database:create --if-not-exists --env=test'
-                    sh 'php bin/console doctrine:migrations:migrate --no-interaction --env=test'
                 }
             }
         }
