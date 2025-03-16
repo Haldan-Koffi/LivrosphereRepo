@@ -15,18 +15,18 @@ class AjoutUtilisateurTest extends KernelTestCase
         $entityManager = $container->get('doctrine')->getManager();
 
         $utilisateur = new Utilisateur();
-        $utilisateur->setEmail('luc@test.com');
+        $utilisateur->setEmail('jn@test.com');
         $utilisateur->setMotDePasse('Jea1234!@#$');
-        $utilisateur->setPseudonyme('luc');
+        $utilisateur->setPseudonyme('jn');
 
         $entityManager->persist($utilisateur);
         $entityManager->flush();
 
         //Récupération de l'utilisateur via le repository
         $utilisateurRepository = $entityManager->getRepository(Utilisateur::class);
-        $utilisateurTrouve = $utilisateurRepository->findOneBy(['email' => 'luc@test.com']);
+        $utilisateurTrouve = $utilisateurRepository->findOneBy(['email' => 'jn@test.com']);
         $this->assertNotNull($utilisateurTrouve);
-        $this->assertEquals('luc', $utilisateurTrouve->getPseudonyme());
+        $this->assertEquals('jn', $utilisateurTrouve->getPseudonyme());
 
     
         $entityManager->remove($utilisateurTrouve);
