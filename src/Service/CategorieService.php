@@ -26,7 +26,7 @@ class CategorieService
         return $this->categorieRepository->findAll();
     }
 
-    public function createCategorie(string $nom, $file = null, $user): Categorie
+    public function createCategorie(string $nom, $user): Categorie
     {
         $categorie = new Categorie();
         $categorie->setNom($nom);
