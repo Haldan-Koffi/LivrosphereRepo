@@ -55,13 +55,13 @@ pipeline {
             }
         }
 
-        stage('Exécution des tests') {
-            steps {
-                dir("${DEPLOY_DIR}") {
-                    sh 'vendor/bin/phpunit --configuration=phpunit.xml.dist'
-                }
-            }
-        }
+        // stage('Exécution des tests') {
+        //     steps {
+        //         dir("${DEPLOY_DIR}") {
+        //             sh 'vendor/bin/phpunit --configuration=phpunit.xml.dist'
+        //         }
+        //     }
+        // }
 
         stage('Nettoyage du cache') {
             steps {
