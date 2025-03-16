@@ -18,11 +18,10 @@
 
 {% block body %}
 <main>
-    <!-- Menu Utilisateur -->
-    <section class="menu_utilisateur">
+    <nav class="menu_utilisateur">
         <section class="notification-menu_utilisateur">
             <section class="profile-buttons">
-                <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="nav-link dropdown-toggle text-black" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     {{ app.user.pseudonyme }}
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -30,19 +29,17 @@
                     <li><a class="dropdown-item" href="{{ path('utilisateur_modification', {'id': app.user.id})}}">Afficher et modifier mes informations</a></li>
                     <li><a class="dropdown-item" href="{{ path('utilisateur_modifier_mot_de_passe',  {'id': app.user.id})}}">Modifier mon mot de passe</a></li>
                     <li><hr class="dropdown-divider" /></li>
-                    <li><a class="dropdown-item" href="{{ path('utilisateur_supprimer', {'id': app.user.id})}}">Supprimer mon compte</a></li>
+                    <li><a class="dropdown-item bg-black text-white" href="{{ path('utilisateur_supprimer', {'id': app.user.id})}}">Supprimer mon compte</a></li>
                 </ul>
             </section>
         </section>
-    </section>
+    </nav>
 
-    <!-- Bienvenue utilisateur -->
     <section class="titre-livrosphere">
         <h1>Hello {{ app.user.pseudonyme }} !</h1>
         <p>Bienvenue dans votre espace</p>
     </section>
 
-    <!-- Section des livres ajoutés -->
     <section class="coverLivre-categories" id="categoriesContainer"></section>
     <section class="livres-ajoutes">
         <h2>Vos livres ajoutés</h2>
@@ -62,7 +59,6 @@
     </section>
 </main>
 
-<!-- Footer -->
 <footer class="footer-container">
     <nav class="boutons-footer">
         <a href="{{ path('app_accueil')}}">Accueil</a>

@@ -34,12 +34,10 @@ class UtilisateurController extends AbstractController
     {
         $currentUtilisateur = $this->getUser();
 
-        // Vérifier si l'utilisateur est connecté
         if (!$currentUtilisateur) {
-            return $this->redirectToRoute('login'); // Redirection vers la page de connexion si l'utilisateur n'est pas authentifié
+            return $this->redirectToRoute('login');
         }
 
-        // Afficher les données de l'utilisateur connecté
         return $this->render('utilisateur/info.html.twig', [
             'utilisateur' => [
                 'id' => $currentUtilisateur->getId(),
@@ -52,7 +50,7 @@ class UtilisateurController extends AbstractController
         ]);
     }
 
-    // Injecte le service ValidatorInterface dans la méthode
+    
     #[Route('/inscription', name: 'utilisateur_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
@@ -60,23 +58,18 @@ class UtilisateurController extends AbstractController
         $csrfToken = $csrfTokenManager->getToken('utilisateur_new')->getValue();
 
         if ($request->isMethod('POST')) {
-            // Vérification du token CSRF
             $token = $request->request->get('_csrf_token');
             // dd($token);
             if (!$csrfTokenManager->isTokenValid(new CsrfToken('utilisateur_new', $token))) {
                 throw new AccessDeniedHttpException('Le token CSRF est invalide.');
             }
 
-            // Traitement des données
             $utilisateur = new Utilisateur();
-            // $utilisateur->setNom($request->request->get('nom'));
-            // $utilisateur->setPrenom($request->request->get('prenom'));
             $utilisateur->setEmail($request->request->get('email'));
             $utilisateur->setPseudonyme($request->request->get('pseudonyme'));
 
             $formMotDePasse = $request->request->get('mot_de_passe');
             
-            // Vérifie les contraintes de validation
             $utilisateur->setMotDePasse($formMotDePasse);
             $errors = $validator->validate($utilisateur);
             
@@ -90,7 +83,6 @@ class UtilisateurController extends AbstractController
                 ]);
             }
 
-            // Hashage et persistance si validation OK
             $hashedMotDePasse = $passwordHasher->hashPassword($utilisateur, $formMotDePasse);
             $utilisateur->setMotDePasse($hashedMotDePasse);
             $utilisateur->setRoles(['ROLE_USER']);
@@ -110,15 +102,11 @@ class UtilisateurController extends AbstractController
     public function edit(Utilisateur $utilisateur, Request $request, EntityManagerInterface $em, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         if ($request->isMethod('POST')) {
-            // Vérification du token CSRF
             $token = $request->request->get('_csrf_token');
             if (!$csrfTokenManager->isTokenValid(new CsrfToken('utilisateur_modification_' . $utilisateur->getId(), $token))) {
                 throw new AccessDeniedHttpException('Le token CSRF est invalide.');
             }
 
-            // Traitement des modifications
-            // $utilisateur->setNom($request->request->get('nom'));
-            // $utilisateur->setPrenom($request->request->get('prenom'));
             $utilisateur->setPseudonyme($request->request->get('pseudonyme'));
             $utilisateur->setEmail($request->request->get('email'));
             $em->flush();
@@ -126,7 +114,6 @@ class UtilisateurController extends AbstractController
             return $this->redirectToRoute('app_accueil');
         }
 
-        // Génération du token CSRF
         $csrfToken = $csrfTokenManager->getToken('utilisateur_modification_' . $utilisateur->getId())->getValue();
 
         return $this->render('utilisateur/modification.html.twig', [
@@ -138,24 +125,22 @@ class UtilisateurController extends AbstractController
     #[Route('/utilisateur/{id}/modifier_mot_de_passe', name: 'utilisateur_modifier_mot_de_passe', methods: ['GET', 'POST'])]
     public function changePassword(Utilisateur $utilisateur, Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
-        // Vérifier si l'utilisateur connecté est bien celui qu'on veut modifier
+        
         if ($utilisateur !== $this->getUser()) {
             throw $this->createAccessDeniedException('Vous ne pouvez pas modifier ces informations.');
         }
 
         if ($request->isMethod('POST')) {
-            // Vérification du token CSRF
+            
             $token = $request->request->get('_csrf_token');
             if (!$csrfTokenManager->isTokenValid(new CsrfToken('utilisateur_modifier_mot_de_passe_' . $utilisateur->getId(), $token))) {
                 throw new AccessDeniedHttpException('Le token CSRF est invalide.');
             }
 
-            // Traitement du mot de passe actuel
             $currentPassword = $request->request->get('current_password');
             $newPassword = $request->request->get('new_password');
             $confirmPassword = $request->request->get('confirm_password');
-
-            // Vérification du mot de passe actuel
+ 
             if (!$passwordHasher->isPasswordValid($utilisateur, $currentPassword)) {
                 $this->addFlash('error', 'Le mot de passe actuel est incorrect.');
                 return $this->render('utilisateur/modifier_mot_de_passe.html.twig', [
@@ -164,7 +149,6 @@ class UtilisateurController extends AbstractController
                 ]);
             }
 
-            // Vérification de la correspondance des nouveaux mots de passe
             if ($newPassword !== $confirmPassword) {
                 $this->addFlash('error', 'Les nouveaux mots de passe ne correspondent pas.');
                 return $this->render('utilisateur/modifier_mot_de_passe.html.twig', [
@@ -173,18 +157,14 @@ class UtilisateurController extends AbstractController
                 ]);
             }
 
-            // Hashage du nouveau mot de passe et mise à jour de l'utilisateur
             $hashedNewPassword = $passwordHasher->hashPassword($utilisateur, $newPassword);
             $utilisateur->setMotDePasse($hashedNewPassword);
 
-            // Sauvegarde des modifications dans la base de données
             $em->flush();
 
-            // Redirection après modification
             return $this->redirectToRoute('mon_espace');
         }
 
-        // Génération du token CSRF pour sécuriser le formulaire
         $csrfToken = $csrfTokenManager->getToken('utilisateur_modifier_mot_de_passe_' . $utilisateur->getId())->getValue();
 
         return $this->render('utilisateur/modifier_mot_de_passe.html.twig', [
@@ -199,12 +179,10 @@ class UtilisateurController extends AbstractController
     {
         $currentUser = $this->getUser();
 
-        // Vérifier que l'utilisateur est connecté et qu'il est soit admin, soit lui-même
         if (!$currentUser || (!in_array('ROLE_ADMIN', $currentUser->getRoles()) && $currentUser->getId() !== $utilisateur->getId())) {
             throw $this->createAccessDeniedException('Vous n\'avez pas la permission de supprimer cet utilisateur.');
         }
 
-        // Suppression des entités liées AVANT de supprimer l'utilisateur
         foreach ($utilisateur->getLivres() as $livre) {
             $em->remove($livre);
         }
@@ -218,36 +196,29 @@ class UtilisateurController extends AbstractController
             $em->remove($interaction);
         }
 
-        // Suppression de l'utilisateur
         $em->remove($utilisateur);
         $em->flush();
 
-        // Déconnecter l'utilisateur s'il supprime son propre compte
         if ($currentUser->getId() === $utilisateur->getId()) {
-            $tokenStorage->setToken(null); // Supprime le token d'authentification
-            $session->invalidate(); // Détruit la session
+            $tokenStorage->setToken(null);
+            $session->invalidate();
         }
 
-        // Redirection après suppression
         return $this->redirectToRoute('app_accueil');
     }
 
     #[Route('/mon-espace', name: 'mon_espace', methods: ['GET'])]
     public function monEspace(LivreRepository $livreRepository): Response
     {
-        // Récupérer l'utilisateur actuellement connecté
         $utilisateur = $this->getUser();
 
-        // Vérifier si l'utilisateur est connecté
         if (!$utilisateur) {
             $this->addFlash('error', 'Vous devez être connecté pour accéder à votre espace.');
-            return $this->redirectToRoute('app_connexion'); // Redirection vers la page de connexion
+            return $this->redirectToRoute('app_connexion');
         }
 
-        // Récupérer les livres ajoutés par l'utilisateur
         $livresAjoutes = $livreRepository->findBy(['utilisateur' => $utilisateur]);
 
-        // Rendre la vue du tableau de bord utilisateur
         return $this->render('utilisateur/mon_espace.html.twig', [
             'livres' => $livresAjoutes,
         ]);

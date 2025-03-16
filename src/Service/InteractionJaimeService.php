@@ -16,9 +16,6 @@ class InteractionJaimeService
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * Vérifie si l'utilisateur a déjà aimé un livre.
-     */
     public function hasLiked(Utilisateur $utilisateur, Livre $livre): ?InteractionJaime
     {
         $interactionRepo = $this->entityManager->getRepository(InteractionJaime::class);
@@ -26,9 +23,6 @@ class InteractionJaimeService
         return $interactionRepo->findByUserAndLivre($utilisateur, $livre);
     }
 
-    /**
-     * Ajoute un "j'aime" pour un utilisateur sur un livre.
-     */
     public function addLike(Utilisateur $utilisateur, Livre $livre): void
     {
         $like = new InteractionJaime();
@@ -40,9 +34,6 @@ class InteractionJaimeService
         $this->entityManager->flush();
     }
 
-    /**
-     * Supprime un "j'aime" pour un utilisateur sur un livre.
-     */
     public function removeLike(InteractionJaime $like): void
     {
         $this->entityManager->remove($like);

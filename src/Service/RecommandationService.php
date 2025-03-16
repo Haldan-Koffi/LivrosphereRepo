@@ -16,9 +16,6 @@ class RecommandationService
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * Vérifie si un utilisateur a déjà recommandé un livre.
-     */
     public function hasRecommended(Utilisateur $utilisateur, Livre $livre): ?Recommandation
     {
         $recommandationRepo = $this->entityManager->getRepository(Recommandation::class);
@@ -26,9 +23,7 @@ class RecommandationService
         return $recommandationRepo->findByUserAndLivre($utilisateur, $livre);
     }
 
-    /**
-     * Ajoute une recommandation pour un utilisateur et un livre.
-     */
+
     public function addRecommandation(Utilisateur $utilisateur, Livre $livre): void
     {
         $recommandation = new Recommandation();
@@ -40,9 +35,6 @@ class RecommandationService
         $this->entityManager->flush();
     }
 
-    /**
-     * Supprime une recommandation.
-     */
     public function removeRecommandation(Recommandation $recommandation): void
     {
         $this->entityManager->remove($recommandation);

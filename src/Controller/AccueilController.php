@@ -10,13 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AccueilController extends AbstractController
 {
-    // #[Route('/accueil', name: 'app_accueil')]
-    // public function index(): Response
-    // {
-    //     return $this->render('accueil/index.html.twig', [
-    //         'controller_name' => 'AccueilController',
-    //     ]);
-    // }
 
     #[Route('/', name: 'app_accueil')]
     public function indexLivre(LivreRepository $livreRepository, MongoDBService $mongoDBService): Response
@@ -28,7 +21,6 @@ class AccueilController extends AbstractController
         if (empty($derniersLivres)) {
             $this->addFlash('info', 'Aucun livre disponible pour le moment.');
         }
-
 
         return $this->render('accueil/index.html.twig', [
             'derniersLivres' => $derniersLivres,

@@ -37,10 +37,8 @@ class Categorie
 
     public function __construct()
     {
-        date_default_timezone_set('Europe/Paris'); // Forcer le fuseau horaire
+        date_default_timezone_set('Europe/Paris');
         $this->date_creation = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
-
-        // $this->date_creation = new \DateTime();
         $this->livres = new ArrayCollection();
     }
 
@@ -94,7 +92,7 @@ class Categorie
     public function removeLivre(Livre $livre): static
     {
         if ($this->livres->removeElement($livre)) {
-            // set the owning side to null (unless already changed)
+
             if ($livre->getCategorie() === $this) {
                 $livre->setCategorie(null);
             }

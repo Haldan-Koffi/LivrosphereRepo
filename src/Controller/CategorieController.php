@@ -25,44 +25,49 @@ class CategorieController extends AbstractController
     #[Route('/categorie', name: 'app_categorie')]
     public function index(): Response
     {
+        $user = $this->getUser();
+        if (!$user) {
+            throw new AccessDeniedHttpException('Vous devez être connecté pour créer une catégorie.');
+        }
+        
         $categories = $this->categorieService->getAllCategories();
         return $this->render('categorie/liste_categorie.html.twig', ['categories' => $categories]);
     }
 
     #[Route('/admin/nouvelle/categorie', name: 'nouvelle_categorie', methods: ['GET', 'POST'])]
-#[IsGranted('ROLE_ADMIN')]
-public function new(Request $request, CsrfTokenManagerInterface $csrfTokenManager): Response
-{
+    #[IsGranted('ROLE_ADMIN')]
+    public function new(Request $request, CsrfTokenManagerInterface $csrfTokenManager): Response
+    {
     // Générer le token CSRF pour la création de catégorie
-    $csrfToken = $csrfTokenManager->getToken('nouvelle_categorie')->getValue();
+        $csrfToken = $csrfTokenManager->getToken('nouvelle_categorie')->getValue();
 
-    // Récupérer l'utilisateur connecté depuis le contrôleur (hérité de AbstractController)
-    $user = $this->getUser();
-    if (!$user) {
-        throw new AccessDeniedHttpException('Vous devez être connecté pour créer une catégorie.');
-    }
-
-    if ($request->isMethod('POST')) {
-        // Vérification du token CSRF
-        $token = $request->request->get('_csrf_token');
-        if (!$csrfTokenManager->isTokenValid(new CsrfToken('nouvelle_categorie', $token))) {
-            throw new AccessDeniedHttpException('Le token CSRF est invalide.');
+        // Récupérer l'utilisateur connecté depuis le contrôleur (hérité de AbstractController)
+        $user = $this->getUser();
+        if (!$user) {
+            throw new AccessDeniedHttpException('Vous devez être connecté pour créer une catégorie.');
         }
 
-        // Récupération des données du formulaire
-        $nom = $request->request->get('nom');
-        $file = $request->files->get('couverture_categorie');
+        if ($request->isMethod('POST')) {
+            // Vérification du token CSRF
+            $token = $request->request->get('_csrf_token');
+            if (!$csrfTokenManager->isTokenValid(new CsrfToken('nouvelle_categorie', $token))) {
+                throw new AccessDeniedHttpException('Le token CSRF est invalide.');
+            }
 
-        // Appel du service en passant l'utilisateur connecté
-        $this->categorieService->createCategorie($nom, $file, $user);
+            // Récupération des données du formulaire
+            $nom = $request->request->get('nom');
+            $file = $request->files->get('couverture_categorie');
 
-        return $this->redirectToRoute('app_categorie');
-    }
+            // Appel du service en passant l'utilisateur connecté
+            $this->categorieService->createCategorie($nom, $file, $user);
 
-    return $this->render('categorie/nouvelle_categorie.html.twig', [
+            return $this->redirectToRoute('app_categorie');
+        }
+
+        return $this->render('categorie/nouvelle_categorie.html.twig', [
         'csrf_token' => $csrfToken
-    ]);
-}
+        ]);
+    }
 
 
     #[Route('/categorie/{id}/modification', name: 'modification_categorie', methods: ['GET', 'POST'])]
@@ -70,6 +75,11 @@ public function new(Request $request, CsrfTokenManagerInterface $csrfTokenManage
     {
         // Générer le token CSRF pour la modification de catégorie
         $csrfToken = $csrfTokenManager->getToken('modification_categorie_' . $categorie->getId())->getValue();
+
+        $user = $this->getUser();
+        if (!$user) {
+            throw new AccessDeniedHttpException('Vous devez être connecté pour créer une catégorie.');
+        }
 
         if ($request->isMethod('POST')) {
             // Vérification du token CSRF
@@ -97,7 +107,12 @@ public function new(Request $request, CsrfTokenManagerInterface $csrfTokenManage
     public function delete(Categorie $categorie): Response
     {
         // Récupérer l'utilisateur actuellement connecté
-        $currentUser = $this->getUser();
+        // $currentUser = $this->getUser();
+
+        $user = $this->getUser();
+        if (!$user) {
+            throw new AccessDeniedHttpException('Vous devez être connecté pour créer une catégorie.');
+        }
 
         // Vérifier que l'utilisateur est connecté et qu'il possède le rôle admin
         if (!$currentUser || !in_array('ROLE_ADMIN', $currentUser->getRoles())) {

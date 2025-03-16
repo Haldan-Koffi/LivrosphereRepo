@@ -24,27 +24,27 @@
 
       <section class="modif_mdp">
         <form method="post">
-            <div>
+            <section>
                 <label for="current_password">Mot de passe actuel</label>
                 <input type="password" id="current_password" name="current_password" required>
-            </div>
+            </section>
 
-            <div>
+            <section>
                 <label for="new_password">Nouveau mot de passe</label>
                 <input type="password" id="new_password" name="new_password" required>
-            </div>
+            </section>
 
-            <div>
+            <section>
                 <label for="confirm_password">Confirmer le nouveau mot de passe</label>
                 <input type="password" id="confirm_password" name="confirm_password" required>
-            </div>
+            </section>
 
             <!-- Ajout du token CSRF -->
             <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
 
-            <div>
+            <section>
                 <button type="submit" class="btn btn-dark">Enregistrer les modifications</button>
-            </div>
+            </section>
         </form>
       </section>
     </main>
@@ -66,8 +66,8 @@
             <a href="{{ path('app_cgu') }}">Conditions générales d'utilisation</a>
         </nav>
 
-        <section class="copyright">
+        <div class="copyright">
             <p>© Livrosphère 2025</p>
-        </section>
+        </div>
     </footer>
 {% endblock %}

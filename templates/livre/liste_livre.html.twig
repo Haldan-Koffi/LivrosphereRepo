@@ -22,41 +22,41 @@
 {% block body %}
 <main>
     <section class="creation_bouton">
-    <form action="{{ path('nouveau_livre') }}" method="get">
-    <button type="submit" class="btn btn-dark">Ajouter un nouveau livre</button>
-    </form>
-    <section class="text_categorie">
-    <h1>
-        {% if app.request.query.get('categorie') %}
-            Livres de la catégorie sélectionnée
-        {% else %}
-            Tous les livres
-        {% endif %}
-    </h1>
+        <form action="{{ path('nouveau_livre') }}" method="get">
+            <button type="submit" class="btn btn-dark">Ajouter un nouveau livre</button>
+        </form>
     </section>
 
-    <!-- Formulaire de filtre par catégorie -->
+    {# <section class="text_categorie">
+        <h1>
+            {% if app.request.query.get('categorie') %}
+                Livres de la catégorie sélectionnée
+            {% else %}
+                Tous les livres
+            {% endif %}
+        </h1>
+    </section> #}
+    
+
     <section class="text_categorie">
-    <form id="filterForm">
-        <section>
-            <label for="categorie">Filtrer par catégorie :</label>
-            <select id="categorie" name="categorie">
-                <option value="">Toutes les catégories</option>
-                {% for categorie in categories %}
-                    <option value="{{ categorie.id }}" 
-                        {% if app.request.query.get('categorie') == categorie.id %}selected{% endif %}>
-                        {{ categorie.nom }}
-                    </option>
-                {% endfor %}
-            </select>
-        </section>
-    </form>
+        <form id="filterForm">
+            <section>
+                <label for="categorie">Filtrer par catégorie :</label>
+                <select id="categorie" name="categorie">
+                    <option value="">Toutes les catégories</option>
+                    {% for categorie in categories %}
+                        <option value="{{ categorie.id }}" 
+                            {% if app.request.query.get('categorie') == categorie.id %}selected{% endif %}>
+                            {{ categorie.nom }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </section>
+        </form>
     </section>
 
-    <!-- Conteneur des livres -->
     <section id="livresContainer" class="d-flex flex-wrap gap-3"></section>
 
-    <!-- Script AJAX pour le filtrage des livres -->
     <script>
         async function chargerLivres(categorieId = "") {
             let url = `/livres/filtrer?categorie=${categorieId}`;
@@ -65,10 +65,9 @@
                 let response = await fetch(url);
                 let livres = await response.json();
 
-                console.log(livres); // Vérifie que les champs resume et annee_publication sont maintenant présents
 
                 let livresContainer = document.getElementById("livresContainer");
-                livresContainer.innerHTML = ""; // Vide la liste actuelle
+                livresContainer.innerHTML = "";
 
                 if (livres.length === 0) {
                     livresContainer.innerHTML = "<p>Aucun livre trouvé pour cette catégorie.</p>";
@@ -76,17 +75,15 @@
                 }
 
                 livres.forEach((livre) => {
-                    let card = document.createElement("div");
+                    let card = document.createElement("section");
                     card.className = "card h-100";
                     card.style.width = "18rem";
 
-                    // Formater le résumé si disponible
                     let resume = livre.resume || 'Pas de résumé disponible';
 
-                    // Vérification de la date et formatage
-                    let anneePublication = livre.annee_publication || 'Date inconnue'; // Utiliser directement la donnée si elle est présente
+                    let anneePublication = livre.annee_publication || 'Date inconnue';
 
-                    console.log(`Résumé: ${resume}, Date de publication: ${anneePublication}`); // Vérifie les valeurs avant de les afficher
+                    console.log(`Résumé: ${resume}, Date de publication: ${anneePublication}`);
 
                     card.innerHTML = `
                         <img src="/uploads/${livre.couverture}" class="card-img-top" alt="${livre.titre}" style="height: 300px; object-fit: cover;" />
@@ -109,12 +106,10 @@
             }
         }
 
-        // Écouteur d'événement sur le changement de catégorie
         document.getElementById("categorie").addEventListener("change", function () {
             chargerLivres(this.value);
         });
 
-        // Charger les livres au chargement initial en fonction de l'URL
         document.addEventListener("DOMContentLoaded", () => {
             let categorieId = new URLSearchParams(window.location.search).get("categorie") || "";
             document.getElementById("categorie").value = categorieId;
@@ -142,9 +137,9 @@
         <a href="{{ path('app_cgu') }}">Conditions générales d'utilisation</a>
     </nav>
 
-    <section class="copyright">
+    <div class="copyright">
         <p>© Livrosphère 2025</p>
-    </section>
+    </div>
 </footer>
 
 {% endblock %}

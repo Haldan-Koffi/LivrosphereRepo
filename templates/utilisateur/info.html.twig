@@ -1,37 +1,22 @@
 {% extends 'base.html.twig' %}
+
 {% block stylesheets %}
-{{ encore_entry_link_tags('style_accueil') }}
+    {{ encore_entry_link_tags('style_espace_utilisateur') }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+          integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block javascripts %}
-{{ encore_entry_script_tags('app') }}
+    {{ encore_entry_script_tags('app') }}
 {% endblock %}
 
 {% block title %}Informations de l'utilisateur{% endblock %}
 
 {% block body %}
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Page d'accueil</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+GB+S:ital,wght@0,100..400;1,100..400&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
   <main>
     <h1>Informations de l'utilisateur connecté</h1>
 
@@ -66,7 +51,7 @@
     
 
     <a href="{{ path('app_utilisateur') }}">Retour à la liste des utilisateurs</a>
-    </main>
+</main>
     
     <footer class="footer-container">
       <nav class="boutons-footer">
@@ -85,10 +70,8 @@
         <a href="{{ path('app_cgu') }}">Conditions générales d'utilisation</a>
       </nav>
 
-      <section class="copyright">
+      <div class="copyright">
         <p>© Livrosphère 2025</p>
-      </section>
+      </div>
     </footer>
-  </body>
-</html>
 {% endblock %}

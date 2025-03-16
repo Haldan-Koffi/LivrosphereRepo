@@ -189,7 +189,8 @@ body {
 }
 
 .titre_com {
-  h3 {
+  h1 {
+    font-size: x-large;
     margin-top: 20px;
     margin-bottom: 20px;
     text-align: center;
@@ -204,6 +205,9 @@ body {
 }
 
 .informations-ajout {
+  h1 {
+    font-size: x-large;
+  }
   margin-left: 50px;
 }
 
@@ -230,7 +234,8 @@ body {
 }
 
 .commentaires {
-  h3 {
+  h1 {
+    font-size: x-large;
     display: flex;
 
     justify-content: center;

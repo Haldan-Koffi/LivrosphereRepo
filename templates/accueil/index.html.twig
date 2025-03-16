@@ -3,11 +3,11 @@
 {% block stylesheets %}
 {{ encore_entry_link_tags('style_accueil') }}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+          integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+GB+S:ital,wght@0,100..400;1,100..400&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block javascripts %}
@@ -17,24 +17,24 @@
 {% block body %}
 <main>
     <section class="titre-livrosphere">
-        <h2>LIVROSPHÈRE</h2>
+        <h1>LIVROSPHÈRE</h1>
     </section>
 
     <section class="message-homepage1">
-        <h3>BIBLIOTHÈQUE COLLABORATIVE</h3>
-        <h4 class="message-homepage2 text-gray">
+        <h2>BIBLIOTHÈQUE COLLABORATIVE</h2>
+        <h3 class="message-homepage2 text-gray">
             Découvrez, partagez et discutez des livres que vous avez lus
-        </h4>
+        </h3>
     </section>
 
     <section class="bloc-carousel bg-gray100">
-        <section
+        <div
             id="carouselExampleIndicators"
             class="carousel slide"
             data-bs-ride="carousel"
             data-bs-interval="4000"
         >
-            <section class="carousel-indicators">
+            <div class="carousel-indicators">
                 <button
                     type="button"
                     data-bs-target="#carouselExampleIndicators"
@@ -55,7 +55,7 @@
                     data-bs-slide-to="2"
                     aria-label="Slide 3"
                 ></button>
-            </section>
+            </div>
             <section class="carousel-inner">
                 {% if derniersLivres is not empty %}
                     {% for livre in derniersLivres %}
@@ -64,7 +64,7 @@
                         </section>
                     {% endfor %}
                 {% else %}
-                    <p>Aucune image disponible pour le carrousel.</p>
+                    <p>Aucun livre n'est disponible.</p>
                 {% endif %}
             </section>
 
@@ -86,7 +86,7 @@
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
-        </section>
+        </div>
     </section>
 
     <section class="cover-livre">
@@ -112,8 +112,8 @@
 
 
     <section class="message2-homepage">
-        <h3>UNE COMMUNAUTÉ PEU COMMUNE</h3>
-        <h4 class="text-gray">Rejoignez une communauté de lecteur engagé</h4>
+        <h2>UNE COMMUNAUTÉ PEU COMMUNE</h2>
+        <h3 class="text-gray">Rejoignez une communauté de lecteur engagé</h3>
     </section>
 
     <section class="bloc-carousel bg-gray100">
@@ -145,8 +145,8 @@
         <a href="{{ path('app_cgu') }}">Conditions générales d'utilisation</a>
     </nav>
 
-    <section class="copyright">
+    <div class="copyright">
         <p>© Livrosphère 2025</p>
-    </section>
+    </div>
 </footer>
 {% endblock %}

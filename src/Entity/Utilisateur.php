@@ -21,15 +21,8 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    // #[ORM\Column(length: 50)]
-    // private ?string $nom = null;
-
-    // #[ORM\Column(length: 50)]
-    // private ?string $prenom = null;
-
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
-
 
     
     #[ORM\Column(length: 255)]
@@ -86,7 +79,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        date_default_timezone_set('Europe/Paris'); // Forcer le fuseau horaire
+        date_default_timezone_set('Europe/Paris');
         $this->date_inscription = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
 
 
@@ -101,30 +94,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->id;
     }
-
-    // public function getNom(): ?string
-    // {
-    //     return $this->nom;
-    // }
-
-    // public function setNom(string $nom): static
-    // {
-    //     $this->nom = $nom;
-
-    //     return $this;
-    // }
-
-    // public function getPrenom(): ?string
-    // {
-    //     return $this->prenom;
-    // }
-
-    // public function setPrenom(string $prenom): static
-    // {
-    //     $this->prenom = $prenom;
-
-    //     return $this;
-    // }
 
     public function getEmail(): ?string
     {
@@ -164,22 +133,15 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    // Méthodes pour UserInterface
 
-    // public function getUsername(): string
-    // {
-    //     return $this->email;
-    // }
-
-        // Méthode requise par l'interface UserInterface. Elle renvoie l'identifiant de l'utilisateur (ici, l'email)
     public function getUserIdentifier(): string 
     {
-        return $this->email; // Retourne l'email de l'utilisateur comme identifiant unique
+        return $this->email;
     }
 
     public function eraseCredentials(): void
     {
-        // Vous pouvez y ajouter des logiques pour effacer des données sensibles si nécessaire
+        
     }
 
     public function getPassword(): string
@@ -208,7 +170,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeLivre(Livre $livre): static
     {
         if ($this->livres->removeElement($livre)) {
-            // set the owning side to null (unless already changed)
+
             if ($livre->getUtilisateur() === $this) {
                 $livre->setUtilisateur(null);
             }
@@ -238,7 +200,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeCommentaire(Commentaire $commentaire): static
     {
         if ($this->commentaires->removeElement($commentaire)) {
-            // set the owning side to null (unless already changed)
+
             if ($commentaire->getUtilisateur() === $this) {
                 $commentaire->setUtilisateur(null);
             }
@@ -280,7 +242,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeInteractionJaime(InteractionJaime $interactionJaime): static
     {
         if ($this->interactionJaimes->removeElement($interactionJaime)) {
-            // set the owning side to null (unless already changed)
+
             if ($interactionJaime->getUtilisateur() === $this) {
                 $interactionJaime->setUtilisateur(null);
             }
@@ -310,7 +272,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeRecommandation(Recommandation $recommandation): static
     {
         if ($this->recommandations->removeElement($recommandation)) {
-            // set the owning side to null (unless already changed)
+
             if ($recommandation->getUtilisateur() === $this) {
                 $recommandation->setUtilisateur(null);
             }
@@ -340,7 +302,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeCategory(Categorie $category): static
     {
         if ($this->categories->removeElement($category)) {
-            // set the owning side to null (unless already changed)
+
             if ($category->getUtilisateur() === $this) {
                 $category->setUtilisateur(null);
             }

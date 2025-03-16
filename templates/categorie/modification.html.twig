@@ -18,10 +18,10 @@
 
 {% block body %}
 
-    <main>
-    <h1>Modifier la Catégorie</h1>
+<main>
+  <h1>Modifier la Catégorie</h1>
 
-    <form method="post" action="{{ path('modification_categorie', {id: categorie.id}) }}" enctype="multipart/form-data">
+  <form method="post" action="{{ path('modification_categorie', {id: categorie.id}) }}" enctype="multipart/form-data">
     <div>
         <label for="nom">Nom de la catégorie :</label>
         <input type="text" id="nom" name="nom" value="{{ categorie.nom }}" required>
@@ -43,28 +43,29 @@
     <button type="submit">Modifier</button>
   </form>
 
-    </main>
-    <footer class="footer-container">
-      <nav class="boutons-footer">
-        <a href="{{ path('app_accueil')}}">Accueil</a>
-        <a href="{{ path('app_categorie')}}">Catégories</a>
-        <a href="{{ path('app_livre')}}">Nos livres</a>
-        <a href="{{ path('mon_espace')}}">Mon espace</a>
-        <a href="{{ path('app_a_propos')}}">À propos</a>
-        <a href="{{ path('utilisateur_new')}}">S'inscrire</a>
-        <a href="{{ path('app_connexion')}}">Se connecter</a>
-      </nav>
+</main>
+  
+  <footer class="footer-container">
+    <nav class="boutons-footer">
+      <a href="{{ path('app_accueil')}}">Accueil</a>
+      <a href="{{ path('app_categorie')}}">Catégories</a>
+      <a href="{{ path('app_livre')}}">Nos livres</a>
+      <a href="{{ path('mon_espace')}}">Mon espace</a>
+      <a href="{{ path('app_a_propos')}}">À propos</a>
+      <a href="{{ path('utilisateur_new')}}">S'inscrire</a>
+      <a href="{{ path('app_connexion')}}">Se connecter</a>
+    </nav>
 
 
-      <nav class="pages-legales">
-        <a href="{{ path('app_mentions_legales') }}">Mentions légales</a>
-        <a href="{{ path('app_cgu') }}">Conditions générales d'utilisation</a>
-      </nav>
+    <nav class="pages-legales">
+      <a href="{{ path('app_mentions_legales') }}">Mentions légales</a>
+      <a href="{{ path('app_cgu') }}">Conditions générales d'utilisation</a>
+    </nav>
 
-      <section class="copyright">
-        <p>© Livrosphère 2025</p>
-      </section>
-    </footer>
+    <div class="copyright">
+      <p>© Livrosphère 2025</p>
+    </div>
+  </footer>
 </html>
     
 {% endblock %}

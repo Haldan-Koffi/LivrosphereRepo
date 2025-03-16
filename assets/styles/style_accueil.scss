@@ -39,6 +39,10 @@
   color: var(--main-bg-color-gray);
 }
 
+body {
+  font-family: "Montserrat", "Roboto", "Poppins";
+}
+
 main {
   min-height: 100vh; /* Assure que le main occupe au moins la hauteur de l'écran */
   display: flex;
@@ -193,14 +197,6 @@ footer {
   background-color: var(--main-bg-color-gray100);
 }
 
-/* Styles généraux */
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: transparent !important;
-}
-
 /* Adjustments for small screens */
 @media (min-width: 100px) and (max-width: 1024px) {
   /* Redimensionner le logo */
@@ -219,7 +215,7 @@ body {
     gap: 90px;
   }
 
-  .titre-livrosphere h2 {
+  .titre-livrosphere h1 {
     font-size: 1.5rem;
   }
   .titre-livrosphere button {
@@ -236,11 +232,11 @@ body {
   .message-homepage1 {
     padding-bottom: 20px;
 
-    h3 {
+    h2 {
       font-size: 20px;
       margin-left: 15px;
     }
-    h4 {
+    h3 {
       font-size: 18px;
       margin-left: 15px;
       display: flex;
@@ -273,11 +269,11 @@ body {
   .message2-homepage {
     padding-bottom: 20px;
 
-    h3 {
+    h2 {
       margin-left: 5px;
       font-size: 20px;
     }
-    h4 {
+    h3 {
       font-size: 18px;
       margin-left: 15px;
       display: flex;

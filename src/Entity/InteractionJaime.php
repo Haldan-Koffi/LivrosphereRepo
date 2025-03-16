@@ -27,7 +27,7 @@ class InteractionJaime
 
     public function __construct()
     {
-        date_default_timezone_set('Europe/Paris'); // Forcer le fuseau horaire
+        date_default_timezone_set('Europe/Paris');
         $this->date_jaime = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
     }
     

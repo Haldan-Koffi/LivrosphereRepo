@@ -7,60 +7,44 @@
 {% endblock %}
 
 {% block body %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Connexion</title>
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-  </head>
-  <body>
     <header class="header-container">
     </header>
     <main class="">
-      <div class="container-form">
+      <section class="container-form">
         <form class="bloc-inscription" method="post" action="{{ path('app_connexion') }}">
-          <div class="logo-titre">
+          <section class="logo-titre">
             <a href="{{path('app_accueil')}}"
               ><img
                 src="{{ asset('images/logo-livrosphere.png') }}"
                 height="50px"
                 width="50px"
             /></a>
-            <h5>CONNEXION</h5>
-          </div>
+            <h1>CONNEXION</h1>
+          </section>
 
-          <div>
+          <section>
             <label for="username" class="form-label">Email</label>
             <input type="email" class="form-control" id="username" name="_username" placeholder="Adresse email ..." required />
-
+          </section>
+          
+          <section>
             <label for="password" class="form-label">Mot de passe</label>
             <input type="password" class="form-control" id="password" name="_password" placeholder="Mot de passe ..." required/>
-          </div>
-          <div class="btnU">
+          </section>
+          <section class="btnU">
             <button type="submit" class="btn btn-dark">Me connecter</button>
-            <section class="gestion-password">
+            <div class="gestion-password">
               <a class="text-white" href="{{ path('app_forgot_password_request') }}"
                 >Réinitialiser mon mot de passe</a
               >
-            </section>
-          </div>
+            </div>
+          </section>
         </form>
-      </div>
+      </section>
     </main>
 
     <footer class="footer-container">
     </footer>
-  </body>
-</html>
-
 
 {% endblock %}

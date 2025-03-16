@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Consultation{% endblock %}
+{% block title %}Découverte{% endblock %}
 
 {% block stylesheets %}
     {{ encore_entry_link_tags('style_aff_livres') }}
@@ -18,27 +18,22 @@
 
 {% block body %}
 <main>
-    <!-- Section titre -->
     <section class="titre-livrosphere">
-        <h2>LIVROSPHÈRE</h2>
+        <h1>LIVROSPHÈRE</h1>
     </section>
 
-    <!-- Section des détails du livre -->
     <section class="informations-ajout">
-        <h3>Ajouté par {{ livre.utilisateur.pseudonyme }} le {{ livre.dateAjout|date('d/m/Y') }}</h3>
+        <h1>Ajouté par {{ livre.utilisateur.pseudonyme }} le {{ livre.dateAjout|date('d/m/Y') }}</h1>
     </section>
 
     <section class="ajout">
         <figure class="cover-ajout">
             {% if livre.couverture %}
                 <img src="{{ asset('uploads/' ~ livre.couverture) }}" height="400px" alt="Couverture du livre '{{ livre.titre }}'" />
-            {% else %}
-                <img src="/path/to/default_cover.jpg" height="400px" alt="Pas de couverture disponible" />
+            {# {% else %}
+                <img src="/path/to/default_cover.jpg" height="400px" alt="Pas de couverture disponible" /> #}
             {% endif %}
         </figure>
-    
-    
-    {# <section class="ajout"> #}
 
         <article class="info-livre">
             <h1>{{ livre.titre }}</h1>
@@ -58,7 +53,6 @@
         </article>
     </section>
 
-    <!-- Section des interactions -->
     <section class="espace-interaction">
         <section class="bouton-interaction">
             <form method="POST" action="{{ path('toggle_like', {'id': livre.id}) }}" style="display: inline;">
@@ -76,9 +70,8 @@
             <span class="badge bg-secondary">{{ nombreRecommandations }}</span>
         </section>
 
-        <!-- Section des commentaires -->
         <section class="commentaires">
-            <h3>Commentaires</h3>
+            <h1>Commentaires</h1>
             <section class="commentaires-ajouts">
                 {% if commentaires is not empty %}
                     {% for commentaire in commentaires %}
@@ -103,9 +96,8 @@
                 {% endif %}
             </section>
 
-            <!-- Formulaire pour ajouter un commentaire -->
             <section class="titre_com">
-                <h3>Ajouter un commentaire</h3>
+                <h1>Ajouter un commentaire</h1>
             </section>
             <section class="form_com">
                 {{ form_start(form) }}
@@ -116,13 +108,11 @@
         </section>
     </section>
 
-    <!-- Affichage du bouton "Modifier le livre" si l'utilisateur est le créateur du livre -->
     <section class="action_livre">
         {% if livre.utilisateur == app.user %}
             <a href="{{ path('modification_livre', {'id': livre.id}) }}" class="btn btn-secondary">Modifier le livre</a>
         {% endif %}
 
-        <!-- Affichage du bouton "Supprimer le livre" si l'utilisateur est le créateur ou admin -->
         {% if livre.utilisateur == app.user or is_granted('ROLE_ADMIN') %}
             <form method="POST" action="{{ path('suppression_livre', {'id': livre.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?');">
                 <button type="submit" class="btn btn-dark">Supprimer le livre</button>
@@ -131,7 +121,6 @@
     </section>
 </main>
 
-<!-- Footer -->
 <footer class="footer-container">
     <nav class="boutons-footer">
         <a href="{{ path('app_accueil')}}">Accueil</a>
@@ -149,8 +138,8 @@
         <a href="{{ path('app_cgu') }}">Conditions générales d'utilisation</a>
     </nav>
 
-    <section class="copyright">
+    <div class="copyright">
         <p>© Livrosphère 2025</p>
-    </section>
+    </div>
 </footer>
 {% endblock %}

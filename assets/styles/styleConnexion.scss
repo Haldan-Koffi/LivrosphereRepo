@@ -39,6 +39,10 @@
   color: var(--main-bg-color-gray);
 }
 
+body {
+  font-family: "Montserrat", "Roboto", "Poppins";
+}
+
 .header-container {
   border-bottom: 1px solid;
   height: 80px;
@@ -161,7 +165,9 @@
   gap: 145px;
 }
 
-.logo-titre h5 {
+.logo-titre h1 {
+  color: var(--main-bg-color-white);
+  font-size: x-large;
   margin-top: 21px;
 }
 

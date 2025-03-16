@@ -72,25 +72,24 @@ class CategorieService
 
     public function deleteCategorie(Categorie $categorie): void
     {
-        // Pour chaque livre de la catégorie, supprimer d'abord ses dépendances
+
         foreach ($categorie->getLivres() as $livre) {
-            // Supprimer les commentaires associés au livre
+            
             foreach ($livre->getCommentaires() as $commentaire) {
                 $this->em->remove($commentaire);
             }
-            // Supprimer les interactions "jaime" associées au livre
+            
             foreach ($livre->getInteractionJaimes() as $interaction) {
                 $this->em->remove($interaction);
             }
-            // Supprimer les recommandations associées au livre
+            
             foreach ($livre->getRecommandations() as $recommandation) {
                 $this->em->remove($recommandation);
             }
-            // Supprimer le livre lui-même
+            
             $this->em->remove($livre);
         }
 
-        // Supprimer la catégorie
         $this->em->remove($categorie);
         $this->em->flush();
     }

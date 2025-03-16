@@ -66,7 +66,6 @@ class CommentaireController extends AbstractController
         $commentaire->setDateCommentaire(new \DateTime());
         $commentaire->setModificationCommentaire(false);
 
-        // Récupérer les commentaires associés au livre
         
 
         $form = $this->createForm(CommentaireType::class, $commentaire);
@@ -76,10 +75,8 @@ class CommentaireController extends AbstractController
             $em->persist($commentaire);
             $em->flush();
 
-            // Lier le commentaire au livre
             $livre->addCommentaire($commentaire);
 
-            // Ajouter un message flash
             $this->addFlash('success', 'Votre commentaire a été ajouté avec succès.');
 
             return $this->redirectToRoute('livre_information', ['id' => $livre->getId()]);
@@ -87,10 +84,9 @@ class CommentaireController extends AbstractController
 
         $commentaires = $commentaireRepository->findBy(['livre' => $livre]);
 
-        // Passer les commentaires récupérés à la vue
         return $this->render('commentaire/ajouter.html.twig', [
             'livre' => $livre,
-            'commentaires' => $commentaires,  // Ajout de la variable 'commentaires'
+            'commentaires' => $commentaires,
             'form' => $form->createView(),
         ]);
     }
@@ -100,35 +96,29 @@ class CommentaireController extends AbstractController
     {
         $currentUtilisateur = $this->getUser();
 
-        // Vérifier que l'utilisateur connecté est celui qui a créé le commentaire
         if ($commentaire->getUtilisateur() !== $currentUtilisateur) {
             $this->addFlash('error', 'Vous ne pouvez pas modifier ce commentaire.');
             return $this->redirectToRoute('livre_information', ['id' => $commentaire->getLivre()->getId()]);
         }
 
-        // Créer un formulaire pour modifier le commentaire
         $form = $this->createForm(CommentaireType::class, $commentaire);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Mettre à jour la date de commentaire avec la date actuelle
+
             $commentaire->setDateCommentaire(new \DateTime());
 
-            // Indiquer que le commentaire a été modifié
+            
             $commentaire->setModificationCommentaire(true);
 
-            // Sauvegarder les modifications
             $em->persist($commentaire);
             $em->flush();
 
-            // Ajouter un message flash
             $this->addFlash('success', 'Votre commentaire a été modifié avec succès.');
 
-            // Rediriger l'utilisateur vers la page d'info du livre
             return $this->redirectToRoute('livre_information', ['id' => $commentaire->getLivre()->getId()]);
         }
 
-        // Retourner la vue avec le formulaire
         return $this->render('commentaire/modification.html.twig', [
             'form' => $form->createView(),
             'commentaire' => $commentaire
@@ -141,23 +131,19 @@ class CommentaireController extends AbstractController
     {
         $currentUtilisateur = $security->getUser();
 
-        // Vérifier si l'utilisateur a le droit de supprimer le commentaire
         if ($currentUtilisateur === $commentaire->getUtilisateur() || in_array('ROLE_ADMIN', $currentUtilisateur->getRoles())) {
-            // Supprimer le commentaire
+            
             $em->remove($commentaire);
             $em->flush();
 
-            // Ajouter un message flash
+            
             $this->addFlash('success', 'Le commentaire a été supprimé avec succès.');
         } else {
-            // Ajouter un message flash si l'utilisateur n'a pas les droits
+            
             $this->addFlash('error', 'Vous n\'avez pas les droits pour supprimer ce commentaire.');
         }
 
-        // Rediriger vers la page du livre
         return $this->redirectToRoute('livre_information', ['id' => $commentaire->getLivre()->getId()]);
     }
-
-
 
 }

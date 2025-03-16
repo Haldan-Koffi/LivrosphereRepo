@@ -24,41 +24,40 @@
 
   <section class="form_modification">
     <form method="post" enctype="multipart/form-data">
-        <div>
+        <section>
             <label for="titre">Titre :</label>
             <input type="text" id="titre" name="titre" required>
-        </div>
+        </section>
 
-        <div>
+        <section>
             <label for="auteur">Auteur :</label>
             <input type="text" id="auteur" name="auteur" required>
-        </div>
+        </section>
 
-        <div>
+        <section>
             <label for="annee_publication">Année de publication :</label>
             <input type="date" id="annee_publication" name="annee_publication" required>
-        </div>
+        </section>
 
-        <div>
+        <section>
             <label for="resume">Résumé :</label>
             <textarea id="resume" name="resume" required></textarea>
-        </div>
+        </section>
 
-        <div>
+        <section>
             <label for="couverture">Couverture :</label>
             <input type="file" id="couverture" name="couverture" accept="image/*">
-        </div>
+        </section>
 
-        <div>
+        <section>
             <label for="categorie">Catégorie :</label>
             <select id="categorie" name="categorie" required>
                 {% for categorie in categories %}
                     <option value="{{ categorie.id }}">{{ categorie.nom }}</option>
                 {% endfor %}
             </select>
-        </div>
+        </section>
 
-        <!-- Ajout du champ CSRF -->
         <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
 
         <button type="submit" class="btn btn-dark">Ajouter</button>
@@ -83,8 +82,8 @@
         <a href="{{ path('app_cgu') }}">Conditions générales d'utilisation</a>
     </nav>
 
-    <section class="copyright">
+    <div class="copyright">
         <p>© Livrosphère 2025</p>
-    </section>
+    </div>
 </footer>
 {% endblock %}

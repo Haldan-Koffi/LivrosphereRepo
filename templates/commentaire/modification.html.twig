@@ -1,63 +1,56 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier le Commentaire{% endblock %}
+{% block title %}Modifier le commentaire{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('style_liste_livre') }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+          integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
 
 {% block body %}
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Page d'accueil</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+GB+S:ital,wght@0,100..400;1,100..400&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-  <main>
+<main>
+    <section class="bloc_principale">
+      <h1>Modifier le Commentaire</h1>
 
-    <h1>Modifier le Commentaire</h1>
+      {{ form_start(form) }}
+          {{ form_row(form.message) }}
+          <button class="btn btn-dark w-25" type="submit">Modifier</button>
+      {{ form_end(form) }}
 
-    {{ form_start(form) }}
-        {{ form_row(form.message) }}
-        <button class="btn btn-primary" type="submit">Modifier</button>
-    {{ form_end(form) }}
+      <a href="{{ path('livre_information', {'id': commentaire.livre.id}) }}">Retour à la page du livre</a>
+    </section>
+</main>
 
-    <a href="{{ path('livre_information', {'id': commentaire.livre.id}) }}">Retour à la page du livre</a>
-    </main>
-
-     <footer class="footer-container">
-      <nav class="boutons-footer">
-        <a href="{{ path('app_accueil')}}">Accueil</a>
-        <a href="{{ path('app_categorie')}}">Catégories</a>
-        <a href="{{ path('app_livre')}}">Nos livres</a>
-        <a href="{{ path('mon_espace')}}">Mon espace</a>
-        <a href="{{ path('app_a_propos')}}">À propos</a>
-        <a href="{{ path('utilisateur_new')}}">S'inscrire</a>
-        <a href="{{ path('app_connexion')}}">Se connecter</a>
-      </nav>
+<footer class="footer-container">
+  <nav class="boutons-footer">
+    <a href="{{ path('app_accueil')}}">Accueil</a>
+    <a href="{{ path('app_categorie')}}">Catégories</a>
+    <a href="{{ path('app_livre')}}">Nos livres</a>
+    <a href="{{ path('mon_espace')}}">Mon espace</a>
+    <a href="{{ path('app_a_propos')}}">À propos</a>
+    <a href="{{ path('utilisateur_new')}}">S'inscrire</a>
+    <a href="{{ path('app_connexion')}}">Se connecter</a>
+  </nav>
 
 
-      <nav class="pages-legales">
-        <a href="{{ path('app_mentions_legales') }}">Mentions légales</a>
-        <a href="{{ path('app_cgu') }}">Conditions générales d'utilisation</a>
-      </nav>
+  <nav class="pages-legales">
+    <a href="{{ path('app_mentions_legales') }}">Mentions légales</a>
+    <a href="{{ path('app_cgu') }}">Conditions générales d'utilisation</a>
+  </nav>
 
-      <section class="copyright">
-        <p>© Livrosphère 2025</p>
-      </section>
-    </footer>
-  </body>
-</html>
+  <div class="copyright">
+    <p>© Livrosphère 2025</p>
+  </div>
+</footer>
+
 {% endblock %}
