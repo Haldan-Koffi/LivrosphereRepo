@@ -54,7 +54,7 @@ pipeline {
                 }
             }
         }
-
+//test
         // stage('Exécution des tests') {
         //     steps {
         //         dir("${DEPLOY_DIR}") {
