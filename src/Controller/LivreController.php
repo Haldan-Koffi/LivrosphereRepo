@@ -26,7 +26,7 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 class LivreController extends AbstractController
 {
     #[Route('/livres', name: 'app_livre')]
-    public function index(Request $request, LivreRepository $livreRepository, EntityManagerInterface $em): Response
+    public function afficherLivres(Request $request, LivreRepository $livreRepository, EntityManagerInterface $em): Response
     {
         $categorieId = $request->query->get('categorie');
         $categories = $em->getRepository(Categorie::class)->findAll();
@@ -96,7 +96,7 @@ class LivreController extends AbstractController
     }
 
     #[Route('/livre/nouveau', name: 'nouveau_livre', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $em, CategorieRepository $categorieRepository, Security $security, CsrfTokenManagerInterface $csrfTokenManager): Response
+    public function ajouterLivre(Request $request, EntityManagerInterface $em, CategorieRepository $categorieRepository, Security $security, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         try {
             $user = $security->getUser();
@@ -155,8 +155,8 @@ class LivreController extends AbstractController
         }
     } 
 
-    #[Route('/livre/{id}/info', name: 'livre_information', methods: ['GET', 'POST'])]
-    public function show(Livre $livre, Request $request, EntityManagerInterface $em): Response
+    #[Route('/livre/{id}/information', name: 'livre_information', methods: ['GET', 'POST'])]
+    public function afficherLivre(Livre $livre, Request $request, EntityManagerInterface $em): Response
     {
         if (!$livre) {
             throw new NotFoundHttpException("Le livre demandé n'existe pas.");
@@ -207,7 +207,7 @@ class LivreController extends AbstractController
     }
 
     #[Route('/livre/{id}/supprimer', name: 'suppression_livre', methods: ['GET','POST'])]
-    public function delete(Livre $livre = null, EntityManagerInterface $em): Response
+    public function supprimerLivre(Livre $livre = null, EntityManagerInterface $em): Response
     {
         if (!$livre) {
             throw new NotFoundHttpException("Le livre que vous tentez de supprimer n'existe pas.");
@@ -277,7 +277,7 @@ class LivreController extends AbstractController
     }
 
     #[Route('/livre/{id}/modification', name: 'modification_livre', methods: ['GET', 'POST'])]
-    public function edit(Livre $livre, Request $request, EntityManagerInterface $em, SluggerInterface $slugger, CsrfTokenManagerInterface $csrfTokenManager, CategorieRepository $categorieRepository): Response
+    public function modifierLivre(Livre $livre, Request $request, EntityManagerInterface $em, SluggerInterface $slugger, CsrfTokenManagerInterface $csrfTokenManager, CategorieRepository $categorieRepository): Response
     {
         if (!$livre) {
             throw new NotFoundHttpException("Le livre que vous tentez de modifier n'existe pas.");

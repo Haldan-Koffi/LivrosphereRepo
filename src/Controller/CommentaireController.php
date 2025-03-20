@@ -18,7 +18,7 @@ use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 class CommentaireController extends AbstractController
 {
     #[Route('/admin/commentaires', name: 'app_commentaire', methods: ['GET'])]
-    public function index(CommentaireRepository $commentaireRepository): Response
+    public function afficherCommentaires(CommentaireRepository $commentaireRepository): Response
     {
         $commentaires = $commentaireRepository->findAll();
 
@@ -58,7 +58,7 @@ class CommentaireController extends AbstractController
     
 
     #[Route('/livre/{id}/commentaire', name: 'ajout_commentaire', methods: ['GET', 'POST'])]
-    public function new(Livre $livre, Request $request, EntityManagerInterface $em, CommentaireRepository $commentaireRepository): Response
+    public function ajouterCommentaires(Livre $livre, Request $request, EntityManagerInterface $em, CommentaireRepository $commentaireRepository): Response
     {
         $commentaire = new Commentaire();
         $commentaire->setLivre($livre);
@@ -92,7 +92,7 @@ class CommentaireController extends AbstractController
     }
 
     #[Route('/commentaire/{id}/edit', name: 'edit_commentaire', methods: ['GET', 'POST'])]
-    public function edit(Commentaire $commentaire, Request $request, EntityManagerInterface $em): Response
+    public function modifierCommentaire(Commentaire $commentaire, Request $request, EntityManagerInterface $em): Response
     {
         $currentUtilisateur = $this->getUser();
 
@@ -127,7 +127,7 @@ class CommentaireController extends AbstractController
 
 
     #[Route('/commentaire/{id}/delete', name: 'delete_commentaire', methods: ['POST'])]
-    public function delete(Commentaire $commentaire, EntityManagerInterface $em, Security $security): Response
+    public function supprimerCommentaire(Commentaire $commentaire, EntityManagerInterface $em, Security $security): Response
     {
         $currentUtilisateur = $security->getUser();
 

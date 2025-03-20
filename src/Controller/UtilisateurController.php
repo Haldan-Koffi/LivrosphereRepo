@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class UtilisateurController extends AbstractController
 {
     #[Route('/utilisateurs', name: 'app_utilisateur', methods: ['GET'])]
-    public function index(UtilisateurRepository $utilisateurRepository): Response
+    public function afficherComptes(UtilisateurRepository $utilisateurRepository): Response
     {
         $utilisateurs = $utilisateurRepository->findAll();
 
@@ -30,7 +30,7 @@ class UtilisateurController extends AbstractController
     }
 
     #[Route('/utilisateurs/information', name: 'utilisateur_info', methods: ['GET'])]
-    public function show(): Response
+    public function afficherCompte(): Response
     {
         $currentUtilisateur = $this->getUser();
 
@@ -41,8 +41,6 @@ class UtilisateurController extends AbstractController
         return $this->render('utilisateur/info.html.twig', [
             'utilisateur' => [
                 'id' => $currentUtilisateur->getId(),
-                'nom' => $currentUtilisateur->getNom(),
-                'prenom' => $currentUtilisateur->getPrenom(),
                 'pseudonyme' => $currentUtilisateur->getPseudonyme(),
                 'email' => $currentUtilisateur->getEmail(),
                 'roles' => $currentUtilisateur->getRoles(),
@@ -52,14 +50,13 @@ class UtilisateurController extends AbstractController
 
     
     #[Route('/inscription', name: 'utilisateur_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator, CsrfTokenManagerInterface $csrfTokenManager): Response
+    public function creerCompte(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
 
         $csrfToken = $csrfTokenManager->getToken('utilisateur_new')->getValue();
 
         if ($request->isMethod('POST')) {
             $token = $request->request->get('_csrf_token');
-            // dd($token);
             if (!$csrfTokenManager->isTokenValid(new CsrfToken('utilisateur_new', $token))) {
                 throw new AccessDeniedHttpException('Le token CSRF est invalide.');
             }
@@ -99,19 +96,49 @@ class UtilisateurController extends AbstractController
     }
 
     #[Route('/utilisateur/{id}/modification', name: 'utilisateur_modification', methods: ['GET', 'POST'])]
-    public function edit(Utilisateur $utilisateur, Request $request, EntityManagerInterface $em, CsrfTokenManagerInterface $csrfTokenManager): Response
-    {
+    public function modifierCompte(
+        Utilisateur $utilisateur,
+        Request $request,
+        EntityManagerInterface $em,
+        CsrfTokenManagerInterface $csrfTokenManager,
+        ValidatorInterface $validator
+    ): Response {
+  
+        $currentUser = $this->getUser();
+        if (!$currentUser || $currentUser->getId() !== $utilisateur->getId()) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas l\'autorisation de modifier ce compte.');
+        }
+
         if ($request->isMethod('POST')) {
+            
             $token = $request->request->get('_csrf_token');
             if (!$csrfTokenManager->isTokenValid(new CsrfToken('utilisateur_modification_' . $utilisateur->getId(), $token))) {
                 throw new AccessDeniedHttpException('Le token CSRF est invalide.');
             }
 
-            $utilisateur->setPseudonyme($request->request->get('pseudonyme'));
-            $utilisateur->setEmail($request->request->get('email'));
-            $em->flush();
+            
+            $pseudonyme = $request->request->get('pseudonyme');
+            $email = $request->request->get('email');
 
-            return $this->redirectToRoute('app_accueil');
+            $utilisateur->setPseudonyme($pseudonyme);
+            $utilisateur->setEmail($email);
+
+            
+            $errors = $validator->validate($utilisateur);
+            if (count($errors) > 0) {
+                $errorMessages = [];
+                foreach ($errors as $error) {
+                    $errorMessages[] = $error->getMessage();
+                }
+                return $this->render('utilisateur/modification.html.twig', [
+                    'utilisateur' => $utilisateur,
+                    'csrf_token' => $csrfTokenManager->getToken('utilisateur_modification_' . $utilisateur->getId())->getValue(),
+                    'errors' => $errorMessages,
+                ]);
+            } else {
+                $em->flush();
+                return $this->redirectToRoute('app_accueil');
+            }
         }
 
         $csrfToken = $csrfTokenManager->getToken('utilisateur_modification_' . $utilisateur->getId())->getValue();
@@ -122,8 +149,9 @@ class UtilisateurController extends AbstractController
         ]);
     }
 
+
     #[Route('/utilisateur/{id}/modifier_mot_de_passe', name: 'utilisateur_modifier_mot_de_passe', methods: ['GET', 'POST'])]
-    public function changePassword(Utilisateur $utilisateur, Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, CsrfTokenManagerInterface $csrfTokenManager): Response
+    public function changerMotDePasse(Utilisateur $utilisateur, Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         
         if ($utilisateur !== $this->getUser()) {
@@ -175,7 +203,7 @@ class UtilisateurController extends AbstractController
 
     
     #[Route('/utilisateur/{id}/supprimer', name: 'utilisateur_supprimer', methods: ['GET'])]
-    public function delete(Utilisateur $utilisateur, EntityManagerInterface $em, TokenStorageInterface $tokenStorage, SessionInterface $session): Response 
+    public function supprimerCompte(Utilisateur $utilisateur, EntityManagerInterface $em, TokenStorageInterface $tokenStorage, SessionInterface $session): Response 
     {
         $currentUser = $this->getUser();
 
@@ -208,7 +236,7 @@ class UtilisateurController extends AbstractController
     }
 
     #[Route('/mon-espace', name: 'mon_espace', methods: ['GET'])]
-    public function monEspace(LivreRepository $livreRepository): Response
+    public function accederMonEspace(LivreRepository $livreRepository): Response
     {
         $utilisateur = $this->getUser();
 
