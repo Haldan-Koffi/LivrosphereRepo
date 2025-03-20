@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Cloner le dépôt') {
             steps {
-                sh "rm -rf ${DEPLOY_DIR}" // Nettoyage du précédent build
+                sh "rm -rf ${DEPLOY_DIR}"
                 sh "git clone -b ${GIT_BRANCH} ${GIT_REPO} ${DEPLOY_DIR}"
             }
         }
@@ -54,14 +54,14 @@ pipeline {
                 }
             }
         }
-//test
-        // stage('Exécution des tests') {
-        //     steps {
-        //         dir("${DEPLOY_DIR}") {
-        //             sh 'vendor/bin/phpunit --configuration=phpunit.xml.dist'
-        //         }
-        //     }
-        // }
+
+        stage('Exécution des tests') {
+            steps {
+                dir("${DEPLOY_DIR}") {
+                    sh 'vendor/bin/phpunit --configuration=phpunit.xml.dist'
+                }
+            }
+        }
 
         stage('Nettoyage du cache') {
             steps {
@@ -74,13 +74,11 @@ pipeline {
 
         stage('Déploiement') {
             steps {
-                sh "rm -rf /var/www/html/${DEPLOY_DIR}" // Supprime le dossier de destination
-                sh "mkdir /var/www/html/${DEPLOY_DIR}" // Recréé le dossier de destination
+                sh "rm -rf /var/www/html/${DEPLOY_DIR}"
+                sh "mkdir /var/www/html/${DEPLOY_DIR}"
                 sh "cp -rT ${DEPLOY_DIR} /var/www/html/${DEPLOY_DIR}"
                 sh "chmod -R 775 /var/www/html/${DEPLOY_DIR}/var"
-
-                        // 3. Ajustement des permissions
-                //   - On autorise aussi l'écriture sur le dossier uploads
+                
                 sh "chmod -R 775 /var/www/html/${DEPLOY_DIR}/public/uploads"
             }
         }

@@ -30,8 +30,6 @@
         <figure class="cover-ajout">
             {% if livre.couverture %}
                 <img src="{{ asset('uploads/' ~ livre.couverture) }}" height="400px" alt="Couverture du livre '{{ livre.titre }}'" />
-            {# {% else %}
-                <img src="/path/to/default_cover.jpg" height="400px" alt="Pas de couverture disponible" /> #}
             {% endif %}
         </figure>
 

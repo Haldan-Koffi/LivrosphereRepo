@@ -16,13 +16,10 @@ class InscriptionControllerTest extends WebTestCase
         $csrfToken = $crawler->filter('input[name="_csrf_token"]')->attr('value');
         $this->assertNotEmpty($csrfToken);
 
-        $now = (new \DateTime())->format('Y-m-d H:i:s');
-
         $form = $crawler->selectButton('M\'inscrire')->form([
-            'email'            => 'nw@example.com',
+            'email'            => 'raiqq@example.com',
             'mot_de_passe'     => 'UsdD1234!@#$',
-            'pseudonyme'       => 'nw',
-            'date_inscription' => $now,
+            'pseudonyme'       => 'raiqqri',
             '_csrf_token'      => $csrfToken,
         ]);
 
@@ -32,7 +29,6 @@ class InscriptionControllerTest extends WebTestCase
         
         $this->assertResponseRedirects($expectedUrl);
     }
-
 }
 
 
