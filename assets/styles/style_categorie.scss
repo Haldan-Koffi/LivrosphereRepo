@@ -125,7 +125,6 @@ body {
 
   h2 {
     color: var(--main-bg-color-black);
-    /* background-color: var(--main-bg-color-black); */
     background-color: var(--main-bg-color-gray100);
     width: fit-content;
     padding: 5px;
@@ -208,7 +207,6 @@ body {
   color: var(--main-bg-color-white);
 }
 
-/* Écrans larges (ordinateur de bureau) */
 @media (min-width: 992px) {
   #categoriesContainer {
     gap: 89px;
@@ -235,7 +233,6 @@ body {
   }
 }
 
-/* Tablettes et petits écrans (tablettes, smartphones) */
 @media (max-width: 991px) {
   #categoriesContainer {
     gap: 100px;
@@ -286,7 +283,6 @@ body {
   }
 }
 
-/* Mobile portrait */
 @media (max-width: 576px) {
   #categoriesContainer {
     gap: 30px;

@@ -80,7 +80,7 @@
                                 <p><em>(Modifié)</em></p>
                             {% endif %}
                             {% if commentaire.utilisateur == app.user %}
-                                <a href="{{ path('edit_commentaire', {'id': commentaire.id}) }}" class="btn btn-secondary">Modifier</a>
+                                <a href="{{ path('edit_commentaire', {'id': commentaire.id}) }}" class="btn btn-secondary mb-2">Modifier</a>
                             {% endif %}
                             {% if commentaire.utilisateur == app.user or is_granted('ROLE_ADMIN') %}
                                 <form action="{{ path('delete_commentaire', {'id': commentaire.id}) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">
@@ -94,17 +94,26 @@
                 {% endif %}
             </section>
 
-            <section class="titre_com">
-                <h1>Ajouter un commentaire</h1>
-            </section>
-            <section class="form_com">
-                {{ form_start(form) }}
-                {{ form_row(form.message) }}
-                <button type="submit">Ajouter Commentaire</button>
-                {{ form_end(form) }}
-            </section>
-        </section>
-    </section>
+            <section class="text-center">
+    <h1 class="text-dark">Ajouter un commentaire</h1>
+</section>
+
+<section class="d-flex justify-content-center">
+    <div class="w-100" style="max-width: 600px;">
+        {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+        
+        <div class="mb-3">
+            {{ form_label(form.message, ' ', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.message, {'attr': {'class': 'form-control', 'rows': '4'}}) }}
+            {{ form_errors(form.message) }}
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Ajouter</button>
+        
+        {{ form_end(form) }}
+    </div>
+</section>
+
 
     <section class="action_livre">
         {% if livre.utilisateur == app.user %}

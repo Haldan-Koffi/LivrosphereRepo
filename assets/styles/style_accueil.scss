@@ -197,20 +197,16 @@ footer {
   background-color: var(--main-bg-color-gray100);
 }
 
-/* Adjustments for small screens */
 @media (min-width: 100px) and (max-width: 1024px) {
-  /* Redimensionner le logo */
   .header-container img {
     height: 50px;
   }
 
-  /* Centrer les éléments dans la barre de navigation */
   .navbar-nav {
     text-align: center;
     margin: 0 auto;
   }
 
-  /* Réduire la taille des boutons dans la bannière de titre */
   .titre-livrosphere {
     gap: 90px;
   }
@@ -249,12 +245,10 @@ footer {
     margin-right: 0px;
     margin-top: 30px;
   }
-  /* Réduire la taille des images dans le carousel */
+
   .carousel-item img {
     height: auto;
   }
-
-  /* Réduire la taille des cartes de livres */
 
   .cover-livre {
     display: flex;
@@ -286,7 +280,6 @@ footer {
     }
   }
 
-  /* Ajuster les espaces dans le footer */
   .pages-legales {
     display: flex;
     flex-direction: column;
@@ -308,7 +301,6 @@ footer {
     align-items: center;
   }
 
-  /* Centrer le copyright */
   .copyright {
     display: flex;
     justify-content: center;
@@ -318,13 +310,6 @@ footer {
       justify-content: start;
     }
   }
-
-  // #navbarSupportedContent {
-  //   background-color: white;
-  //   /* collapse navbar-collapse {
-  //     background-color: white;
-  //   } */
-  // }
 }
 
 @media (max-width: 576px) {

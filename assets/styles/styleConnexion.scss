@@ -57,11 +57,6 @@ body {
   align-content: center;
 }
 
-/* .btn {
-  display: flex;
-  align-items: center;
-} */
-
 .footer-container {
   margin-top: 50px;
   background-color: var(--main-bg-color-blue);
@@ -71,12 +66,6 @@ body {
   padding-bottom: 20px;
   padding-top: 20px;
 }
-
-// .boutons-header {
-//   display: flex;
-//   flex-direction: column;
-//   margin-left: 250px;
-// }
 
 .boutons-footer {
   display: flex;
@@ -116,7 +105,6 @@ body {
   background-color: var(--main-bg-color-white);
   justify-content: center;
   padding: 193px;
-  /* border: 1px solid black; */
 }
 
 .bloc-inscription {
@@ -194,7 +182,6 @@ body {
     height: 50px;
   }
 
-  /* Centrer les éléments dans la barre de navigation */
   .navbar-nav {
     text-align: center;
     margin: 0 auto;
@@ -224,7 +211,6 @@ body {
     align-items: center;
   }
 
-  /* Centrer le copyright */
   .copyright {
     display: flex;
     justify-content: center;
@@ -237,8 +223,5 @@ body {
 
   #navbarSupportedContent {
     background-color: white;
-    /* collapse navbar-collapse {
-      background-color: white;
-    } */
   }
 }

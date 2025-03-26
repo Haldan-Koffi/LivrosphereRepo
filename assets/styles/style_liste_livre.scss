@@ -40,13 +40,13 @@
 }
 
 main {
-  min-height: 100vh; /* Assure que le main occupe au moins la hauteur de l'écran */
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
 footer {
-  margin-top: auto; /* Pousse le footer au bas */
+  margin-top: auto;
 }
 
 body {
@@ -68,10 +68,6 @@ body {
   flex-wrap: wrap;
   margin-top: 50px;
   margin-bottom: 20px;
-  // margin-left: 150px;
-  // margin-right: 50px;
-  // margin-bottom: 80px;
-  // padding-left: 50px;
   width: auto;
 }
 
@@ -161,7 +157,6 @@ body {
 
   h3 {
     color: var(--main-bg-color-black);
-    /* background-color: var(--main-bg-color-black); */
     background-color: var(--main-bg-color-gray100);
     width: fit-content;
     padding: 5px;
@@ -245,8 +240,6 @@ body {
   color: var(--main-bg-color-white);
 }
 
-// modification livre
-
 .titre {
   h1 {
     text-align: center;
@@ -277,7 +270,6 @@ body {
   justify-content: center;
 }
 
-/* Mobile portrait */
 @media (max-width: 576px) {
   .creation_bouton {
     button {

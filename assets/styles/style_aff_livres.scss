@@ -141,11 +141,6 @@ body {
   }
 }
 
-// .photo_ajout {
-//   display: flex;
-//   justify-content: center;
-// }
-
 .titre-livrosphere {
   margin: 30px;
 }
@@ -237,9 +232,8 @@ body {
   h1 {
     font-size: x-large;
     display: flex;
-
+    margin-top: 10px;
     justify-content: center;
-    margin-bottom: 50px;
   }
   .commentaires-ajouts {
     display: flex;
@@ -263,7 +257,6 @@ body {
   }
 }
 
-/* Pour les petits écrans (mobile) */
 @media (max-width: 768px) {
   .ajout {
     flex-direction: column;
@@ -281,7 +274,6 @@ body {
     max-width: 100%;
   }
 
-  /* Modifier les espacements des boutons */
   .action_livre {
     display: flex;
     flex-direction: column;
@@ -331,7 +323,6 @@ body {
   }
 }
 
-/* Styles pour les écrans plus larges */
 @media (min-width: 769px) {
   .ajout {
     display: flex;

@@ -12,7 +12,7 @@ class AccueilController extends AbstractController
 {
 
     #[Route('/', name: 'app_accueil')]
-    public function indexLivre(LivreRepository $livreRepository, MongoDBService $mongoDBService): Response
+    public function afficherLivres(LivreRepository $livreRepository, MongoDBService $mongoDBService): Response
     {
         $mongoDBService->insertVisit('/');
         $derniersLivres = $livreRepository->findBy([], ['date_ajout' => 'DESC'], 3);
